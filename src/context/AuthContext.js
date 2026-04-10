@@ -1,67 +1,59 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
+import { ALLOWED_ROLES, DEFAULT_ROLE, DEMO_USERS } from '../config/menuConfig';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [usuario, setUsuario] = useState(null);
+  const resolverRolInicial = () => {
+    const params = new URLSearchParams(window.location.search);
+    const rolDesdeUrl = params.get('rol');
+    return ALLOWED_ROLES.includes(rolDesdeUrl) ? rolDesdeUrl : DEFAULT_ROLE;
+  };
+
+  const [usuario, setUsuario] = useState(() => {
+    const rol = resolverRolInicial();
+    return { ...DEMO_USERS[rol], rol };
+  });
   const [cargando, setCargando] = useState(true);
 
-  useEffect(() => {
-    // Verificar si el usuario ya está autenticado al cargar la app
-    verificarAutenticacion();
-  }, []);
-
-  const verificarAutenticacion = async () => {
+  const cargarUsuarioPorCedula = useCallback(async (cedula, rolFallback) => {
     try {
-      const response = await fetch('http://localhost:8080/api/usuarios/me', {
-        credentials: 'include',
-      });
+      const response = await fetch(`http://localhost:8080/api/tramites?cedula=${cedula}`);
       if (response.ok) {
         const data = await response.json();
-        setUsuario(data);
+        const rol = ALLOWED_ROLES.includes(data?.usuario?.rol) ? data.usuario.rol : rolFallback;
+        setUsuario({
+          nombre: data?.usuario?.nombre || DEMO_USERS[rol]?.nombre || 'Usuario',
+          cedula: data?.usuario?.cedula || cedula,
+          rol,
+        });
+      } else {
+        setUsuario({ ...DEMO_USERS[rolFallback], rol: rolFallback });
       }
-    } catch (error) {
-      console.error('Error verificando autenticación:', error);
+    } catch {
+      setUsuario({ ...DEMO_USERS[rolFallback], rol: rolFallback });
     } finally {
       setCargando(false);
     }
-  };
+  }, []);
 
-  const login = async (codigo, contrasena) => {
-    try {
-      const response = await fetch('http://localhost:8080/api/usuarios/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ codigo, contrasena }),
-      });
+  useEffect(() => {
+    const rol = resolverRolInicial();
+    cargarUsuarioPorCedula(DEMO_USERS[rol].cedula, rol);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cargarUsuarioPorCedula]);
 
-      if (response.ok) {
-        const data = await response.json();
-        setUsuario(data);
-        return { success: true };
-      } else {
-        return { success: false, error: 'Credenciales inválidas' };
-      }
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  };
-
-  const logout = async () => {
-    try {
-      await fetch('http://localhost:8080/api/usuarios/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-      setUsuario(null);
-    } catch (error) {
-      console.error('Error en logout:', error);
-    }
-  };
+  const cambiarRol = useCallback(
+    (nuevoRol) => {
+      if (!ALLOWED_ROLES.includes(nuevoRol)) return;
+      setCargando(true);
+      cargarUsuarioPorCedula(DEMO_USERS[nuevoRol].cedula, nuevoRol);
+    },
+    [cargarUsuarioPorCedula],
+  );
 
   return (
-    <AuthContext.Provider value={{ usuario, cargando, login, logout }}>
+    <AuthContext.Provider value={{ usuario, cargando, cambiarRol }}>
       {children}
     </AuthContext.Provider>
   );
