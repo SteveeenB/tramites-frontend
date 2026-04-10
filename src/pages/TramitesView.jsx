@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { ALLOWED_ROLES, getMenuByRole } from '../config/menuConfig';
+import { ALLOWED_ROLES, DEMO_OPTIONS, getMenuByRole } from '../config/menuConfig';
 
 // ── Iconos ────────────────────────────────────────────────────────────────────
 
@@ -309,23 +309,28 @@ const TramitesView = () => {
           {/* Selector de rol demo */}
           <div className="border-t border-slate-200 p-5">
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
-              Demo — cambiar rol
+              Demo — cambiar usuario
             </p>
             <div className="flex flex-col gap-2">
-              {ALLOWED_ROLES.map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => cambiarRol(r)}
-                  className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
-                    rol === r
-                      ? `${colores.active}`
-                      : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-                  }`}
-                >
-                  {ROLE_LABELS[r] || r}
-                </button>
-              ))}
+              {DEMO_OPTIONS.map((opt) => {
+                const esActivo =
+                  opt.key === rol ||
+                  (opt.key === 'ESTUDIANTE_CON_CREDITOS' &&
+                    rol === 'ESTUDIANTE' &&
+                    usuario?.cedula === '1098765435');
+                return (
+                  <button
+                    key={opt.key}
+                    type="button"
+                    onClick={() => cambiarRol(opt.key)}
+                    className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
+                      esActivo ? colores.active : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </aside>

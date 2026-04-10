@@ -44,10 +44,13 @@ export const AuthProvider = ({ children }) => {
   }, [cargarUsuarioPorCedula]);
 
   const cambiarRol = useCallback(
-    (nuevoRol) => {
-      if (!ALLOWED_ROLES.includes(nuevoRol)) return;
+    (demoKey) => {
+      const demoUser = DEMO_USERS[demoKey];
+      if (!demoUser) return;
+      // ESTUDIANTE_CON_CREDITOS usa el rol ESTUDIANTE pero con cédula de Laura
+      const rolEfectivo = ALLOWED_ROLES.includes(demoKey) ? demoKey : 'ESTUDIANTE';
       setCargando(true);
-      cargarUsuarioPorCedula(DEMO_USERS[nuevoRol].cedula, nuevoRol);
+      cargarUsuarioPorCedula(demoUser.cedula, rolEfectivo);
     },
     [cargarUsuarioPorCedula],
   );
