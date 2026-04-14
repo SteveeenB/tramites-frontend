@@ -18,10 +18,10 @@ export const MENU_BY_ROLE = {
 // ESTUDIANTE_SIN_CREDITOS: Juan Pérez (86/100) — etapa 1 bloqueada
 // ESTUDIANTE_CON_CREDITOS: Laura Gomez (100/100) — etapa 1 habilitada
 export const DEMO_USERS = {
-  ESTUDIANTE:              { cedula: '1098765432', nombre: 'Juan Perez' },
-  ESTUDIANTE_CON_CREDITOS: { cedula: '1098765435', nombre: 'Laura Gomez' },
-  DIRECTOR:                { cedula: '1098765433', nombre: 'Maria Director' },
-  ADMIN:                   { cedula: '1098765434', nombre: 'Admin User' },
+  ESTUDIANTE:              { cedula: '1098765432', nombre: 'Juan Perez',    programaAcademico: 'Maestría en Gerencia de Empresas' },
+  ESTUDIANTE_CON_CREDITOS: { cedula: '1098765435', nombre: 'Laura Gomez',  programaAcademico: 'Maestría en Gerencia de Empresas' },
+  DIRECTOR:                { cedula: '1098765433', nombre: 'Maria Director', programaAcademico: 'Maestría en Educación Matemáticas' },
+  ADMIN:                   { cedula: '1098765434', nombre: 'Admin User',    programaAcademico: 'Especialización en Estructuras' },
 };
 
 export const ALLOWED_ROLES = Object.keys(MENU_BY_ROLE);
