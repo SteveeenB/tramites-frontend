@@ -203,7 +203,7 @@ const ProcesodeGrado = () => {
     );
   }
 
-  const { estudiante, creditos, estadoAcademico, convocatoria, etapa1Completada, etapa2Disponible } = datos;
+  const { creditos, estadoAcademico, convocatoria, etapa1Completada, etapa2Disponible } = datos;
 
   const aprobados  = Number(creditos?.aprobados || 0);
   const requeridos = Number(creditos?.requeridos || 0);
@@ -219,13 +219,13 @@ const ProcesodeGrado = () => {
           <div className="flex-1 px-5 py-6">
             <div className="mb-6 flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
               <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-red-100 text-lg font-bold text-red-700">
-                <span>{(estudiante?.nombre || 'E').slice(0, 2).toUpperCase()}</span>
+                <span>{(usuario.nombre || 'E').slice(0, 2).toUpperCase()}</span>
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Estudiante</p>
-                <p className="font-semibold text-slate-900">{estudiante?.nombre || 'Estudiante'}</p>
-                {estudiante?.programaAcademico && (
-                  <p className="mt-0.5 text-xs text-slate-500">{estudiante.programaAcademico}</p>
+                <p className="font-semibold text-slate-900">{usuario.nombre}</p>
+                {usuario.programaAcademico && (
+                  <p className="mt-0.5 text-xs text-slate-500">{usuario.programaAcademico}</p>
                 )}
               </div>
             </div>
@@ -255,9 +255,9 @@ const ProcesodeGrado = () => {
             <h1 className="text-lg font-bold uppercase tracking-[0.18em] md:text-xl">ESTUDIANTES</h1>
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold">
-                <span>{(estudiante?.nombre || 'AV').slice(0, 2).toUpperCase()}</span>
+                <span>{usuario.nombre.slice(0, 2).toUpperCase()}</span>
               </div>
-              <p className="hidden text-sm font-semibold sm:block">{estudiante?.nombre}</p>
+              <p className="hidden text-sm font-semibold sm:block">{usuario.nombre}</p>
             </div>
           </header>
 
@@ -378,7 +378,15 @@ const ProcesodeGrado = () => {
                 <p className="text-sm leading-6 text-slate-600">
                   Disponible una vez aprobada la Terminación de Materias.
                 </p>
-                {!etapa2Disponible && (
+                {etapa2Disponible ? (
+                  <button
+                    type="button"
+                    className="mt-4 inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+                  >
+                    <SendIcon />
+                    Iniciar Solicitud de Grado
+                  </button>
+                ) : (
                   <div className="mt-4 inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600">
                     Bloqueada
                   </div>

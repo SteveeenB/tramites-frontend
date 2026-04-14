@@ -23,9 +23,10 @@ export const AuthProvider = ({ children }) => {
         const data = await response.json();
         const rol = ALLOWED_ROLES.includes(data?.usuario?.rol) ? data.usuario.rol : rolFallback;
         setUsuario({
-          nombre: data?.usuario?.nombre || DEMO_USERS[rol]?.nombre || 'Usuario',
-          cedula: data?.usuario?.cedula || cedula,
+          nombre:           data?.usuario?.nombre           || DEMO_USERS[rol]?.nombre           || 'Usuario',
+          cedula:           data?.usuario?.cedula           || cedula,
           rol,
+          programaAcademico: data?.usuario?.programaAcademico || DEMO_USERS[rol]?.programaAcademico || '',
         });
       } else {
         setUsuario({ ...DEMO_USERS[rolFallback], rol: rolFallback });
