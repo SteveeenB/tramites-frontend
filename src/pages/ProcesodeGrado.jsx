@@ -17,7 +17,8 @@ const ProcesodeGrado = () => {
     solicitarTerminacion,
     porcentaje,
     faltantes,
-    etapa1Completada,
+    etapa1Habilitada,
+    etapa2Habilitada,
   } = useProcesodeGrado();
 
   const fechaActual = new Date().toLocaleDateString('es-CO', {
@@ -40,7 +41,7 @@ const ProcesodeGrado = () => {
     );
   }
 
-  const { estadoAcademico, convocatoria, etapa2Disponible } = datos;
+  const { estadoAcademico, convocatoria } = datos;
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
@@ -69,8 +70,8 @@ const ProcesodeGrado = () => {
             </div>
 
             <EtapasResumen
-              etapa1Completada={etapa1Completada}
-              etapa2Disponible={etapa2Disponible}
+              etapa1Habilitada={etapa1Habilitada}
+              etapa2Habilitada={etapa2Habilitada}
               solicitud={solicitud}
             />
 
@@ -78,7 +79,7 @@ const ProcesodeGrado = () => {
               <DetalleEtapa1
                 porcentaje={porcentaje}
                 faltantes={faltantes}
-                etapa1Completada={etapa1Completada}
+                etapa1Habilitada={etapa1Habilitada}
                 convocatoria={convocatoria}
                 estadoAcademico={estadoAcademico}
                 solicitud={solicitud}
@@ -87,7 +88,7 @@ const ProcesodeGrado = () => {
                 onSolicitar={solicitarTerminacion}
               />
 
-              <Etapa2 etapa2Disponible={etapa2Disponible} />
+              <Etapa2 etapa2Habilitada={etapa2Habilitada} />
 
               <aside className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm xl:col-start-2 xl:row-start-2">
                 <h3 className="mb-3 text-lg font-bold text-slate-900">¿Necesitas ayuda?</h3>

@@ -1,17 +1,17 @@
 import React from 'react';
 import { SendIcon } from './icons';
 
-const Etapa2 = ({ etapa2Disponible }) => (
+const Etapa2 = ({ etapa2Habilitada }) => (
   <aside
     className={`rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm ${
-      etapa2Disponible ? 'opacity-100' : 'opacity-60'
+      etapa2Habilitada ? 'opacity-100' : 'opacity-60'
     }`}
   >
     <h3 className="mb-3 text-xl font-bold text-slate-900">Etapa 2: Solicitud de Grado</h3>
     <p className="text-sm leading-6 text-slate-600">
       Disponible una vez aprobada la Terminación de Materias.
     </p>
-    {etapa2Disponible ? (
+    {etapa2Habilitada ? (
       <button
         type="button"
         className="mt-4 inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700"

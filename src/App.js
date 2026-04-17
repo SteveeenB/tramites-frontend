@@ -4,6 +4,8 @@ import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import TramitesView from './pages/TramitesView';
 import ProcesodeGrado from './pages/ProcesodeGrado';
+import BandejaDirector from './pages/BandejaDirector';
+import ListaSolicitudesDirector from './pages/ListaSolicitudesDirector';
 import NoAutorizado from './pages/NoAutorizado';
 import { ALLOWED_ROLES } from './config/menuConfig';
 import './App.css';
@@ -26,6 +28,22 @@ function App() {
             element={
               <ProtectedRoute rolesPermitidos={['ESTUDIANTE']}>
                 <ProcesodeGrado />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bandeja-director"
+            element={
+              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                <BandejaDirector />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bandeja-director/:estado"
+            element={
+              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                <ListaSolicitudesDirector />
               </ProtectedRoute>
             }
           />
