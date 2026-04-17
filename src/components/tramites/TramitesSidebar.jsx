@@ -57,11 +57,13 @@ const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion,
         </p>
         <div className="flex flex-col gap-2">
           {DEMO_OPTIONS.map((opt) => {
+            const esTIC = rol === 'ESTUDIANTE' && usuario?.cedula === '1098765440';
+            const esConCreditos = rol === 'ESTUDIANTE' && usuario?.cedula === '1098765435';
             const esActivo =
-              opt.key === rol ||
-              (opt.key === 'ESTUDIANTE_CON_CREDITOS' &&
-                rol === 'ESTUDIANTE' &&
-                usuario?.cedula === '1098765435');
+              (opt.key === 'ESTUDIANTE_TIC'          && esTIC) ||
+              (opt.key === 'ESTUDIANTE_CON_CREDITOS' && esConCreditos) ||
+              (opt.key === 'ESTUDIANTE'              && rol === 'ESTUDIANTE' && !esConCreditos && !esTIC) ||
+              (opt.key !== 'ESTUDIANTE' && opt.key !== 'ESTUDIANTE_CON_CREDITOS' && opt.key !== 'ESTUDIANTE_TIC' && opt.key === rol);
             return (
               <button
                 key={opt.key}

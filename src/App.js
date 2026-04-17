@@ -4,8 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import TramitesView from './pages/TramitesView';
 import ProcesodeGrado from './pages/ProcesodeGrado';
-import BandejaDirector from './pages/BandejaDirector';
-import ListaSolicitudesDirector from './pages/ListaSolicitudesDirector';
+import Certificados from './pages/Certificados';
 import NoAutorizado from './pages/NoAutorizado';
 import { ALLOWED_ROLES } from './config/menuConfig';
 import './App.css';
@@ -32,18 +31,10 @@ function App() {
             }
           />
           <Route
-            path="/bandeja-director"
+            path="/certificados"
             element={
-              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
-                <BandejaDirector />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/bandeja-director/:estado"
-            element={
-              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
-                <ListaSolicitudesDirector />
+              <ProtectedRoute rolesPermitidos={['ESTUDIANTE']}>
+                <Certificados />
               </ProtectedRoute>
             }
           />

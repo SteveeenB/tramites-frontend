@@ -6,7 +6,7 @@ import TarjetaLiquidacion from './TarjetaLiquidacion';
 const DetalleEtapa1 = ({
   porcentaje,
   faltantes,
-  etapa1Habilitada,
+  etapa1Completada,
   convocatoria,
   estadoAcademico,
   solicitud,
@@ -39,7 +39,7 @@ const DetalleEtapa1 = ({
     </div>
 
     <p className="mb-5 max-w-2xl text-sm leading-6 text-slate-600">
-      {etapa1Habilitada
+      {etapa1Completada
         ? 'Has completado el 100% de los créditos requeridos.'
         : `Te faltan ${faltantes} créditos. Debes completar el 100% para habilitar este trámite.`}
     </p>
@@ -63,10 +63,10 @@ const DetalleEtapa1 = ({
       <>
         <button
           type="button"
-          disabled={!etapa1Habilitada || enviando}
+          disabled={!etapa1Completada || enviando}
           onClick={onSolicitar}
           className={`mb-3 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition ${
-            etapa1Habilitada && !enviando
+            etapa1Completada && !enviando
               ? 'bg-red-600 text-white hover:bg-red-700'
               : 'cursor-not-allowed bg-slate-300 text-slate-500'
           }`}
@@ -75,7 +75,7 @@ const DetalleEtapa1 = ({
           {enviando ? 'Enviando solicitud…' : 'Solicitar Terminación de Materias'}
         </button>
 
-        {!etapa1Habilitada && (
+        {!etapa1Completada && (
           <p className="text-sm font-medium text-red-600">
             No disponible: requisitos académicos incompletos.
           </p>
