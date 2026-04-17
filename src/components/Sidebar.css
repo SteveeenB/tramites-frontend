@@ -1,0 +1,41 @@
+.role-sidebar {
+  width: 280px;
+  min-height: 100%;
+  border-radius: 12px;
+  padding: 16px;
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+.role-sidebar-title {
+  margin: 0 0 12px;
+}
+
+.role-sidebar-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.role-sidebar-btn {
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  font-weight: 600;
+  color: #e2e8f0;
+  background: #1e293b;
+}
+
+.role-sidebar-btn:hover {
+  background: #334155;
+}
+
+.role-sidebar-btn.active {
+  background: #22c55e;
+  color: #052e16;
+}
