@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { DEMO_OPTIONS } from '../../config/menuConfig';
 
 const SidebarLink = ({ children, active = false, onClick }) => (
   <button
@@ -17,6 +19,16 @@ const SidebarLink = ({ children, active = false, onClick }) => (
 
 const ProcesoPGSidebar = ({ usuario }) => {
   const navigate = useNavigate();
+  const { usuario: usuarioAuth, cambiarRol } = useAuth();
+
+  const handleCambiarRol = (demoKey) => {
+    cambiarRol(demoKey);
+    // Si es un rol distinto a ESTUDIANTE, redirigir a /tramites
+    const esEstudiante = demoKey === 'ESTUDIANTE' || demoKey === 'ESTUDIANTE_CON_CREDITOS';
+    if (!esEstudiante) {
+      navigate('/tramites');
+    }
+  };
 
   return (
     <aside className="flex w-full flex-col border-b border-slate-200 bg-white lg:w-80 lg:border-b-0 lg:border-r">
@@ -40,7 +52,7 @@ const ProcesoPGSidebar = ({ usuario }) => {
           <SidebarLink>Información Estudiantil</SidebarLink>
           <SidebarLink>Información Académica</SidebarLink>
           <div className="rounded-2xl bg-slate-50 p-3">
-            <SidebarLink active>Trámites</SidebarLink>
+            <SidebarLink onClick={() => navigate('/tramites')}>Trámites</SidebarLink>
             <div className="mt-2 space-y-2 pl-3">
               <button
                 type="button"
@@ -48,13 +60,46 @@ const ProcesoPGSidebar = ({ usuario }) => {
               >
                 Proceso de Grado
               </button>
-              <SidebarLink onClick={() => navigate('/tramites')}>Certificados</SidebarLink>
+              <SidebarLink onClick={() => navigate('/certificados')}>Certificados</SidebarLink>
             </div>
           </div>
         </nav>
+      </div>
+
+      {/* ── Selector de usuario demo ── */}
+      <div className="border-t border-slate-200 p-5">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
+          Demo — cambiar usuario
+        </p>
+        <div className="flex flex-col gap-2">
+          {DEMO_OPTIONS.map((opt) => {
+            const esTIC = usuarioAuth?.rol === 'ESTUDIANTE' && usuarioAuth?.cedula === '1098765440';
+            const esConCreditos = usuarioAuth?.rol === 'ESTUDIANTE' && usuarioAuth?.cedula === '1098765435';
+            const esActivo =
+              (opt.key === 'ESTUDIANTE_TIC'          && esTIC) ||
+              (opt.key === 'ESTUDIANTE_CON_CREDITOS' && esConCreditos) ||
+              (opt.key === 'ESTUDIANTE'              && usuarioAuth?.rol === 'ESTUDIANTE' && !esConCreditos && !esTIC) ||
+              (opt.key !== 'ESTUDIANTE' && opt.key !== 'ESTUDIANTE_CON_CREDITOS' && opt.key !== 'ESTUDIANTE_TIC' && opt.key === usuarioAuth?.rol);
+            return (
+              <button
+                key={opt.key}
+                type="button"
+                onClick={() => handleCambiarRol(opt.key)}
+                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
+                  esActivo
+                    ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
+                    : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </aside>
   );
 };
 
 export default ProcesoPGSidebar;
+

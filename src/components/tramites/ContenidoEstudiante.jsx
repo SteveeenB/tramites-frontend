@@ -27,7 +27,7 @@ const ContenidoEstudiante = ({ datosModulo }) => {
           titulo="Certificados Académicos"
           descripcion="Solicita certificados de notas, constancias de estudio y otros documentos académicos oficiales."
           etiqueta="Solicitar certificado"
-          onClick={() => {}}
+          onClick={() => navigate('/certificados')}
           deshabilitada={!accionCrear?.habilitada}
         />
       </div>

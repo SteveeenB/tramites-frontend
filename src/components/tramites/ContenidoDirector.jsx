@@ -1,10 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import TarjetaAccion from './TarjetaAccion';
 import { InboxIcon, HistoryIcon } from './icons';
 
 const ContenidoDirector = ({ datosModulo }) => {
-  const navigate = useNavigate();
   const puedeAprobar = datosModulo?.acciones?.find((a) => a.codigo === 'APROBAR_SOLICITUD')?.habilitada;
 
   return (
@@ -20,7 +18,7 @@ const ContenidoDirector = ({ datosModulo }) => {
           titulo="Bandeja de Aprobación"
           descripcion="Revisa y aprueba las solicitudes de terminación de materias presentadas por los estudiantes del programa."
           etiqueta="Ver solicitudes"
-          onClick={() => navigate('/bandeja-director')}
+          onClick={() => {}}
           deshabilitada={!puedeAprobar}
         />
         <TarjetaAccion
