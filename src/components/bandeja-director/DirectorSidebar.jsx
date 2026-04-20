@@ -18,7 +18,7 @@ const SidebarLink = ({ children, active = false, onClick }) => (
 const DirectorSidebar = ({ usuario }) => {
   const navigate  = useNavigate();
   const location  = useLocation();
-  const enBandeja = location.pathname.startsWith('/bandeja-director');
+  const enBandeja = location.pathname.startsWith('/tramites/bandeja-director');
 
   return (
     <aside className="flex w-full flex-col border-b border-slate-200 bg-white lg:w-80 lg:border-b-0 lg:border-r">
@@ -57,7 +57,7 @@ const DirectorSidebar = ({ usuario }) => {
             <div className="mt-2 space-y-1 pl-3">
               <SidebarLink
                 active={enBandeja}
-                onClick={() => navigate('/bandeja-director')}
+                onClick={() => navigate('/tramites/bandeja-director')}
               >
                 Bandeja de Aprobación
               </SidebarLink>
