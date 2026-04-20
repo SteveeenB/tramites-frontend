@@ -52,11 +52,11 @@ export const useBandejaDirector = () => {
     }
   };
 
-  const rechazar = async (id) => {
+  const rechazar = async (id, motivo = '') => {
     setAccion(id);
     setErrorAccion('');
     try {
-      await solicitudesApi.rechazar(id, usuario.cedula);
+      await solicitudesApi.rechazar(id, usuario.cedula, motivo);
       await cargarBandeja();
     } catch (e) {
       setErrorAccion(mensajeDeError(e));
