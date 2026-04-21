@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { ALLOWED_ROLES, DEFAULT_ROLE, DEMO_USERS } from '../config/menuConfig';
+import { apiClient } from '../api/apiClient';
 
 export const AuthContext = createContext();
 
@@ -18,19 +19,14 @@ export const AuthProvider = ({ children }) => {
 
   const cargarUsuarioPorCedula = useCallback(async (cedula, rolFallback) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/tramites?cedula=${cedula}`);
-      if (response.ok) {
-        const data = await response.json();
-        const rol = ALLOWED_ROLES.includes(data?.usuario?.rol) ? data.usuario.rol : rolFallback;
-        setUsuario({
-          nombre:           data?.usuario?.nombre           || DEMO_USERS[rol]?.nombre           || 'Usuario',
-          cedula:           data?.usuario?.cedula           || cedula,
-          rol,
-          programaAcademico: data?.usuario?.programaAcademico || DEMO_USERS[rol]?.programaAcademico || '',
-        });
-      } else {
-        setUsuario({ ...DEMO_USERS[rolFallback], rol: rolFallback });
-      }
+      const data = await apiClient(`/tramites?cedula=${cedula}`);
+      const rol = ALLOWED_ROLES.includes(data?.usuario?.rol) ? data.usuario.rol : rolFallback;
+      setUsuario({
+        nombre:            data?.usuario?.nombre            || DEMO_USERS[rol]?.nombre            || 'Usuario',
+        cedula:            data?.usuario?.cedula            || cedula,
+        rol,
+        programaAcademico: data?.usuario?.programaAcademico || DEMO_USERS[rol]?.programaAcademico || '',
+      });
     } catch {
       setUsuario({ ...DEMO_USERS[rolFallback], rol: rolFallback });
     } finally {
