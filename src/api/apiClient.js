@@ -1,4 +1,5 @@
-const BASE_URL = process.env.REACT_APP_API_URL;
+const BASE_URL = 'https://tramites-backend.onrender.com/api';
+
 export class ApiError extends Error {
   constructor(status, data) {
     super(data?.error || data?.message || 'Error inesperado del servidor');
