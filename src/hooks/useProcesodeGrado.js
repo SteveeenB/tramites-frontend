@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from './useAuth';
+import { tramitesApi } from '../api/tramitesApi';
+import { solicitudesApi } from '../api/solicitudesApi';
 
 export const useProcesodeGrado = () => {
   const { usuario } = useAuth();
@@ -16,19 +18,15 @@ export const useProcesodeGrado = () => {
     setCargando(true);
     setErrorPagina('');
     try {
-      const [resProc, resSol] = await Promise.all([
-        fetch(`http://localhost:8080/api/tramites/proceso-grado?cedula=${usuario.cedula}`),
-        fetch(`http://localhost:8080/api/solicitudes?cedula=${usuario.cedula}`),
+      const [dataProc, dataSol] = await Promise.all([
+        tramitesApi.getProcesoGrado(usuario.cedula),
+        solicitudesApi.getByCedula(usuario.cedula),
       ]);
 
-      if (!resProc.ok) throw new Error('No se pudo cargar el proceso de grado');
-      setDatos(await resProc.json());
+      setDatos(dataProc);
 
-      if (resSol.ok) {
-        const jsonSol = await resSol.json();
-        const terminacion = jsonSol.find((s) => s.tipo === 'TERMINACION_MATERIAS');
-        if (terminacion) setSolicitud(terminacion);
-      }
+      const terminacion = dataSol.find((s) => s.tipo === 'TERMINACION_MATERIAS');
+      if (terminacion) setSolicitud(terminacion);
     } catch (e) {
       setErrorPagina(e.message);
     } finally {
@@ -42,18 +40,10 @@ export const useProcesodeGrado = () => {
     setEnviando(true);
     setErrorSolicitud('');
     try {
-      const res = await fetch(
-        `http://localhost:8080/api/solicitudes/terminacion-materias?cedula=${usuario.cedula}`,
-        { method: 'POST' },
-      );
-      const json = await res.json();
-      if (!res.ok) {
-        setErrorSolicitud(json.error || 'Error al crear la solicitud');
-      } else {
-        setSolicitud(json);
-      }
-    } catch {
-      setErrorSolicitud('No se pudo conectar con el servidor');
+      const json = await solicitudesApi.crearTerminacion(usuario.cedula);
+      setSolicitud(json);
+    } catch (e) {
+      setErrorSolicitud(e.message || 'No se pudo conectar con el servidor');
     } finally {
       setEnviando(false);
     }
