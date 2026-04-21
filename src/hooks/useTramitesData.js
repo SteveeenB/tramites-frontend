@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
 import { getMenuByRole } from '../config/menuConfig';
+import { tramitesApi } from '../api/tramitesApi';
 
 export const useTramitesData = () => {
   const navigate = useNavigate();
@@ -24,11 +25,8 @@ export const useTramitesData = () => {
 
     const fetchModulo = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/tramites?cedula=${usuario.cedula}`);
-        if (res.ok) {
-          const json = await res.json();
-          setDatosModulo(json);
-        }
+        const json = await tramitesApi.getModulo(usuario.cedula);
+        setDatosModulo(json);
       } catch {
         // el contenido se muestra igual con datos del menuConfig
       }
