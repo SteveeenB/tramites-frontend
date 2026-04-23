@@ -10,11 +10,15 @@ const ProcesodeGrado = () => {
     usuario,
     datos,
     solicitud,
+    solicitudGrado,
     cargando,
     enviando,
+    enviandoGrado,
     errorPagina,
     errorSolicitud,
+    errorSolicitudGrado,
     solicitarTerminacion,
+    solicitarGrado,
     porcentaje,
     faltantes,
     etapa1Completada,
@@ -68,7 +72,7 @@ const ProcesodeGrado = () => {
     );
   }
 
-  const { estadoAcademico, convocatoria, etapa2Disponible } = datos;
+  const { estadoAcademico, convocatoria, etapa2Habilitada: etapa2Disponible } = datos;
 
   return (
     <Layout>
@@ -100,7 +104,13 @@ const ProcesodeGrado = () => {
           onSolicitar={solicitarTerminacion}
         />
 
-        <Etapa2 etapa2Disponible={etapa2Disponible} />
+        <Etapa2
+          etapa2Disponible={etapa2Disponible}
+          solicitudGrado={solicitudGrado}
+          solicitarGrado={solicitarGrado}
+          enviandoGrado={enviandoGrado}
+          errorSolicitudGrado={errorSolicitudGrado}
+        />
 
         <aside className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm xl:col-start-2 xl:row-start-2">
           <h3 className="mb-3 text-lg font-bold text-slate-900">¿Necesitas ayuda?</h3>
