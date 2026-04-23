@@ -68,7 +68,7 @@ const ProcesodeGrado = () => {
     );
   }
 
-  const { estadoAcademico, convocatoria, etapa2Disponible } = datos;
+  const { estadoAcademico, convocatoria, etapa2Habilitada: etapa2Disponible } = datos;
 
   return (
     <Layout>
