@@ -1,5 +1,5 @@
 import React from 'react';
-import { WarningIcon, SendIcon } from './icons';
+import { CheckIcon, WarningIcon, SendIcon } from './icons';
 import { formatFecha } from '../../constants/procesodeGrado';
 import TarjetaLiquidacion from './TarjetaLiquidacion';
 
@@ -13,7 +13,25 @@ const DetalleEtapa1 = ({
   enviando,
   errorSolicitud,
   onSolicitar,
-}) => (
+  aprobada,
+}) => {
+  if (aprobada) {
+    return (
+      <div className="flex items-center gap-4 rounded-2xl border border-green-200 bg-green-50 px-6 py-4 shadow-sm">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+          <CheckIcon />
+        </div>
+        <div className="min-w-0">
+          <span className="font-semibold text-slate-900">Etapa 1: Terminación de Materias</span>
+          <span className="ml-3 inline-block rounded-full bg-green-100 px-3 py-0.5 text-xs font-semibold uppercase tracking-wide text-green-700">
+            Aprobada
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
   <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
     <div className="mb-6 flex items-center gap-3">
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-red-600">
@@ -88,6 +106,7 @@ const DetalleEtapa1 = ({
       </>
     )}
   </section>
-);
+  );
+};
 
 export default DetalleEtapa1;

@@ -6,12 +6,15 @@ import { solicitudesApi } from '../api/solicitudesApi';
 export const useProcesodeGrado = () => {
   const { usuario } = useAuth();
 
-  const [datos, setDatos]                   = useState(null);
-  const [solicitud, setSolicitud]           = useState(null);
-  const [cargando, setCargando]             = useState(true);
-  const [enviando, setEnviando]             = useState(false);
-  const [errorPagina, setErrorPagina]       = useState('');
-  const [errorSolicitud, setErrorSolicitud] = useState('');
+  const [datos, setDatos]                         = useState(null);
+  const [solicitud, setSolicitud]                 = useState(null);
+  const [solicitudGrado, setSolicitudGrado]       = useState(null);
+  const [cargando, setCargando]                   = useState(true);
+  const [enviando, setEnviando]                   = useState(false);
+  const [enviandoGrado, setEnviandoGrado]         = useState(false);
+  const [errorPagina, setErrorPagina]             = useState('');
+  const [errorSolicitud, setErrorSolicitud]       = useState('');
+  const [errorSolicitudGrado, setErrorSolicitudGrado] = useState('');
 
   const cargarDatos = useCallback(async () => {
     if (!usuario?.cedula) return;
@@ -27,6 +30,15 @@ export const useProcesodeGrado = () => {
 
       const terminacion = dataSol.find((s) => s.tipo === 'TERMINACION_MATERIAS');
       if (terminacion) setSolicitud(terminacion);
+
+      // La solicitud de grado la leemos directamente desde proceso-grado
+      // (el backend ya la incluye) para evitar una búsqueda extra en el array
+      if (dataProc.solicitudGrado) {
+        setSolicitudGrado(dataProc.solicitudGrado);
+      } else {
+        const grado = dataSol.find((s) => s.tipo === 'GRADO') || null;
+        setSolicitudGrado(grado);
+      }
     } catch (e) {
       setErrorPagina(e.message);
     } finally {
@@ -49,6 +61,19 @@ export const useProcesodeGrado = () => {
     }
   };
 
+  const solicitarGrado = async () => {
+    setEnviandoGrado(true);
+    setErrorSolicitudGrado('');
+    try {
+      const json = await solicitudesApi.crearSolicitudGrado(usuario.cedula);
+      setSolicitudGrado(json);
+    } catch (e) {
+      setErrorSolicitudGrado(e.message || 'No se pudo conectar con el servidor');
+    } finally {
+      setEnviandoGrado(false);
+    }
+  };
+
   // Valores derivados de créditos
   const aprobados  = Number(datos?.creditos?.aprobados  || 0);
   const requeridos = Number(datos?.creditos?.requeridos || 0);
@@ -61,11 +86,15 @@ export const useProcesodeGrado = () => {
     usuario,
     datos,
     solicitud,
+    solicitudGrado,
     cargando,
     enviando,
+    enviandoGrado,
     errorPagina,
     errorSolicitud,
+    errorSolicitudGrado,
     solicitarTerminacion,
+    solicitarGrado,
     porcentaje,
     faltantes,
     etapa1Completada,
