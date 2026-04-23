@@ -57,7 +57,7 @@ const DetalleEtapa1 = ({
     </div>
 
     <p className="mb-5 max-w-2xl text-sm leading-6 text-slate-600">
-      {etapa1Completada
+      {porcentaje >= 100
         ? 'Has completado el 100% de los créditos requeridos.'
         : `Te faltan ${faltantes} créditos. Debes completar el 100% para habilitar este trámite.`}
     </p>
@@ -95,7 +95,9 @@ const DetalleEtapa1 = ({
 
         {!etapa1Completada && (
           <p className="text-sm font-medium text-red-600">
-            No disponible: requisitos académicos incompletos.
+            {porcentaje < 100
+              ? 'No disponible: requisitos académicos incompletos.'
+              : 'No disponible: fuera del período de convocatoria.'}
           </p>
         )}
         {errorSolicitud && (

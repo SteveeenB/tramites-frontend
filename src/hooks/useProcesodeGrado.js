@@ -79,7 +79,8 @@ export const useProcesodeGrado = () => {
   const requeridos = Number(datos?.creditos?.requeridos || 0);
   const porcentaje = requeridos > 0 ? Math.min(100, Math.round((aprobados / requeridos) * 100)) : 0;
   const faltantes  = Math.max(requeridos - aprobados, 0);
-  const etapa1Completada = porcentaje >= 100;
+  // Usa la validación del backend (créditos + calendario académico)
+  const etapa1Completada = datos?.etapa1Habilitada === true;
 
   return {
     usuario,
