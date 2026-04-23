@@ -10,11 +10,15 @@ const ProcesodeGrado = () => {
     usuario,
     datos,
     solicitud,
+    solicitudGrado,
     cargando,
     enviando,
+    enviandoGrado,
     errorPagina,
     errorSolicitud,
+    errorSolicitudGrado,
     solicitarTerminacion,
+    solicitarGrado,
     porcentaje,
     faltantes,
     etapa1Completada,
@@ -69,6 +73,32 @@ const ProcesodeGrado = () => {
   }
 
   const { estadoAcademico, convocatoria, etapa2Habilitada: etapa2Disponible } = datos;
+  const etapa1Aprobada = solicitud?.estado === 'APROBADA';
+
+  const detalleEtapa1 = (
+    <DetalleEtapa1
+      porcentaje={porcentaje}
+      faltantes={faltantes}
+      etapa1Completada={etapa1Completada}
+      convocatoria={convocatoria}
+      estadoAcademico={estadoAcademico}
+      solicitud={solicitud}
+      enviando={enviando}
+      errorSolicitud={errorSolicitud}
+      onSolicitar={solicitarTerminacion}
+      aprobada={etapa1Aprobada}
+    />
+  );
+
+  const etapa2 = (
+    <Etapa2
+      etapa2Disponible={etapa2Disponible}
+      solicitudGrado={solicitudGrado}
+      solicitarGrado={solicitarGrado}
+      enviandoGrado={enviandoGrado}
+      errorSolicitudGrado={errorSolicitudGrado}
+    />
+  );
 
   return (
     <Layout>
@@ -87,31 +117,37 @@ const ProcesodeGrado = () => {
         solicitud={solicitud}
       />
 
-      <div className="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
-        <DetalleEtapa1
-          porcentaje={porcentaje}
-          faltantes={faltantes}
-          etapa1Completada={etapa1Completada}
-          convocatoria={convocatoria}
-          estadoAcademico={estadoAcademico}
-          solicitud={solicitud}
-          enviando={enviando}
-          errorSolicitud={errorSolicitud}
-          onSolicitar={solicitarTerminacion}
-        />
-
-        <Etapa2 etapa2Disponible={etapa2Disponible} />
-
-        <aside className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm xl:col-start-2 xl:row-start-2">
-          <h3 className="mb-3 text-lg font-bold text-slate-900">¿Necesitas ayuda?</h3>
-          <p className="mb-4 text-sm leading-6 text-slate-600">
-            Si consideras que hay un error en tus créditos, contacta a la oficina de Registro y Control Académico.
-          </p>
-          <button type="button" className="text-sm font-semibold text-red-600 hover:text-red-700">
-            Contactar soporte académico ↗
-          </button>
-        </aside>
-      </div>
+      {etapa1Aprobada ? (
+        /* Terminación aprobada: Etapa 1 compacta arriba, Etapa 2 como protagonista */
+        <div className="flex flex-col gap-6">
+          {detalleEtapa1}
+          {etapa2}
+          <aside className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 className="mb-3 text-lg font-bold text-slate-900">¿Necesitas ayuda?</h3>
+            <p className="mb-4 text-sm leading-6 text-slate-600">
+              Si consideras que hay un error en tus créditos, contacta a la oficina de Registro y Control Académico.
+            </p>
+            <button type="button" className="text-sm font-semibold text-red-600 hover:text-red-700">
+              Contactar soporte académico ↗
+            </button>
+          </aside>
+        </div>
+      ) : (
+        /* Etapa 1 en curso: layout original con columnas */
+        <div className="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
+          {detalleEtapa1}
+          {etapa2}
+          <aside className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm xl:col-start-2 xl:row-start-2">
+            <h3 className="mb-3 text-lg font-bold text-slate-900">¿Necesitas ayuda?</h3>
+            <p className="mb-4 text-sm leading-6 text-slate-600">
+              Si consideras que hay un error en tus créditos, contacta a la oficina de Registro y Control Académico.
+            </p>
+            <button type="button" className="text-sm font-semibold text-red-600 hover:text-red-700">
+              Contactar soporte académico ↗
+            </button>
+          </aside>
+        </div>
+      )}
     </Layout>
   );
 };
