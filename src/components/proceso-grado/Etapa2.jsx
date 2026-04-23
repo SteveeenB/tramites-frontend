@@ -17,7 +17,7 @@ const Etapa2 = ({ etapa2Disponible }) => (
         className="mt-4 inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
       >
         <SendIcon />
-        Iniciar Solicitud de Grado
+        
       </button>
     ) : (
       <div className="mt-4 inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600">
