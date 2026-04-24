@@ -72,7 +72,7 @@ const ProcesodeGrado = () => {
     );
   }
 
-  const { estadoAcademico, convocatoria, etapa2Habilitada: etapa2Disponible } = datos;
+  const { estadoAcademico, convocatoria, etapa2Disponible } = datos;
   const etapa1Aprobada = solicitud?.estado === 'APROBADA';
 
   const detalleEtapa1 = (
