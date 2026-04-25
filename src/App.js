@@ -7,6 +7,7 @@ import ProcesodeGrado from './pages/ProcesodeGrado';
 import Certificados from './pages/Certificados';
 import BandejaDirector from './pages/BandejaDirector';
 import ListaSolicitudesDirector from './pages/ListaSolicitudesDirector';
+import ConfiguracionAdmin from './pages/ConfiguracionAdmin';
 import NoAutorizado from './pages/NoAutorizado';
 import { ALLOWED_ROLES } from './config/menuConfig';
 import './App.css';
@@ -53,6 +54,14 @@ function App() {
             element={
               <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
                 <ListaSolicitudesDirector />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tramites/admin/configuracion"
+            element={
+              <ProtectedRoute rolesPermitidos={['ADMIN']}>
+                <ConfiguracionAdmin />
               </ProtectedRoute>
             }
           />

@@ -10,7 +10,7 @@ export const MENU_BY_ROLE = {
   ADMIN: [
     { id: 'panel', label: 'Panel general', route: '/tramites' },
     { id: 'usuarios', label: 'Gestión de usuarios', route: '/tramites' },
-    { id: 'configuracion', label: 'Configuración', route: '/tramites' },
+    { id: 'configuracion', label: 'Configuración', route: '/tramites/admin/configuracion' },
   ],
 };
 
