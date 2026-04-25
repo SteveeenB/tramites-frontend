@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import TarjetaAccion from './TarjetaAccion';
 import { PanelIcon, UsersIcon, SettingsIcon } from './icons';
 
 const ContenidoAdmin = ({ datosModulo }) => {
+  const navigate = useNavigate();
   const puedeGestionar = datosModulo?.acciones?.find((a) => a.codigo === 'GESTION_TOTAL')?.habilitada;
 
   return (
@@ -34,7 +36,7 @@ const ContenidoAdmin = ({ datosModulo }) => {
           titulo="Configuración"
           descripcion="Configura los parámetros del sistema, convocatorias, créditos requeridos por programa y más."
           etiqueta="Configurar"
-          onClick={() => {}}
+          onClick={() => navigate('/tramites/admin/configuracion')}
           deshabilitada={!puedeGestionar}
         />
       </div>
