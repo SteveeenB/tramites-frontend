@@ -24,3 +24,27 @@ export const apiClient = async (path, options = {}) => {
 
   return data;
 };
+
+export const downloadApiClient = async (path) => {
+  const res = await fetch(`${BASE_URL}${path}`, { credentials: 'include' });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new ApiError(res.status, data);
+  }
+  return {
+    blob: await res.blob(),
+    contentDisposition: res.headers.get('Content-Disposition'),
+  };
+};
+
+export const uploadApiClient = async (path, formData) => {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    credentials: 'include',
+    method: 'POST',
+    body: formData,
+  });
+  if (res.status === 204) return null;
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new ApiError(res.status, data);
+  return data;
+};
