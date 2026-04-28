@@ -44,8 +44,16 @@ export const AuthProvider = ({ children }) => {
     (demoKey) => {
       const demoUser = DEMO_USERS[demoKey];
       if (!demoUser) return;
-      // ESTUDIANTE_CON_CREDITOS usa el rol ESTUDIANTE pero con cédula de Laura
-      const rolEfectivo = ALLOWED_ROLES.includes(demoKey) ? demoKey : 'ESTUDIANTE';
+  
+      // Determinar el rol efectivo según la clave demo
+      const rolEfectivo =
+        demoKey === 'ESTUDIANTE'              ? 'ESTUDIANTE' :
+        demoKey === 'ESTUDIANTE_CON_CREDITOS' ? 'ESTUDIANTE' :
+        demoKey === 'ESTUDIANTE_TIC'          ? 'ESTUDIANTE' :
+        demoKey === 'DIRECTOR'                ? 'DIRECTOR'   :
+        demoKey === 'ADMIN'                   ? 'ADMIN'      :
+        DEFAULT_ROLE;
+  
       setCargando(true);
       cargarUsuarioPorCedula(demoUser.cedula, rolEfectivo);
     },

@@ -2,7 +2,10 @@ import React from 'react';
 import { formatFecha, formatCOP } from '../../constants/procesodeGrado';
 
 const TarjetaSolicitud = ({ solicitud, colores, onAprobar, onRechazar, enCurso }) => {
-  const { estudiante, fechaSolicitud, observaciones, costo, estado } = solicitud;
+  const { 
+    estudiante, fechaSolicitud, observaciones, costo, estado,
+    decision, observacionesDirector, fechaDecision, cedulaDirector 
+  } = solicitud;
   const iniciales  = (estudiante?.nombre || 'E').slice(0, 2).toUpperCase();
   const procesando = enCurso === solicitud.id;
   const hayAcciones = onAprobar || onRechazar;
@@ -80,6 +83,45 @@ const TarjetaSolicitud = ({ solicitud, colores, onAprobar, onRechazar, enCurso }
           </div>
         )}
       </dl>
+
+      {decision && (
+        <div className="flex items-center gap-2">
+          <dt className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Decisión
+          </dt>
+          <dd>
+            <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${
+              decision === 'APROBADA' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+            }`}>
+              {decision}
+            </span>
+          </dd>
+        </div>
+      )}
+      {observacionesDirector && (
+        <div className="flex items-start gap-2">
+          <dt className="mt-0.5 w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Director
+          </dt>
+          <dd className="text-xs italic leading-relaxed text-slate-500">{observacionesDirector}</dd>
+        </div>
+      )}
+      {fechaDecision && (
+        <div className="flex items-center gap-2">
+          <dt className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Decidido
+          </dt>
+          <dd className="text-xs text-slate-700">{formatFecha(fechaDecision)}</dd>
+        </div>
+      )}
+      {cedulaDirector && (
+        <div className="flex items-start gap-2">
+          <dt className="w-20 shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Responsable
+          </dt>
+          <dd className="text-xs text-slate-700 break-all">CC {cedulaDirector}</dd>
+        </div>
+      )}
 
       {/* Acciones (solo pendientes) */}
       {hayAcciones && (
