@@ -79,6 +79,31 @@ const TarjetaSolicitud = ({ solicitud, colores, onAprobar, onRechazar, enCurso }
             <dd className="text-xs italic leading-relaxed text-slate-500">{observaciones}</dd>
           </div>
         )}
+
+        {/* TP-41: Fecha de decisión y observaciones del director
+            Solo se muestran si la solicitud tiene fechaDecision registrada.
+            Las solicitudes antiguas (sin estos campos) no mostrarán nada. */}
+        {solicitud.fechaDecision && (
+          <div className="flex items-center gap-2">
+            <dt className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Fecha dec.
+            </dt>
+            <dd className="text-xs text-slate-700">
+              {new Date(solicitud.fechaDecision).toLocaleDateString('es-CO')}
+            </dd>
+          </div>
+        )}
+
+        {solicitud.observacionesDirector && (
+          <div className="flex items-start gap-2">
+            <dt className="mt-0.5 w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Director
+            </dt>
+            <dd className="text-xs italic leading-relaxed text-slate-500">
+              {solicitud.observacionesDirector}
+            </dd>
+          </div>
+        )}
       </dl>
 
       {/* Acciones (solo pendientes) */}

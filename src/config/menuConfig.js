@@ -26,7 +26,11 @@ export const DEMO_USERS = {
   ADMIN:                   { cedula: '1098765434', nombre: 'Admin User',   programaAcademico: 'Especialización en Estructuras' },
 };
 
-export const ALLOWED_ROLES = Object.keys(MENU_BY_ROLE);
+
+//export const ALLOWED_ROLES = Object.keys(MENU_BY_ROLE);
+//export const DEFAULT_ROLE = 'ESTUDIANTE';
+//No me estaba accediendo a los otros estudiantes asi que le estoy modificando aqui para poder acceder a laura y ana
+export const ALLOWED_ROLES = ['ESTUDIANTE', 'ESTUDIANTE_CON_CREDITOS', 'ESTUDIANTE_TIC', 'DIRECTOR', 'ADMIN'];
 export const DEFAULT_ROLE = 'ESTUDIANTE';
 
 // Opciones visibles en el selector demo del sidebar
