@@ -19,13 +19,14 @@ export const AuthProvider = ({ children }) => {
 
   const cargarUsuarioPorCedula = useCallback(async (cedula, rolFallback) => {
     try {
-      const data = await apiClient(`/tramites?cedula=${cedula}`);
-      const rol = ALLOWED_ROLES.includes(data?.usuario?.rol) ? data.usuario.rol : rolFallback;
+      // Establece la sesión en el backend y obtiene datos del usuario
+      const data = await apiClient(`/usuarios/login-demo?cedula=${cedula}`, { method: 'POST' });
+      const rol = ALLOWED_ROLES.includes(data?.rol) ? data.rol : rolFallback;
       setUsuario({
-        nombre:            data?.usuario?.nombre            || DEMO_USERS[rol]?.nombre            || 'Usuario',
-        cedula:            data?.usuario?.cedula            || cedula,
+        cedula:            data?.cedula            || cedula,
+        nombre:            data?.nombre            || DEMO_USERS[rolFallback]?.nombre || 'Usuario',
         rol,
-        programaAcademico: data?.usuario?.programaAcademico || DEMO_USERS[rol]?.programaAcademico || '',
+        programaAcademico: DEMO_USERS[rolFallback]?.programaAcademico || '',
       });
     } catch {
       setUsuario({ ...DEMO_USERS[rolFallback], rol: rolFallback });
@@ -44,7 +45,6 @@ export const AuthProvider = ({ children }) => {
     (demoKey) => {
       const demoUser = DEMO_USERS[demoKey];
       if (!demoUser) return;
-      // ESTUDIANTE_CON_CREDITOS usa el rol ESTUDIANTE pero con cédula de Laura
       const rolEfectivo = ALLOWED_ROLES.includes(demoKey) ? demoKey : 'ESTUDIANTE';
       setCargando(true);
       cargarUsuarioPorCedula(demoUser.cedula, rolEfectivo);

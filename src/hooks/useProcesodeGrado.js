@@ -23,7 +23,7 @@ export const useProcesodeGrado = () => {
     try {
       const [dataProc, dataSol] = await Promise.all([
         tramitesApi.getProcesoGrado(usuario.cedula),
-        solicitudesApi.getByCedula(usuario.cedula),
+        solicitudesApi.getMias(usuario.cedula),
       ]);
 
       setDatos(dataProc);
