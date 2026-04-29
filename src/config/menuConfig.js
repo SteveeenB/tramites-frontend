@@ -29,7 +29,7 @@ export const DEMO_USERS = {
 
 //export const ALLOWED_ROLES = Object.keys(MENU_BY_ROLE);
 //export const DEFAULT_ROLE = 'ESTUDIANTE';
-//No me estaba accediendo a los otros estudiantes asi que le estoy modificando aqui para poder acceder a laura y ana
+//No me estaba accediendo a los otros estudiantes asi que le estoy modificando aqui para poder acceder a laura y
 export const ALLOWED_ROLES = ['ESTUDIANTE', 'ESTUDIANTE_CON_CREDITOS', 'ESTUDIANTE_TIC', 'DIRECTOR', 'ADMIN'];
 export const DEFAULT_ROLE = 'ESTUDIANTE';
 
