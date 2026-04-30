@@ -25,7 +25,7 @@ export const useTramitesData = () => {
 
     const fetchModulo = async () => {
       try {
-        const json = await tramitesApi.getModulo();
+        const json = await tramitesApi.getModulo(usuario.cedula);
         setDatosModulo(json);
       } catch {
         // el contenido se muestra igual con datos del menuConfig
