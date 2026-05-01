@@ -10,6 +10,7 @@ export class ApiError extends Error {
 
 export const apiClient = async (path, options = {}) => {
   const res = await fetch(`${BASE_URL}${path}`, {
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
@@ -23,19 +24,24 @@ export const apiClient = async (path, options = {}) => {
   return data;
 };
 
-// Para descargas de archivos (blob)
 export const downloadApiClient = async (path) => {
-  const res = await fetch(`${BASE_URL}${path}`);
+  const res = await fetch(`${BASE_URL}${path}`, { credentials: 'include' });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     throw new ApiError(res.status, data);
   }
-  return res.blob();
+  return {
+    blob: await res.blob(),
+    contentDisposition: res.headers.get('Content-Disposition'),
+  };
 };
 
-// Para subida de archivos (FormData — sin Content-Type fijo)
 export const uploadApiClient = async (path, formData) => {
-  const res = await fetch(`${BASE_URL}${path}`, { method: 'POST', body: formData });
+  const res = await fetch(`${BASE_URL}${path}`, {
+    credentials: 'include',
+    method: 'POST',
+    body: formData,
+  });
   if (res.status === 204) return null;
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new ApiError(res.status, data);
