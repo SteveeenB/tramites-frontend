@@ -22,8 +22,9 @@ const BandejaSolicitudes = () => {
             </h1>
             <div className="flex items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold">
-                D
+                {(usuario?.nombre || 'D').slice(0, 2).toUpperCase()}
               </div>
+              <p className="hidden text-sm font-semibold sm:block">{usuario?.nombre}</p>
             </div>
           </header>
 
