@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SendIcon } from './icons';
 import TarjetaLiquidacion from './TarjetaLiquidacion';
 import ConfirmacionGrado from './ConfirmacionGrado';
@@ -12,21 +12,10 @@ const Etapa2 = ({
   enviandoGrado,
   errorSolicitudGrado,
 }) => {
-  const [subiendoDocs, setSubiendoDocs] = useState(false);
-  const [errorDocs, setErrorDocs] = useState(null);
-
   const handleSubirDocs = async (archivos) => {
     if (!solicitudGrado?.id) return;
-    setSubiendoDocs(true);
-    setErrorDocs(null);
-    try {
-      for (const archivo of archivos) {
-        await solicitudesApi.subirDocumento(solicitudGrado.id, archivo);
-      }
-    } catch (err) {
-      setErrorDocs(err.message || 'Error al subir los documentos.');
-    } finally {
-      setSubiendoDocs(false);
+    for (const archivo of archivos) {
+      await solicitudesApi.subirDocumento(solicitudGrado.id, archivo);
     }
   };
 
@@ -56,12 +45,7 @@ const Etapa2 = ({
       {etapa2Disponible && solicitudGrado && solicitudGrado.estado !== 'APROBADA' && (
         <>
           <TarjetaLiquidacion solicitud={solicitudGrado} />
-          {errorDocs && (
-            <p className="mt-3 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-              {errorDocs}
-            </p>
-          )}
-          <DragDropZone onUpload={handleSubirDocs} uploading={subiendoDocs} />
+          <DragDropZone onUpload={handleSubirDocs} />
         </>
       )}
 

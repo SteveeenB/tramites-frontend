@@ -8,10 +8,6 @@ const ConfirmacionGrado = ({ solicitudGrado }) => {
   const [generando, setGenerando] = useState(false);
   const [errorActa, setErrorActa] = useState(null);
   const [actaDescargada, setActaDescargada] = useState(false);
-  const [subiendo, setSubiendo] = useState(false);
-  const [errorSubida, setErrorSubida] = useState(null);
-  const [archivosSubidos, setArchivosSubidos] = useState([]);
-
   const handleGenerarActa = async () => {
     setGenerando(true);
     setErrorActa(null);
@@ -35,17 +31,8 @@ const ConfirmacionGrado = ({ solicitudGrado }) => {
   };
 
   const handleSubirDocs = async (archivos) => {
-    setSubiendo(true);
-    setErrorSubida(null);
-    try {
-      for (const archivo of archivos) {
-        await solicitudesApi.subirDocumento(solicitudGrado.id, archivo);
-        setArchivosSubidos((prev) => [...prev, archivo.name]);
-      }
-    } catch (err) {
-      setErrorSubida(err.message || 'Error al subir los archivos.');
-    } finally {
-      setSubiendo(false);
+    for (const archivo of archivos) {
+      await solicitudesApi.subirDocumento(solicitudGrado.id, archivo);
     }
   };
 
@@ -134,26 +121,8 @@ const ConfirmacionGrado = ({ solicitudGrado }) => {
           Adjunta los documentos requeridos para completar tu expediente de grado.
         </p>
 
-        {archivosSubidos.length > 0 && (
-          <ul className="mb-4 space-y-1">
-            {archivosSubidos.map((nombre, i) => (
-              <li key={i} className="flex items-center gap-2 text-sm text-green-700">
-                <CheckIcon className="h-4 w-4" />
-                {nombre}
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {errorSubida && (
-          <p className="mb-3 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-            {errorSubida}
-          </p>
-        )}
-
         <DragDropZone
           onUpload={handleSubirDocs}
-          uploading={subiendo}
           titulo="Subir documentos de soporte"
         />
       </div>

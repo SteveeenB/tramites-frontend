@@ -24,10 +24,13 @@ const validar = (file) => {
   return null;
 };
 
-const DragDropZone = ({ onUpload, uploading = false, titulo = 'Documentos de soporte' }) => {
+const DragDropZone = ({ onUpload, titulo = 'Documentos de soporte' }) => {
   const [archivos, setArchivos] = useState([]);
   const [sobreZona, setSobreZona] = useState(false);
   const [errores, setErrores] = useState([]);
+  const [subiendo, setSubiendo] = useState(false);
+  const [subidos, setSubidos] = useState([]);
+  const [errorSubida, setErrorSubida] = useState(null);
   const inputRef = useRef(null);
 
   const agregar = useCallback(
@@ -52,6 +55,20 @@ const DragDropZone = ({ onUpload, uploading = false, titulo = 'Documentos de sop
   );
 
   const quitar = (index) => setArchivos((prev) => prev.filter((_, i) => i !== index));
+
+  const handleSubir = async () => {
+    setSubiendo(true);
+    setErrorSubida(null);
+    try {
+      await onUpload(archivos);
+      setSubidos((prev) => [...prev, ...archivos.map((f) => f.name)]);
+      setArchivos([]);
+    } catch (err) {
+      setErrorSubida(err.message || 'Error al subir los archivos. Intenta nuevamente.');
+    } finally {
+      setSubiendo(false);
+    }
+  };
 
   const onDragOver = (e) => {
     e.preventDefault();
@@ -129,15 +146,34 @@ const DragDropZone = ({ onUpload, uploading = false, titulo = 'Documentos de sop
         </ul>
       )}
 
+      {subidos.length > 0 && (
+        <div className="mt-3 rounded-2xl border border-green-200 bg-green-50 p-4">
+          <p className="mb-2 text-sm font-semibold text-green-800">
+            ✓ {subidos.length} archivo{subidos.length > 1 ? 's' : ''} enviado{subidos.length > 1 ? 's' : ''} con éxito
+          </p>
+          <ul className="space-y-0.5">
+            {subidos.map((nombre, i) => (
+              <li key={i} className="text-xs text-green-700">• {nombre}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {errorSubida && (
+        <p className="mt-3 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+          {errorSubida}
+        </p>
+      )}
+
       {archivos.length > 0 && onUpload && (
         <button
           type="button"
-          disabled={uploading}
-          onClick={() => onUpload(archivos)}
+          disabled={subiendo}
+          onClick={handleSubir}
           className="mt-4 inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <UploadIcon className="h-4 w-4" />
-          {uploading
+          {subiendo
             ? 'Subiendo…'
             : `Subir ${archivos.length} archivo${archivos.length > 1 ? 's' : ''}`}
         </button>
