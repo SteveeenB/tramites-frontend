@@ -14,12 +14,30 @@ export const apiClient = async (path, options = {}) => {
     ...options,
   });
 
-  // 204 No Content — respuesta vacía válida
   if (res.status === 204) return null;
 
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) throw new ApiError(res.status, data);
 
+  return data;
+};
+
+// Para descargas de archivos (blob)
+export const downloadApiClient = async (path) => {
+  const res = await fetch(`${BASE_URL}${path}`);
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new ApiError(res.status, data);
+  }
+  return res.blob();
+};
+
+// Para subida de archivos (FormData — sin Content-Type fijo)
+export const uploadApiClient = async (path, formData) => {
+  const res = await fetch(`${BASE_URL}${path}`, { method: 'POST', body: formData });
+  if (res.status === 204) return null;
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new ApiError(res.status, data);
   return data;
 };
