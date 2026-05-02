@@ -18,7 +18,11 @@ const SidebarLink = ({ children, active = false, onClick }) => (
 const DirectorSidebar = ({ usuario }) => {
   const navigate  = useNavigate();
   const location  = useLocation();
-  const enBandeja = location.pathname.startsWith('/tramites/bandeja-director');
+  const path      = location.pathname;
+
+  const enBandejaSolicitudes = path.startsWith('/tramites/bandeja') && !path.includes('/proceso') && !path.includes('/certif');
+  const enTerminacion = path.startsWith('/tramites/bandeja-director') && !path.includes('/grado');
+  const enGrado       = path.includes('/bandeja-director/grado');
 
   return (
     <aside className="flex w-full flex-col border-b border-slate-200 bg-white lg:w-80 lg:border-b-0 lg:border-r">
@@ -39,31 +43,36 @@ const DirectorSidebar = ({ usuario }) => {
           </div>
         </div>
 
-        {/* Navegación */}
-        <nav className="space-y-2">
-          <SidebarLink onClick={() => navigate('/tramites')}>Trámites</SidebarLink>
+         {/* Navegación */}
+         <nav className="space-y-2">
+           <SidebarLink onClick={() => navigate('/tramites')}>Trámites</SidebarLink>
 
-          <div className="rounded-2xl bg-slate-50 p-3">
-            <button
-              type="button"
-              className={`w-full rounded-xl px-4 py-3 text-left text-sm font-semibold ${
-                enBandeja
-                  ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200'
-                  : 'text-slate-700'
-              }`}
-            >
-              Terminación de Materias
-            </button>
-            <div className="mt-2 space-y-1 pl-3">
-              <SidebarLink
-                active={enBandeja}
-                onClick={() => navigate('/tramites/bandeja-director')}
-              >
-                Bandeja de Aprobación
-              </SidebarLink>
-            </div>
-          </div>
-        </nav>
+           {/* Bandeja de Solicitudes */}
+           <div className="rounded-2xl bg-slate-50 p-3">
+             <button type="button"
+               className={`w-full rounded-xl px-4 py-3 text-left text-sm font-semibold ${
+                 enBandejaSolicitudes ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200' : 'text-slate-700'
+               }`}
+               onClick={() => navigate('/tramites/bandeja-solicitudes')}
+             >
+               Bandeja de Solicitudes
+             </button>
+             <div className="mt-2 space-y-1 pl-3">
+               <SidebarLink
+                 active={enTerminacion}
+                 onClick={() => navigate('/tramites/bandeja-director')}
+               >
+                 Terminación de Materias
+               </SidebarLink>
+               <SidebarLink
+                 active={enGrado}
+                 onClick={() => navigate('/tramites/bandeja-director/grado')}
+               >
+                 Solicitudes de Grado
+               </SidebarLink>
+             </div>
+           </div>
+         </nav>
       </div>
     </aside>
   );
