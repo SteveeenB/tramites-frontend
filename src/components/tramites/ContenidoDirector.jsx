@@ -17,10 +17,10 @@ const ContenidoDirector = ({ datosModulo }) => {
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         <TarjetaAccion
           icono={<InboxIcon />}
-          titulo="Bandeja de Aprobación"
-          descripcion="Revisa y aprueba las solicitudes de terminación de materias presentadas por los estudiantes del programa."
-          etiqueta="Ver solicitudes"
-          onClick={() => navigate('/tramites/bandeja-director')}
+          titulo="Bandeja de Solicitudes"
+          descripcion="Gestiona las solicitudes de terminación de materias y de grado de los estudiantes de tu programa."
+          etiqueta="Ver bandeja"
+          onClick={() => navigate('/tramites/bandeja-solicitudes')}
           deshabilitada={!puedeAprobar}
         />
         <TarjetaAccion
