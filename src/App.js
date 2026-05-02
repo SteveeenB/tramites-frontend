@@ -7,6 +7,9 @@ import ProcesodeGrado from './pages/ProcesodeGrado';
 import Certificados from './pages/Certificados';
 import BandejaDirector from './pages/BandejaDirector';
 import ListaSolicitudesDirector from './pages/ListaSolicitudesDirector';
+import BandejaGrado from './pages/BandejaGrado';
+import ListaSolicitudesGrado from './pages/ListaSolicitudesGrado';
+import BandejaSolicitudes from './pages/BandejaSolicitudes';
 import ConfiguracionAdmin from './pages/ConfiguracionAdmin';
 import NoAutorizado from './pages/NoAutorizado';
 import { ALLOWED_ROLES } from './config/menuConfig';
@@ -42,6 +45,14 @@ function App() {
             }
           />
           <Route
+            path="/tramites/bandeja-solicitudes"
+            element={
+              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                <BandejaSolicitudes />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/tramites/bandeja-director"
             element={
               <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
@@ -54,6 +65,22 @@ function App() {
             element={
               <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
                 <ListaSolicitudesDirector />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tramites/bandeja-director/grado"
+            element={
+              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                <BandejaGrado />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tramites/bandeja-director/grado/:estado"
+            element={
+              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                <ListaSolicitudesGrado />
               </ProtectedRoute>
             }
           />
