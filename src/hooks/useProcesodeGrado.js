@@ -10,11 +10,9 @@ export const useProcesodeGrado = () => {
   const [solicitud, setSolicitud]                 = useState(null);
   const [solicitudGrado, setSolicitudGrado]       = useState(null);
   const [cargando, setCargando]                   = useState(true);
-  const [enviando, setEnviando]                   = useState(false);
-  const [enviandoGrado, setEnviandoGrado]         = useState(false);
-  const [errorPagina, setErrorPagina]             = useState('');
-  const [errorSolicitud, setErrorSolicitud]       = useState('');
-  const [errorSolicitudGrado, setErrorSolicitudGrado] = useState('');
+  const [enviando, setEnviando]             = useState(false);
+  const [errorPagina, setErrorPagina]       = useState('');
+  const [errorSolicitud, setErrorSolicitud] = useState('');
 
   const cargarDatos = useCallback(async () => {
     if (!usuario?.cedula) return;
@@ -61,19 +59,6 @@ export const useProcesodeGrado = () => {
     }
   };
 
-  const solicitarGrado = async () => {
-    setEnviandoGrado(true);
-    setErrorSolicitudGrado('');
-    try {
-      const json = await solicitudesApi.crearSolicitudGrado(usuario.cedula);
-      setSolicitudGrado(json);
-    } catch (e) {
-      setErrorSolicitudGrado(e.message || 'No se pudo conectar con el servidor');
-    } finally {
-      setEnviandoGrado(false);
-    }
-  };
-
   // Valores derivados de créditos
   const aprobados  = Number(datos?.creditos?.aprobados  || 0);
   const requeridos = Number(datos?.creditos?.requeridos || 0);
@@ -89,12 +74,9 @@ export const useProcesodeGrado = () => {
     solicitudGrado,
     cargando,
     enviando,
-    enviandoGrado,
     errorPagina,
     errorSolicitud,
-    errorSolicitudGrado,
     solicitarTerminacion,
-    solicitarGrado,
     porcentaje,
     faltantes,
     etapa1Completada,
