@@ -4,8 +4,8 @@ export const MENU_BY_ROLE = {
     { id: 'certificados', label: 'Certificados', route: '/certificados' },
   ],
   DIRECTOR: [
-    { id: 'bandeja', label: 'Bandeja de aprobación', route: '/tramites' },
-    { id: 'historial', label: 'Historial de decisiones', route: '/tramites' },
+    { id: 'bandeja', label: 'Bandeja de Solicitudes', route: '/tramites/bandeja-solicitudes' },
+    { id: 'historial', label: 'Historial de Decisiones', route: '/tramites' },
   ],
   ADMIN: [
     { id: 'panel', label: 'Panel general', route: '/tramites' },

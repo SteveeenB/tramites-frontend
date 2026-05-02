@@ -8,7 +8,10 @@ const ModalRechazo = ({ solicitud, onConfirmar, onCancelar, procesando }) => {
     textareaRef.current?.focus();
   }, []);
 
+  const motivoValido = motivo.trim().length > 0;
+
   const handleConfirmar = () => {
+    if (!motivoValido) return;
     onConfirmar(solicitud.id, motivo.trim());
   };
 
@@ -47,8 +50,7 @@ const ModalRechazo = ({ solicitud, onConfirmar, onCancelar, procesando }) => {
         </p>
 
         <label htmlFor="motivo-rechazo" className="mb-1.5 block text-sm font-semibold text-slate-700">
-          Motivo del rechazo{' '}
-          <span className="font-normal text-slate-400">(opcional)</span>
+          Motivo del rechazo <span className="text-red-500">*</span>
         </label>
         <textarea
           id="motivo-rechazo"
@@ -73,7 +75,7 @@ const ModalRechazo = ({ solicitud, onConfirmar, onCancelar, procesando }) => {
           <button
             type="button"
             onClick={handleConfirmar}
-            disabled={procesando}
+            disabled={procesando || !motivoValido}
             className="flex-1 rounded-xl bg-red-500 py-2.5 text-sm font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {procesando ? 'Rechazando…' : 'Confirmar rechazo'}

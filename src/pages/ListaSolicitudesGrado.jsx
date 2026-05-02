@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useBandejaDirector } from '../hooks/useBandejaDirector';
+import { useBandejaGrado } from '../hooks/useBandejaGrado';
 import BandejaListadoLayout from '../components/bandeja-director/BandejaListadoLayout';
 import EstadoBadge from '../components/bandeja-director/EstadoBadge';
 import ModalRechazo from '../components/bandeja-director/ModalRechazo';
 import { ClockIcon, XCircleIcon, CheckCircleIcon, EyeIcon } from '../components/bandeja-director/icons';
-import { formatFecha, formatCOP } from '../constants/procesodeGrado';
+import { formatFecha } from '../constants/procesodeGrado';
 
 const CONFIG = {
   pendientes: {
-    label: 'Solicitudes Pendientes', sublabel: 'Terminación de Materias',
+    label: 'Solicitudes Pendientes', sublabel: 'Solicitud de Grado',
     icono: <ClockIcon className="h-6 w-6" />,
-    mensajeVacio: 'No hay solicitudes pendientes de revisión.',
+    mensajeVacio: 'No hay solicitudes de grado pendientes de revisión.',
     conAcciones: true,
     colores: {
       header: 'bg-gradient-to-r from-amber-400 to-orange-500',
@@ -22,9 +22,9 @@ const CONFIG = {
     },
   },
   aprobadas: {
-    label: 'Solicitudes Aprobadas', sublabel: 'Terminación de Materias',
+    label: 'Solicitudes Aprobadas', sublabel: 'Solicitud de Grado',
     icono: <CheckCircleIcon className="h-6 w-6" />,
-    mensajeVacio: 'No hay solicitudes aprobadas.',
+    mensajeVacio: 'No hay solicitudes de grado aprobadas.',
     conAcciones: false,
     colores: {
       header: 'bg-gradient-to-r from-green-400 to-emerald-600',
@@ -35,9 +35,9 @@ const CONFIG = {
     },
   },
   rechazadas: {
-    label: 'Solicitudes Rechazadas', sublabel: 'Terminación de Materias',
+    label: 'Solicitudes Rechazadas', sublabel: 'Solicitud de Grado',
     icono: <XCircleIcon className="h-6 w-6" />,
-    mensajeVacio: 'No hay solicitudes rechazadas.',
+    mensajeVacio: 'No hay solicitudes de grado rechazadas.',
     conAcciones: false,
     colores: {
       header: 'bg-gradient-to-r from-red-400 to-rose-600',
@@ -49,10 +49,41 @@ const CONFIG = {
   },
 };
 
-const ListaSolicitudesDirector = () => {
+// Barra de progreso para créditos
+const BarraCreditos = ({ aprobados, requeridos }) => {
+  const pct = requeridos > 0 ? Math.min(100, Math.round((aprobados / requeridos) * 100)) : 0;
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-xs font-semibold text-slate-700">{aprobados ?? 0} / {requeridos ?? 0}</span>
+        <span className="text-xs text-slate-400">{pct}%</span>
+      </div>
+      <div className="h-1.5 w-24 rounded-full bg-slate-200">
+        <div
+          className={`h-1.5 rounded-full ${pct >= 100 ? 'bg-green-500' : 'bg-amber-400'}`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+    </div>
+  );
+};
+
+// Badge de documentos cargados
+const DocsBadge = ({ cargados, requeridos }) => {
+  const completo = requeridos > 0 && cargados >= requeridos;
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+      completo ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
+    }`}>
+      {cargados ?? 0}/{requeridos ?? 0}
+    </span>
+  );
+};
+
+const ListaSolicitudesGrado = () => {
   const { estado } = useParams();
   const navigate = useNavigate();
-  const { usuario, bandeja, cargando, error, aprobar, rechazar, accionEnCurso, errorAccion } = useBandejaDirector();
+  const { usuario, bandeja, cargando, error, aprobar, rechazar, accionEnCurso, errorAccion } = useBandejaGrado();
   const [solicitudARechazar, setSolicitudARechazar] = useState(null);
 
   const cfg = CONFIG[estado];
@@ -86,16 +117,30 @@ const ListaSolicitudesDirector = () => {
       render: (s) => <p className="text-sm text-slate-600">{s.estudiante?.programa || '—'}</p>,
     },
     {
+      header: 'Créditos',
+      render: (s) => (
+        <BarraCreditos
+          aprobados={s.estudiante?.creditosAprobados}
+          requeridos={s.estudiante?.creditosRequeridos}
+        />
+      ),
+    },
+    {
       header: 'Fecha',
       render: (s) => <p className="text-sm text-slate-600">{formatFecha(s.fechaSolicitud)}</p>,
     },
     {
-      header: 'Estado',
-      render: (s) => <EstadoBadge estado={s.estado} />,
+      header: 'Docs',
+      render: (s) => (
+        <DocsBadge
+          cargados={s.documentosCargados}
+          requeridos={s.documentosRequeridos}
+        />
+      ),
     },
     {
-      header: 'Valor',
-      render: (s) => <p className="text-sm font-semibold text-slate-700">{formatCOP(s.costo)}</p>,
+      header: 'Estado',
+      render: (s) => <EstadoBadge estado={s.estado} />,
     },
   ];
 
@@ -123,7 +168,7 @@ const ListaSolicitudesDirector = () => {
       )}
       <button
         type="button"
-        onClick={() => navigate(`/tramites/bandeja-director/${estado}/${s.id}`)}
+        onClick={() => navigate(`/tramites/bandeja-director/grado/${estado}/${s.id}`)}
         className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
       >
         <EyeIcon className="h-3.5 w-3.5" />
@@ -146,10 +191,18 @@ const ListaSolicitudesDirector = () => {
         </div>
         <EstadoBadge estado={s.estado} />
       </div>
-      <div className="mt-3 space-y-1 text-xs text-slate-500">
+      <div className="mt-3 space-y-2 text-xs text-slate-500">
         <p>{s.estudiante?.programa || '—'}</p>
-        <p>CC {s.estudiante?.cedula}</p>
-        {s.costo != null && <p className="font-semibold text-slate-700">{formatCOP(s.costo)}</p>}
+        <div className="flex items-center gap-4">
+          <BarraCreditos
+            aprobados={s.estudiante?.creditosAprobados}
+            requeridos={s.estudiante?.creditosRequeridos}
+          />
+          <DocsBadge cargados={s.documentosCargados} requeridos={s.documentosRequeridos} />
+        </div>
+        {s.observacionesDirector && (
+          <p className="italic text-slate-400">{s.observacionesDirector}</p>
+        )}
       </div>
       <div className="mt-4 flex gap-2">
         {cfg.conAcciones && (
@@ -174,7 +227,7 @@ const ListaSolicitudesDirector = () => {
         )}
         <button
           type="button"
-          onClick={() => navigate(`/tramites/bandeja-director/${estado}/${s.id}`)}
+          onClick={() => navigate(`/tramites/bandeja-director/grado/${estado}/${s.id}`)}
           className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-50"
         >
           <EyeIcon className="h-3.5 w-3.5" />
@@ -190,7 +243,7 @@ const ListaSolicitudesDirector = () => {
         usuario={usuario}
         cfg={cfg}
         estado={estado}
-        breadcrumb="TRÁMITES / DIRECTOR / SOLICITUDES / TERMINACIÓN DE MATERIAS"
+        breadcrumb="TRÁMITES / DIRECTOR / SOLICITUDES / SOLICITUD DE GRADO"
         rutaVolver="/tramites/bandeja-solicitudes"
         solicitudes={solicitudes}
         cargando={cargando}
@@ -213,4 +266,4 @@ const ListaSolicitudesDirector = () => {
   );
 };
 
-export default ListaSolicitudesDirector;
+export default ListaSolicitudesGrado;
