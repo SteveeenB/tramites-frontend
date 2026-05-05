@@ -14,6 +14,9 @@ import BandejaSolicitudes from './pages/BandejaSolicitudes';
 import ConfiguracionAdmin from './pages/ConfiguracionAdmin';
 import SolicitudGradoPage from './pages/SolicitudGradoPage';
 import NoAutorizado from './pages/NoAutorizado';
+import BandejaDependencia from './pages/BandejaDependencia';
+import PazYSalvoDirector from './pages/PazYSalvoDirector';
+import EstadoEstudiantes from './pages/EstadoEstudiantes';
 import { ALLOWED_ROLES } from './config/menuConfig';
 import './App.css';
 
@@ -25,7 +28,7 @@ function App() {
           <Route
             path="/tramites"
             element={
-              <ProtectedRoute rolesPermitidos={ALLOWED_ROLES}>
+              <ProtectedRoute rolesPermitidos={[...ALLOWED_ROLES, 'DEPENDENCIA']}>
                 <TramitesView />
               </ProtectedRoute>
             }
@@ -107,6 +110,30 @@ function App() {
             element={
               <ProtectedRoute rolesPermitidos={['ADMIN']}>
                 <ConfiguracionAdmin />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tramites/bandeja-dependencia"
+            element={
+              <ProtectedRoute rolesPermitidos={['DEPENDENCIA']}>
+                <BandejaDependencia />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tramites/paz-y-salvo-director"
+            element={
+              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                <PazYSalvoDirector />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tramites/estado-estudiantes"
+            element={
+              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                <EstadoEstudiantes />
               </ProtectedRoute>
             }
           />

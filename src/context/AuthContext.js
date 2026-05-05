@@ -4,9 +4,11 @@ import { ALLOWED_ROLES, DEFAULT_ROLE, DEMO_USERS } from '../config/menuConfig';
 export const AuthContext = createContext();
 
 const rolDeKey = (demoKey) => {
-  if (demoKey === 'ESTUDIANTE_CON_CREDITOS' || demoKey === 'ESTUDIANTE_TIC') {
+  if (demoKey === 'ESTUDIANTE_CON_CREDITOS' || demoKey === 'ESTUDIANTE_TIC' || demoKey === 'ESTUDIANTE_GRADO') {
     return 'ESTUDIANTE';
   }
+  if (demoKey === 'DIRECTOR_GRADO') return 'DIRECTOR';
+  if (demoKey.startsWith('DEPENDENCIA_')) return 'DEPENDENCIA';
   return ALLOWED_ROLES.includes(demoKey) ? demoKey : DEFAULT_ROLE;
 };
 
