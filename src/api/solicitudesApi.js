@@ -30,4 +30,9 @@ export const solicitudesApi = {
     fd.append('archivo', file);
     return uploadApiClient(`/solicitudes/${id}/documentos`, fd);
   },
+  pagarGrado: (id) =>
+  apiClient(`/solicitudes/${id}/pagar-grado`, { method: 'POST' }),
+
+  elegirFechaGrado: (id, fecha) =>
+  apiClient(`/solicitudes/${id}/fecha-grado?fecha=${fecha}`, { method: 'POST' }),
 };
