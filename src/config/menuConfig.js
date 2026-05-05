@@ -29,8 +29,10 @@ export const DEMO_USERS = {
   ESTUDIANTE_TIC:          { cedula: '1098765440', nombre: 'Ana Torres',   programaAcademico: 'Maestría en TIC aplicadas a la Educación' },
   DIRECTOR:                { cedula: '1098765433', nombre: 'Maria Director', programaAcademico: 'Maestría en Educación Matemáticas' },
   ADMIN:                   { cedula: '1098765434', nombre: 'Admin User',   programaAcademico: 'Especialización en Estructuras' },
-  DEPENDENCIA_BIBLIOTECA:  { cedula: '3000000001', nombre: 'Biblioteca Central',  programaAcademico: null },
-  ESTUDIANTE_GRADO:        { cedula: '2000000010', nombre: 'Andrea Prueba Grado', programaAcademico: 'Maestría en Gerencia de Empresas' },
+  DEPENDENCIA_BIBLIOTECA:  { cedula: '3000000001', nombre: 'Biblioteca Central',     programaAcademico: null },
+  DEPENDENCIA_TESORERIA:   { cedula: '3000000002', nombre: 'Tesorería',              programaAcademico: null },
+  DEPENDENCIA_ADMISIONES:  { cedula: '3000000003', nombre: 'Admisiones y Registro',  programaAcademico: null },
+  ESTUDIANTE_GRADO:        { cedula: '2000000010', nombre: 'Andrea Prueba Grado',    programaAcademico: 'Maestría en Gerencia de Empresas' },
 };
 
 export const ALLOWED_ROLES = Object.keys(MENU_BY_ROLE);
@@ -48,8 +50,10 @@ export const DEMO_OPTIONS = [
 
 // Opciones adicionales para probar paz y salvos
 export const DEMO_OPTIONS_PAZ_Y_SALVO = [
-  { key: 'ESTUDIANTE_GRADO',       label: 'Estudiante Andrea (solicitud de grado)' },
-  { key: 'DEPENDENCIA_BIBLIOTECA', label: 'Biblioteca Central (dependencia)' },
+  { key: 'ESTUDIANTE_GRADO',        label: 'Estudiante Andrea (solicitud de grado)' },
+  { key: 'DEPENDENCIA_BIBLIOTECA',  label: 'Biblioteca Central (dependencia)'       },
+  { key: 'DEPENDENCIA_TESORERIA',   label: 'Tesorería (dependencia)'                },
+  { key: 'DEPENDENCIA_ADMISIONES',  label: 'Admisiones y Registro (dependencia)'    },
 ];
 
 export const getMenuByRole = (role) => MENU_BY_ROLE[role] || MENU_BY_ROLE[DEFAULT_ROLE];
