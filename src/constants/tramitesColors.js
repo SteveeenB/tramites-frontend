@@ -2,6 +2,7 @@ export const ROLE_LABELS = {
   ESTUDIANTE: 'ESTUDIANTES',
   DIRECTOR: 'DIRECTOR DE PROGRAMA',
   ADMIN: 'ADMINISTRADOR',
+  DEPENDENCIA: 'DEPENDENCIA',
 };
 
 export const ROLE_COLORS = {
@@ -19,5 +20,10 @@ export const ROLE_COLORS = {
     header: 'bg-slate-800',
     active:  'bg-slate-100 text-slate-900 ring-1 ring-slate-300',
     badge:   'bg-slate-200 text-slate-800',
+  },
+  DEPENDENCIA: {
+    header: 'bg-teal-700',
+    active:  'bg-teal-50 text-teal-700 ring-1 ring-teal-200',
+    badge:   'bg-teal-100 text-teal-700',
   },
 };

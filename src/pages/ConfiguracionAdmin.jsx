@@ -30,7 +30,7 @@ const ConfiguracionAdmin = () => {
     setExito(false);
     setGuardando(true);
     try {
-      await convocatoriasApi.actualizar(usuario.cedula, fechaInicio, fechaFin);
+      await convocatoriasApi.actualizar(fechaInicio, fechaFin);
       setExito(true);
     } catch (err) {
       setError(err.message || 'Error al guardar los cambios.');

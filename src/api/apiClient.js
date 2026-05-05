@@ -1,4 +1,4 @@
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+export const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
 
 export class ApiError extends Error {
   constructor(status, data) {
@@ -10,6 +10,7 @@ export class ApiError extends Error {
 
 export const apiClient = async (path, options = {}) => {
   const res = await fetch(`${BASE_URL}${path}`, {
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
@@ -21,5 +22,29 @@ export const apiClient = async (path, options = {}) => {
 
   if (!res.ok) throw new ApiError(res.status, data);
 
+  return data;
+};
+
+export const downloadApiClient = async (path) => {
+  const res = await fetch(`${BASE_URL}${path}`, { credentials: 'include' });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new ApiError(res.status, data);
+  }
+  return {
+    blob: await res.blob(),
+    contentDisposition: res.headers.get('Content-Disposition'),
+  };
+};
+
+export const uploadApiClient = async (path, formData) => {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    credentials: 'include',
+    method: 'POST',
+    body: formData,
+  });
+  if (res.status === 204) return null;
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new ApiError(res.status, data);
   return data;
 };

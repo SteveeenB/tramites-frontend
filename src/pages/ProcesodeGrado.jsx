@@ -13,12 +13,9 @@ const ProcesodeGrado = () => {
     solicitudGrado,
     cargando,
     enviando,
-    enviandoGrado,
     errorPagina,
     errorSolicitud,
-    errorSolicitudGrado,
     solicitarTerminacion,
-    solicitarGrado,
     porcentaje,
     faltantes,
     etapa1Completada,
@@ -94,9 +91,6 @@ const ProcesodeGrado = () => {
     <Etapa2
       etapa2Disponible={etapa2Disponible}
       solicitudGrado={solicitudGrado}
-      solicitarGrado={solicitarGrado}
-      enviandoGrado={enviandoGrado}
-      errorSolicitudGrado={errorSolicitudGrado}
     />
   );
 

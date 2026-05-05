@@ -1,5 +1,5 @@
 import React from 'react';
-import { DEMO_OPTIONS } from '../../config/menuConfig';
+import { DEMO_OPTIONS, DEMO_OPTIONS_PAZ_Y_SALVO, DEMO_USERS } from '../../config/menuConfig';
 import { ROLE_LABELS, ROLE_COLORS } from '../../constants/tramitesColors';
 
 const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion, cambiarRol }) => {
@@ -64,6 +64,24 @@ const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion,
               (opt.key === 'ESTUDIANTE_CON_CREDITOS' && esConCreditos) ||
               (opt.key === 'ESTUDIANTE'              && rol === 'ESTUDIANTE' && !esConCreditos && !esTIC) ||
               (opt.key !== 'ESTUDIANTE' && opt.key !== 'ESTUDIANTE_CON_CREDITOS' && opt.key !== 'ESTUDIANTE_TIC' && opt.key === rol);
+            return (
+              <button
+                key={opt.key}
+                type="button"
+                onClick={() => cambiarRol(opt.key)}
+                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
+                  esActivo ? colores.active : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+          <p className="mt-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
+            Paz y Salvos
+          </p>
+          {DEMO_OPTIONS_PAZ_Y_SALVO.map((opt) => {
+            const esActivo = usuario?.cedula === DEMO_USERS[opt.key]?.cedula;
             return (
               <button
                 key={opt.key}

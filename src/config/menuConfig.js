@@ -1,11 +1,16 @@
 export const MENU_BY_ROLE = {
+  DEPENDENCIA: [
+    { id: 'paz-y-salvo', label: 'Paz y Salvos', route: '/tramites' },
+  ],
   ESTUDIANTE: [
     { id: 'proceso-de-grado', label: 'Proceso de Grado', route: '/proceso-de-grado' },
     { id: 'certificados', label: 'Certificados', route: '/certificados' },
   ],
   DIRECTOR: [
-    { id: 'bandeja', label: 'Bandeja de aprobación', route: '/tramites' },
-    { id: 'historial', label: 'Historial de decisiones', route: '/tramites' },
+    { id: 'bandeja', label: 'Bandeja de Solicitudes', route: '/tramites/bandeja-solicitudes' },
+    { id: 'historial', label: 'Historial de Decisiones', route: '/tramites' },
+    { id: 'paz-y-salvo', label: 'Mis Paz y Salvos', route: '/tramites' },
+    { id: 'estado-estudiantes', label: 'Estado Estudiantes', route: '/tramites' },
   ],
   ADMIN: [
     { id: 'panel', label: 'Panel general', route: '/tramites' },
@@ -24,6 +29,8 @@ export const DEMO_USERS = {
   ESTUDIANTE_TIC:          { cedula: '1098765440', nombre: 'Ana Torres',   programaAcademico: 'Maestría en TIC aplicadas a la Educación' },
   DIRECTOR:                { cedula: '1098765433', nombre: 'Maria Director', programaAcademico: 'Maestría en Educación Matemáticas' },
   ADMIN:                   { cedula: '1098765434', nombre: 'Admin User',   programaAcademico: 'Especialización en Estructuras' },
+  DEPENDENCIA_BIBLIOTECA:  { cedula: '3000000001', nombre: 'Biblioteca Central',  programaAcademico: null },
+  ESTUDIANTE_GRADO:        { cedula: '2000000010', nombre: 'Andrea Prueba Grado', programaAcademico: 'Maestría en Gerencia de Empresas' },
 };
 
 export const ALLOWED_ROLES = Object.keys(MENU_BY_ROLE);
@@ -36,6 +43,13 @@ export const DEMO_OPTIONS = [
   { key: 'ESTUDIANTE_TIC',          label: 'Estudiante Ana (77/77 – sin solicitud)' },
   { key: 'DIRECTOR',                label: 'Director de programa' },
   { key: 'ADMIN',                   label: 'Administrador' },
+  
+];
+
+// Opciones adicionales para probar paz y salvos
+export const DEMO_OPTIONS_PAZ_Y_SALVO = [
+  { key: 'ESTUDIANTE_GRADO',       label: 'Estudiante Andrea (solicitud de grado)' },
+  { key: 'DEPENDENCIA_BIBLIOTECA', label: 'Biblioteca Central (dependencia)' },
 ];
 
 export const getMenuByRole = (role) => MENU_BY_ROLE[role] || MENU_BY_ROLE[DEFAULT_ROLE];
