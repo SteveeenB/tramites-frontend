@@ -5,6 +5,9 @@ import TramitesHeader from '../components/tramites/TramitesHeader';
 import ContenidoEstudiante from '../components/tramites/ContenidoEstudiante';
 import ContenidoDirector from '../components/tramites/ContenidoDirector';
 import ContenidoAdmin from '../components/tramites/ContenidoAdmin';
+import BandejaDependencia from './BandejaDependencia';
+import PazYSalvoDirector from './PazYSalvoDirector';
+import EstadoEstudiantes from './EstadoEstudiantes';
 
 const CONTENIDO_POR_ROL = {
   DIRECTOR: ContenidoDirector,
@@ -15,7 +18,14 @@ const TramitesView = () => {
   const { usuario, cambiarRol, datosModulo, selectedMenuId, manejarSeleccion, rol, menuItems } =
     useTramitesData();
 
-  const Contenido = CONTENIDO_POR_ROL[rol] || ContenidoEstudiante;
+  // Contenido inline según rol y menú seleccionado
+  const renderContenido = () => {
+    if (rol === 'DEPENDENCIA') return <BandejaDependencia />;
+    if (rol === 'DIRECTOR' && selectedMenuId === 'paz-y-salvo') return <PazYSalvoDirector />;
+    if (rol === 'DIRECTOR' && selectedMenuId === 'estado-estudiantes') return <EstadoEstudiantes />;
+    const Contenido = CONTENIDO_POR_ROL[rol] || ContenidoEstudiante;
+    return <Contenido datosModulo={datosModulo} />;
+  };
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
@@ -32,7 +42,7 @@ const TramitesView = () => {
         <div className="flex min-w-0 flex-1 flex-col">
           <TramitesHeader usuario={usuario} rol={rol} />
           <main className="flex-1 p-6 md:p-8">
-            <Contenido datosModulo={datosModulo} />
+            {renderContenido()}
           </main>
         </div>
       </div>

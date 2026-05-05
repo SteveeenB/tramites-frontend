@@ -11,6 +11,11 @@ const TarjetaLiquidacion = ({ solicitud }) => {
     color: 'bg-slate-100 text-slate-700',
   };
 
+  const labelEstado =
+    solicitud.estado === 'PENDIENTE_PAGO' && solicitud.tipo === 'GRADO'
+      ? 'Pendiente de pago de derechos de grado'
+      : cfg.label;
+
   return (
     <>
       <div className="rounded-3xl border border-green-200 bg-green-50 p-6 shadow-sm">
@@ -21,7 +26,7 @@ const TarjetaLiquidacion = ({ solicitud }) => {
           <div>
             <h3 className="text-lg font-bold text-slate-900">Solicitud registrada</h3>
             <span className={`inline-block rounded-full px-3 py-0.5 text-xs font-semibold ${cfg.color}`}>
-              {cfg.label}
+              {labelEstado}
             </span>
           </div>
         </div>
