@@ -63,12 +63,7 @@ const DetalleEtapa1 = ({
     </p>
 
     <div className="mb-6 flex flex-wrap gap-3">
-      <span className="rounded-full bg-red-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-red-700">
-        Próxima convocatoria:{' '}
-        {convocatoria
-          ? `${formatFecha(convocatoria.fechaInicio)} al ${formatFecha(convocatoria.fechaFin)}`
-          : 'Sin convocatoria'}
-      </span>
+      
       <span className="rounded-full bg-slate-100 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700">
         Estado académico: {estadoAcademico || 'Sin estado'}
       </span>
