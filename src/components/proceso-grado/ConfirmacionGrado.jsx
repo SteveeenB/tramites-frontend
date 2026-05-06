@@ -555,9 +555,17 @@ const SeccionGenerarActa = ({ solicitudGrado, fechaGradoInfo }) => {
 
 /* ─── Componente principal ───────────────────────────────────────────── */
 const ConfirmacionGrado = ({ solicitudGrado }) => {
+  //console.log('estadoPagoGrado:', solicitudGrado?.estadoPagoGrado);
+  //console.log('objeto completo:', JSON.stringify(solicitudGrado));
   const [pagoRealizado, setPagoRealizado] = useState(
-    solicitudGrado?.pagoGradoRealizado === true
-  );
+  solicitudGrado?.estadoPagoGrado === 'APROBADO'
+);
+
+useEffect(() => {
+  if (solicitudGrado?.estadoPagoGrado === 'APROBADO') {
+    setPagoRealizado(true);
+  }
+}, [solicitudGrado]);
   const [pazYSalvosOk, setPazYSalvosOk] = useState(false);
   const [fechaGradoInfo, setFechaGradoInfo] = useState(() => {
     if (!solicitudGrado?.fechaGrado) return null;
