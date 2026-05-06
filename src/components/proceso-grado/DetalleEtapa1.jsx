@@ -74,37 +74,37 @@ const DetalleEtapa1 = ({
       </span>
     </div>
 
-    {/* Botón o tarjeta de liquidación */}
-    {solicitud ? (
-      <TarjetaLiquidacion solicitud={solicitud} />
-    ) : (
-      <>
-        <button
-          type="button"
-          disabled={!etapa1Completada || enviando}
-          onClick={onSolicitar}
-          className={`mb-3 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition ${
-            etapa1Completada && !enviando
-              ? 'bg-red-600 text-white hover:bg-red-700'
-              : 'cursor-not-allowed bg-slate-300 text-slate-500'
-          }`}
-        >
-          <SendIcon />
-          {enviando ? 'Enviando solicitud…' : 'Solicitar Terminación de Materias'}
-        </button>
+     {/* Botón o tarjeta de liquidación */}
+     {solicitud && solicitud.estado !== 'RECHAZADA' ? (
+       <TarjetaLiquidacion solicitud={solicitud} />
+     ) : (
+       <>
+         <button
+           type="button"
+           disabled={!etapa1Completada || enviando}
+           onClick={onSolicitar}
+           className={`mb-3 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition ${
+             etapa1Completada && !enviando
+               ? 'bg-red-600 text-white hover:bg-red-700'
+               : 'cursor-not-allowed bg-slate-300 text-slate-500'
+           }`}
+         >
+           <SendIcon />
+           {enviando ? 'Enviando solicitud…' : 'Solicitar Terminación de Materias'}
+         </button>
 
-        {!etapa1Completada && (
-          <p className="text-sm font-medium text-red-600">
-            {porcentaje < 100
-              ? 'No disponible: requisitos académicos incompletos.'
-              : 'No disponible: fuera del período de convocatoria.'}
-          </p>
-        )}
-        {errorSolicitud && (
-          <p className="mt-2 text-sm font-medium text-red-600">{errorSolicitud}</p>
-        )}
-      </>
-    )}
+         {!etapa1Completada && (
+           <p className="text-sm font-medium text-red-600">
+             {porcentaje < 100
+               ? 'No disponible: requisitos académicos incompletos.'
+               : 'No disponible: fuera del período de convocatoria.'}
+           </p>
+         )}
+         {errorSolicitud && (
+           <p className="mt-2 text-sm font-medium text-red-600">{errorSolicitud}</p>
+         )}
+       </>
+     )}
   </section>
   );
 };
