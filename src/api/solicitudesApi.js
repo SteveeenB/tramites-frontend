@@ -35,4 +35,13 @@ export const solicitudesApi = {
 
   elegirFechaGrado: (id, fecha) =>
   apiClient(`/solicitudes/${id}/fecha-grado?fecha=${fecha}`, { method: 'POST' }),
+
+  getBandejaPosgrados: (cedula) =>
+  apiClient(`/solicitudes/posgrados/bandeja?cedula=${cedula}`),
+
+  descargarCertificadoPdf: (id, cedula) =>
+  downloadApiClient(`/solicitudes/${id}/certificado-pdf?cedula=${cedula}`),
+
+  aprobarPosgrados: (id, cedula) =>
+  apiClient(`/solicitudes/${id}/aprobar-posgrados?cedula=${cedula}`, { method: 'POST' }),
 };
