@@ -29,6 +29,7 @@ export const DEMO_USERS = {
   DEPENDENCIA_TESORERIA:   { cedula: '3000000002', nombre: 'Tesorería',           programaAcademico: null                                        },
   DEPENDENCIA_ADMISIONES:  { cedula: '3000000003', nombre: 'Admisiones y Registro', programaAcademico: null                                      },
   ESTUDIANTE_GRADO:        { cedula: '2000000010', nombre: 'Andrea Prueba Grado', programaAcademico: 'Maestría en Gerencia de Empresas'          },
+  ESTUDIANTE_KEDARVI: { cedula: '2000000011', nombre: 'Kevin Estudiante', programaAcademico: 'Maestría en Gerencia de Empresas' },
 };
 
 export const ALLOWED_ROLES = Object.keys(MENU_BY_ROLE);
@@ -38,6 +39,7 @@ export const DEMO_OPTIONS = [
   { key: 'ESTUDIANTE',              label: 'Estudiante Juan (40/56 créditos)'        },
   { key: 'ESTUDIANTE_CON_CREDITOS', label: 'Estudiante Laura (56/56 – créditos)'    },
   { key: 'ESTUDIANTE_TIC',          label: 'Estudiante Ana (77/77 – créditos)' },
+  { key: 'ESTUDIANTE_KEDARVI', label: 'Estudiante Kevin (56 créditos – certificado)' },
   { key: 'DIRECTOR',                label: 'Director de programa'                    },
   { key: 'POSGRADOS',               label: 'Coordinador de Posgrados'                },
 ];
