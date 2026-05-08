@@ -4,25 +4,31 @@ import TramitesSidebar from '../components/tramites/TramitesSidebar';
 import TramitesHeader from '../components/tramites/TramitesHeader';
 import ContenidoEstudiante from '../components/tramites/ContenidoEstudiante';
 import ContenidoDirector from '../components/tramites/ContenidoDirector';
-import ContenidoAdmin from '../components/tramites/ContenidoAdmin';
 import BandejaDependencia from './BandejaDependencia';
 import PazYSalvoDirector from './PazYSalvoDirector';
 import EstadoEstudiantes from './EstadoEstudiantes';
+import BandejaPosgrados from './BandejaPosgrados';
 
 const CONTENIDO_POR_ROL = {
   DIRECTOR: ContenidoDirector,
-  ADMIN:    ContenidoAdmin,
 };
 
 const TramitesView = () => {
   const { usuario, cambiarRol, datosModulo, selectedMenuId, manejarSeleccion, rol, menuItems } =
     useTramitesData();
 
-  // Contenido inline según rol y menú seleccionado
   const renderContenido = () => {
+    // DEPENDENCIA
     if (rol === 'DEPENDENCIA') return <BandejaDependencia />;
-    if (rol === 'DIRECTOR' && selectedMenuId === 'paz-y-salvo') return <PazYSalvoDirector />;
+
+    // DIRECTOR
+    if (rol === 'DIRECTOR' && selectedMenuId === 'paz-y-salvo')        return <PazYSalvoDirector />;
     if (rol === 'DIRECTOR' && selectedMenuId === 'estado-estudiantes') return <EstadoEstudiantes />;
+
+    // POSGRADOS
+    if (rol === 'POSGRADOS') return <BandejaPosgrados />;
+
+    // Default por rol
     const Contenido = CONTENIDO_POR_ROL[rol] || ContenidoEstudiante;
     return <Contenido datosModulo={datosModulo} />;
   };
@@ -38,7 +44,6 @@ const TramitesView = () => {
           onSeleccion={manejarSeleccion}
           cambiarRol={cambiarRol}
         />
-
         <div className="flex min-w-0 flex-1 flex-col">
           <TramitesHeader usuario={usuario} rol={rol} />
           <main className="flex-1 p-6 md:p-8">
