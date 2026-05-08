@@ -69,7 +69,7 @@ const ProcesodeGrado = () => {
     );
   }
 
-  const { estadoAcademico, convocatoria, etapa2Disponible } = datos;
+  const { estadoAcademico, etapa2Disponible } = datos ?? {};
   const etapa1Aprobada = solicitud?.estado === 'APROBADA';
 
   const detalleEtapa1 = (
@@ -77,7 +77,7 @@ const ProcesodeGrado = () => {
       porcentaje={porcentaje}
       faltantes={faltantes}
       etapa1Completada={etapa1Completada}
-      convocatoria={convocatoria}
+      //convocatoria={convocatoria}
       estadoAcademico={estadoAcademico}
       solicitud={solicitud}
       enviando={enviando}

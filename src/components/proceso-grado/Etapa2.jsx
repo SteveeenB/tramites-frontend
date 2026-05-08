@@ -61,8 +61,9 @@ const SolicitudEnviada = ({ solicitudGrado }) => {
   );
 };
 
-const SolicitudRechazada = ({ solicitudGrado }) => (
+const SolicitudRechazada = ({ solicitudGrado, onNuevaSolicitud }) => (
   <div className="flex flex-col gap-4">
+    {/* Banner de rechazo con motivo */}
     <div className="flex items-start gap-3 rounded-2xl bg-red-50 border border-red-200 p-4">
       <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-red-100">
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -79,13 +80,35 @@ const SolicitudRechazada = ({ solicitudGrado }) => (
         )}
       </div>
     </div>
-    <p className="text-xs text-slate-500">
-      Si consideras que hay un error, contacta a la oficina de posgrados.
-    </p>
+
+    {/* Proyecto que fue rechazado */}
+    {solicitudGrado?.tituloProyecto && (
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 opacity-60">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Proyecto rechazado</p>
+        <p className="text-sm font-semibold text-slate-700 leading-snug line-through">
+          {solicitudGrado.tituloProyecto}
+        </p>
+      </div>
+    )}
+
+    {/* Opción de reiniciar */}
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+      <p className="mb-3 text-sm text-slate-600 leading-6">
+        Puedes corregir las observaciones indicadas y presentar una nueva solicitud de grado.
+      </p>
+      <button
+        type="button"
+        onClick={onNuevaSolicitud}
+        className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+      >
+        <SendIcon />
+        Presentar nueva solicitud
+      </button>
+    </div>
   </div>
 );
 
-const Etapa2 = ({ etapa2Disponible, solicitudGrado }) => {
+const Etapa2 = ({ etapa2Disponible, solicitudGrado, onSolicitudGradoCreada }) => {
   const navigate = useNavigate();
 
   return (
@@ -127,7 +150,7 @@ const Etapa2 = ({ etapa2Disponible, solicitudGrado }) => {
          </>
        )}
 
-      {/* ── Pendiente del director (cualquier estado intermedio) ─────── */}
+      {/* ── Pendiente del director ─────────────────────────────────────── */}
       {etapa2Disponible && solicitudGrado &&
         solicitudGrado.estado !== 'APROBADA' &&
         solicitudGrado.estado !== 'RECHAZADA' && (
@@ -136,7 +159,10 @@ const Etapa2 = ({ etapa2Disponible, solicitudGrado }) => {
 
       {/* ── RECHAZADA ─────────────────────────────────────────────────── */}
       {etapa2Disponible && solicitudGrado?.estado === 'RECHAZADA' && (
-        <SolicitudRechazada solicitudGrado={solicitudGrado} />
+        <SolicitudRechazada
+          solicitudGrado={solicitudGrado}
+          onNuevaSolicitud={() => navigate('/proceso-de-grado/solicitud-grado')}
+        />
       )}
 
       {/* ── APROBADA ──────────────────────────────────────────────────── */}

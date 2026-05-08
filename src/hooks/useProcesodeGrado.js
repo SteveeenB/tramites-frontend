@@ -4,6 +4,7 @@ import { tramitesApi } from '../api/tramitesApi';
 import { solicitudesApi } from '../api/solicitudesApi';
 
 export const useProcesodeGrado = () => {
+  
   const { usuario } = useAuth();
 
   const [datos, setDatos]                         = useState(null);
@@ -65,7 +66,9 @@ export const useProcesodeGrado = () => {
   const porcentaje = requeridos > 0 ? Math.min(100, Math.round((aprobados / requeridos) * 100)) : 0;
   const faltantes  = Math.max(requeridos - aprobados, 0);
   // Usa la validación del backend (créditos + calendario académico)
-  const etapa1Completada = (datos?.etapa1Habilitada ?? datos?.etapa1Completada) === true;
+  const etapa1Completada = datos?.etapa1Completada === true;
+
+  console.log('datos del proceso:', JSON.stringify(datos));
 
   return {
     usuario,
