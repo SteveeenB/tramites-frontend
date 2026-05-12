@@ -14,6 +14,7 @@ export const useProcesodeGrado = () => {
   const [enviando, setEnviando]             = useState(false);
   const [errorPagina, setErrorPagina]       = useState('');
   const [errorSolicitud, setErrorSolicitud] = useState('');
+  const [descargandoActa, setDescargandoActa] = useState(false);
 
   const cargarDatos = useCallback(async () => {
     if (!usuario?.cedula) return;
@@ -60,6 +61,24 @@ export const useProcesodeGrado = () => {
     }
   };
 
+  const descargarActaTerminacion = async () => {
+    if (!solicitud?.id || !usuario?.cedula) return;
+    setDescargandoActa(true);
+    try {
+      const { blob } = await solicitudesApi.descargarCertificadoPdf(solicitud.id, usuario.cedula);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `acta-terminacion-${solicitud.id}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('Error descargando acta:', e);
+    } finally {
+      setDescargandoActa(false);
+    }
+  };
+
   // Valores derivados de créditos
   const aprobados  = Number(datos?.creditos?.aprobados  || 0);
   const requeridos = Number(datos?.creditos?.requeridos || 0);
@@ -67,6 +86,7 @@ export const useProcesodeGrado = () => {
   const faltantes  = Math.max(requeridos - aprobados, 0);
   // Usa la validación del backend (créditos + calendario académico)
   const etapa1Completada = datos?.etapa1Completada === true;
+  const actaDisponible = solicitud?.estado === 'APROBADA' && solicitud?.actaGenerada === true;
 
   console.log('datos del proceso:', JSON.stringify(datos));
 
@@ -83,5 +103,8 @@ export const useProcesodeGrado = () => {
     porcentaje,
     faltantes,
     etapa1Completada,
+    descargarActaTerminacion,
+    descargandoActa,
+    actaDisponible,
   };
 };

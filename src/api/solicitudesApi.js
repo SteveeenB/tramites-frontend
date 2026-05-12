@@ -43,5 +43,5 @@ export const solicitudesApi = {
   downloadApiClient(`/solicitudes/${id}/certificado-pdf?cedula=${cedula}`),
 
   aprobarPosgrados: (id, cedula) =>
-  apiClient(`/solicitudes/${id}/aprobar-posgrados?cedula=${cedula}`, { method: 'POST' }),
+  downloadApiClient(`/solicitudes/${id}/aprobar-posgrados?cedula=${cedula}`, { method: 'POST' }),
 };
