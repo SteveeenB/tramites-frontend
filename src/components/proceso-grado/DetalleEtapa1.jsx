@@ -1,6 +1,15 @@
 import React from 'react';
 import { CheckIcon, WarningIcon, SendIcon } from './icons';
 import TarjetaLiquidacion from './TarjetaLiquidacion';
+import BotonActaTerminacion from '../tramites/BotonActaTerminacion';
+
+const fmtFecha = (f) => {
+  if (!f) return '—';
+  try {
+    return new Date(f + (String(f).includes('T') ? '' : 'T00:00:00'))
+      .toLocaleDateString('es-CO', { day: '2-digit', month: 'short', year: 'numeric' });
+  } catch { return f; }
+};
 
 const DetalleEtapa1 = ({
   porcentaje,
@@ -12,19 +21,67 @@ const DetalleEtapa1 = ({
   errorSolicitud,
   onSolicitar,
   aprobada,
+  onDescargarCertificado,
+  descargandoCert = false,
+  actaDisponible = false,
 }) => {
   if (aprobada) {
     return (
-      <div className="flex items-center gap-4 rounded-2xl border border-green-200 bg-green-50 px-6 py-4 shadow-sm">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
-          <CheckIcon />
+      <div className="rounded-2xl border border-green-200 bg-green-50 p-6 shadow-sm">
+        {/* Encabezado */}
+        <div className="mb-5 flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+            <CheckIcon />
+          </div>
+          <div className="min-w-0">
+            <span className="font-semibold text-slate-900">Etapa 1: Terminación de Materias</span>
+            <span className="ml-3 inline-block rounded-full bg-green-100 px-3 py-0.5 text-xs font-semibold uppercase tracking-wide text-green-700">
+              Aprobada
+            </span>
+          </div>
         </div>
-        <div className="min-w-0">
-          <span className="font-semibold text-slate-900">Etapa 1: Terminación de Materias</span>
-          <span className="ml-3 inline-block rounded-full bg-green-100 px-3 py-0.5 text-xs font-semibold uppercase tracking-wide text-green-700">
-            Aprobada
-          </span>
-        </div>
+
+        {/* Detalle de la solicitud */}
+        {solicitud && (
+          <div className="mb-5 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+            <div>
+              <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Trámite</p>
+              <p className="font-medium text-slate-800">Terminación de Materias</p>
+            </div>
+            <div>
+              <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Fecha de solicitud</p>
+              <p className="font-medium text-slate-800">{fmtFecha(solicitud.fechaSolicitud)}</p>
+            </div>
+            <div>
+              <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Fecha de aprobación</p>
+              <p className="font-medium text-slate-800">{fmtFecha(solicitud.fechaDecision)}</p>
+            </div>
+            {solicitud.cedulaDirector && (
+              <div>
+                <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Director</p>
+                <p className="font-medium text-slate-800">{solicitud.cedulaDirector}</p>
+              </div>
+            )}
+            {solicitud.observacionesDirector && (
+              <div className="col-span-2">
+                <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Observaciones del director</p>
+                <p className="font-medium text-slate-800">{solicitud.observacionesDirector}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {actaDisponible ? (
+          <BotonActaTerminacion
+            onGenerar={onDescargarCertificado}
+            disabled={descargandoCert}
+            cargando={descargandoCert}
+          />
+        ) : (
+          <p className="text-xs font-medium text-slate-400">
+            El acta estará disponible cuando la oficina de posgrados la genere.
+          </p>
+        )}
       </div>
     );
   }
