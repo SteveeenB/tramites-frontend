@@ -25,8 +25,8 @@ export const apiClient = async (path, options = {}) => {
   return data;
 };
 
-export const downloadApiClient = async (path) => {
-  const res = await fetch(`${BASE_URL}${path}`, { credentials: 'include' });
+export const downloadApiClient = async (path, options = {}) => {
+  const res = await fetch(`${BASE_URL}${path}`, { credentials: 'include', ...options });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
     throw new ApiError(res.status, data);

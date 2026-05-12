@@ -19,6 +19,9 @@ const ProcesodeGrado = () => {
     porcentaje,
     faltantes,
     etapa1Completada,
+    descargarActaTerminacion,
+    descargandoActa,
+    actaDisponible,
   } = useProcesodeGrado();
 
   const fechaActual = new Date().toLocaleDateString('es-CO', {
@@ -77,13 +80,15 @@ const ProcesodeGrado = () => {
       porcentaje={porcentaje}
       faltantes={faltantes}
       etapa1Completada={etapa1Completada}
-      //convocatoria={convocatoria}
       estadoAcademico={estadoAcademico}
       solicitud={solicitud}
       enviando={enviando}
       errorSolicitud={errorSolicitud}
       onSolicitar={solicitarTerminacion}
       aprobada={etapa1Aprobada}
+      onDescargarCertificado={descargarActaTerminacion}
+      descargandoCert={descargandoActa}
+      actaDisponible={actaDisponible}
     />
   );
 
