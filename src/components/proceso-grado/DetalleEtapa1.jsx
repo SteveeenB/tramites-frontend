@@ -44,6 +44,12 @@ const DetalleEtapa1 = ({
         {/* Detalle de la solicitud */}
         {solicitud && (
           <div className="mb-5 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+            {solicitud.radicado && (
+              <div className="col-span-2">
+                <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">N.° de radicado</p>
+                <p className="font-mono text-sm font-semibold text-blue-700">{solicitud.radicado}</p>
+              </div>
+            )}
             <div>
               <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Trámite</p>
               <p className="font-medium text-slate-800">Terminación de Materias</p>

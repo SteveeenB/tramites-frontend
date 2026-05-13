@@ -148,7 +148,10 @@ const DetalleSolicitudGrado = () => {
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="min-w-0">
                       <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                        Solicitud de Grado #{solicitud.id}
+                        Solicitud de Grado
+                      </p>
+                      <p className="font-mono text-xs font-semibold text-blue-700">
+                        {solicitud.radicado ?? `#${solicitud.id}`}
                       </p>
                       <h2 className="mt-1 text-xl font-bold text-slate-900">
                         {solicitud.tituloProyecto || 'Sin título'}
