@@ -2,7 +2,7 @@ import React from 'react';
 import { formatFecha, formatCOP } from '../../constants/procesodeGrado';
 
 const TarjetaSolicitud = ({ solicitud, colores, onAprobar, onRechazar, enCurso }) => {
-  const { estudiante, fechaSolicitud, observaciones, costo, estado } = solicitud;
+  const { estudiante, fechaSolicitud, observaciones, costo, estado, radicado } = solicitud;
   const iniciales  = (estudiante?.nombre || 'E').slice(0, 2).toUpperCase();
   const procesando = enCurso === solicitud.id;
   const hayAcciones = onAprobar || onRechazar;
@@ -24,6 +24,15 @@ const TarjetaSolicitud = ({ solicitud, colores, onAprobar, onRechazar, enCurso }
 
       {/* Detalles */}
       <dl className="flex-1 space-y-1.5">
+        {radicado && (
+          <div className="flex items-center gap-2">
+            <dt className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-400">
+              Radicado
+            </dt>
+            <dd className="font-mono text-xs font-semibold text-blue-700">{radicado}</dd>
+          </div>
+        )}
+
         <div className="flex items-start gap-2">
           <dt className="mt-0.5 w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-400">
             Programa
