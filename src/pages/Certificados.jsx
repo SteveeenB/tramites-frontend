@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
-const API = 'http://localhost:8080/api';
+const API = 'https://tramites-backend.onrender.com/api';
 
 // ── ESTADOS_BADGE (sin cambios) ───────────────────────────────────────
 const ESTADOS_BADGE = {
