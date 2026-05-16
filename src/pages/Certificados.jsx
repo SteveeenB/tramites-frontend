@@ -197,6 +197,52 @@ const Certificados = () => {
     return item.modalidadEnvio === 'DIGITAL' ? c.precioDigital : c.precioFisico;
   };
 
+  const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
+
+  const ModalConfirmacion = () => (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div className="mx-4 w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
+      <h3 className="mb-2 text-lg font-bold text-slate-900">Aceptación de términos</h3>
+      <div className="mb-4 rounded-2xl bg-amber-50 border border-amber-200 p-4">
+        <p className="text-sm font-bold text-amber-900 mb-1">
+          Recibo de Pago: {cert?.label}
+        </p>
+        <p className="text-sm font-bold text-amber-900 mb-3">
+          Valor: {formatPesos(precio)}
+        </p>
+        <p className="text-sm text-amber-800 mb-2">
+          Tenga en cuenta que generar un recibo de pago se considera un compromiso.
+        </p>
+        <p className="text-sm text-amber-800 mb-3">
+          Con la aceptación del presente aviso legal:
+        </p>
+        <p className="text-sm font-bold text-amber-900 text-center">
+          ¿Realmente desea Generar el Recibo de Pago?
+        </p>
+      </div>
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={() => setMostrarConfirmacion(false)}
+          className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+        >
+          Rechazar
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setMostrarConfirmacion(false);
+            handleGenerarRecibo();
+          }}
+          className="flex-1 rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-amber-600"
+        >
+          ✓ Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
       <div className="flex min-h-screen flex-col lg:flex-row">
@@ -368,7 +414,7 @@ const Certificados = () => {
               <div className="mt-6 flex flex-col items-end gap-2">
                 <button
                   type="button"
-                  onClick={handleGenerarRecibo}
+                  onClick={() => setMostrarConfirmacion(true)}
                   disabled={generando || tieneVigente}
                   className="flex items-center gap-2 rounded-xl bg-red-700 px-6 py-3 text-sm font-bold text-white shadow transition hover:bg-red-800 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
@@ -465,6 +511,10 @@ const Certificados = () => {
           </main>
         </div>
       </div>
+      
+       {/* Modal de confirmación */}
+    {mostrarConfirmacion && <ModalConfirmacion />}
+
     </div>
   );
 };
