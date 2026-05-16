@@ -4,27 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 
 const API = 'http://localhost:8080/api';
 
-const CERTIFICADOS = [
-  {
-    id: 'CONSTANCIA_REGISTRO_CALIFICADO',
-    label: 'CONSTANCIA REGISTRO CALIFICADO DE UN PROGRAMA ACADEMICO',
-    precioDigital: 8800,
-    precioFisico: 12500,
-  },
-  {
-    id: 'CONSTANCIA_MATRICULA',
-    label: 'CONSTANCIA MATRICULA ACADEMICA POSGRADO',
-    precioDigital: 6500,
-    precioFisico: 9800,
-  },
-  {
-    id: 'CONSTANCIA_BUENA_CONDUCTA',
-    label: 'CONSTANCIA BUENA CONDUCTA POSGRADO',
-    precioDigital: 7200,
-    precioFisico: 11000,
-  },
-];
-
+// ── ESTADOS_BADGE (sin cambios) ───────────────────────────────────────
 const ESTADOS_BADGE = {
   PENDIENTE_PAGO: {
     label: 'Pendiente de pago',
@@ -41,6 +21,10 @@ const ESTADOS_BADGE = {
   RECHAZADA: {
     label: 'Rechazada',
     className: 'bg-red-100 text-red-700 ring-1 ring-red-300',
+  },
+  PAGADO: {
+    label: 'Pagado',
+    className: 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-300',
   },
 };
 
@@ -95,7 +79,9 @@ const Certificados = () => {
   const navigate = useNavigate();
   const { usuario } = useAuth();
 
-  const [certSeleccionado, setCertSeleccionado] = useState(CERTIFICADOS[0].id);
+  // ── Estado ────────────────────────────────────────────────────────
+  const [certificados, setCertificados] = useState([]);      // tipos desde BD
+  const [certSeleccionado, setCertSeleccionado] = useState('');
   const [modalidad, setModalidad] = useState('DIGITAL');
   const [historial, setHistorial] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -103,15 +89,17 @@ const Certificados = () => {
   const [error, setError] = useState('');
   const [pagando, setPagando] = useState(null);
 
-  const cert = CERTIFICADOS.find((c) => c.id === certSeleccionado);
-  const precio = modalidad === 'DIGITAL' ? cert.precioDigital : cert.precioFisico;
+  // ── Computed ──────────────────────────────────────────────────────
+  const cert = certificados.find((c) => c.codigo === certSeleccionado);
+  const precio = cert
+    ? (modalidad === 'DIGITAL' ? cert.precioDigital : cert.precioFisico)
+    : 0;
 
-
-const tieneVigente = historial.some(
+  const tieneVigente = historial.some(
     (item) =>
-        item.tipoCertificado === certSeleccionado &&
-        item.estado === 'PENDIENTE_PAGO'
-);
+      item.tipoCertificado === certSeleccionado &&
+      item.estado === 'PENDIENTE_PAGO'
+  );
 
   const fechaActual = new Date().toLocaleDateString('es-CO', {
     month: 'long',
@@ -119,7 +107,22 @@ const tieneVigente = historial.some(
     year: 'numeric',
   });
 
-  // ── Cargar historial al montar ──────────────────────────────────────
+  // ── Cargar tipos de certificado desde BD ──────────────────────────
+  useEffect(() => {
+    const cargarTipos = async () => {
+      try {
+        const res = await fetch(`${API}/certificados/tipos`);
+        const data = await res.json();
+        setCertificados(data);
+        if (data.length > 0) setCertSeleccionado(data[0].codigo);
+      } catch (e) {
+        console.error('Error cargando tipos:', e);
+      }
+    };
+    cargarTipos();
+  }, []);
+
+  // ── Cargar historial al montar ────────────────────────────────────
   useEffect(() => {
     const cargarHistorial = async () => {
       if (!usuario?.cedula) return;
@@ -140,7 +143,7 @@ const tieneVigente = historial.some(
     cargarHistorial();
   }, [usuario]);
 
-  // ── Generar recibo — llama al backend ──────────────────────────────
+  // ── Generar recibo ────────────────────────────────────────────────
   const handleGenerarRecibo = async () => {
     if (!usuario?.cedula) return;
     setGenerando(true);
@@ -151,10 +154,7 @@ const tieneVigente = historial.some(
         { method: 'POST', credentials: 'include' }
       );
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'No se pudo generar el recibo');
-      }
-      // Agrega al historial sin recargar
+      if (!res.ok) throw new Error(data.error || 'No se pudo generar el recibo');
       setHistorial((prev) => [data, ...prev]);
     } catch (e) {
       setError(e.message);
@@ -163,42 +163,36 @@ const tieneVigente = historial.some(
     }
   };
 
+  // ── Pagar ─────────────────────────────────────────────────────────
   const handlePagar = async (id) => {
     if (!usuario?.cedula) return;
     setPagando(id);
     setError('');
     try {
-        const res = await fetch(
-            `${API}/certificados/${id}/pagar?cedula=${usuario.cedula}`,
-            { method: 'POST', credentials: 'include' }
-        );
-        const data = await res.json();
-        if (!res.ok) {
-            throw new Error(data.error || 'No se pudo procesar el pago');
-        }
-        // Actualiza el historial localmente sin recargar
-        setHistorial((prev) =>
-            prev.map((item) => (item.id === id ? data : item))
-        );
+      const res = await fetch(
+        `${API}/certificados/${id}/pagar?cedula=${usuario.cedula}`,
+        { method: 'POST', credentials: 'include' }
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudo procesar el pago');
+      setHistorial((prev) => prev.map((item) => (item.id === id ? data : item)));
     } catch (e) {
-        setError(e.message);
+      setError(e.message);
     } finally {
-        setPagando(null);
+      setPagando(null);
     }
-};
-
-  // ── Helpers para mapear respuesta del backend a la tabla ────────────
-  const getLabelTipo = (tipoCertificado) => {
-    const cert = CERTIFICADOS.find((c) => c.id === tipoCertificado);
-    return cert ? cert.label : tipoCertificado;
   };
-  
-  
+
+  // ── Helpers ───────────────────────────────────────────────────────
+  const getLabelTipo = (tipoCertificado) => {
+    const c = certificados.find((ce) => ce.codigo === tipoCertificado);
+    return c ? c.label : tipoCertificado;
+  };
 
   const getModalidadLabel = (m) => (m === 'DIGITAL' ? 'Digital' : 'Física');
 
   const getCosto = (item) => {
-    const c = CERTIFICADOS.find((ce) => ce.id === item.tipoCertificado);
+    const c = certificados.find((ce) => ce.codigo === item.tipoCertificado);
     if (!c) return item.costo;
     return item.modalidadEnvio === 'DIGITAL' ? c.precioDigital : c.precioFisico;
   };
@@ -206,7 +200,7 @@ const tieneVigente = historial.some(
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
       <div className="flex min-h-screen flex-col lg:flex-row">
-        {/* ── SIDEBAR (sin cambios) ── */}
+        {/* ── SIDEBAR ── */}
         <aside className="flex w-full flex-col border-b border-slate-200 bg-white lg:w-80 lg:border-b-0 lg:border-r">
           <div className="flex-1 px-5 py-6">
             <div className="mb-6 flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
@@ -269,7 +263,6 @@ const tieneVigente = historial.some(
           </header>
 
           <main className="flex-1 p-6 md:p-8">
-            {/* Breadcrumb */}
             <div className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
               <span className="cursor-pointer hover:text-slate-600" onClick={() => navigate('/tramites')}>
                 Trámites
@@ -283,14 +276,12 @@ const tieneVigente = historial.some(
               <p className="text-sm font-semibold text-slate-700">{fechaActual}</p>
             </div>
 
-            {/* Error global */}
             {error && (
               <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
                 {error}
               </div>
             )}
 
-            {/* Advertencia */}
             <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
               <div className="flex items-start gap-3">
                 <WarningIcon />
@@ -323,8 +314,8 @@ const tieneVigente = historial.some(
                       onChange={(e) => setCertSeleccionado(e.target.value)}
                       className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100"
                     >
-                      {CERTIFICADOS.map((c) => (
-                        <option key={c.id} value={c.id}>
+                      {certificados.map((c) => (
+                        <option key={c.codigo} value={c.codigo}>
                           {c.label}
                         </option>
                       ))}
@@ -363,7 +354,7 @@ const tieneVigente = historial.some(
                           className="h-4 w-4 accent-red-600"
                         />
                         <span className="text-sm font-medium text-slate-700">{opt.label}</span>
-                        {opt.value !== modalidad && (
+                        {opt.value !== modalidad && cert && (
                           <span className="ml-auto text-xs text-slate-400">
                             +{formatPesos(cert.precioFisico - cert.precioDigital)}
                           </span>
@@ -375,15 +366,15 @@ const tieneVigente = historial.some(
               </div>
 
               <div className="mt-6 flex flex-col items-end gap-2">
-               <button
-               type="button"
-              onClick={handleGenerarRecibo}
-              disabled={generando || tieneVigente}
-              className="flex items-center gap-2 rounded-xl bg-red-700 px-6 py-3 text-sm font-bold text-white shadow transition hover:bg-red-800 disabled:opacity-60 disabled:cursor-not-allowed"
->
-    <RefreshIcon />
-    {generando ? 'Generando…' : tieneVigente ? 'Ya tienes una solicitud vigente' : 'Generar Recibo de Pago'}
-</button>
+                <button
+                  type="button"
+                  onClick={handleGenerarRecibo}
+                  disabled={generando || tieneVigente}
+                  className="flex items-center gap-2 rounded-xl bg-red-700 px-6 py-3 text-sm font-bold text-white shadow transition hover:bg-red-800 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  <RefreshIcon />
+                  {generando ? 'Generando…' : tieneVigente ? 'Ya tienes una solicitud vigente' : 'Generar Recibo de Pago'}
+                </button>
                 <p className="flex items-center gap-1 text-xs text-slate-500">
                   <InfoIcon />
                   Si ya dispone de una solicitud vigente, no aparecerá como opción para crear un nuevo recibo.
@@ -417,47 +408,46 @@ const tieneVigente = historial.some(
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-  {historial.map((item) => {
-    const badge = ESTADOS_BADGE[item.estado] || {
-      label: item.estado,
-      className: 'bg-slate-100 text-slate-600',
-    };
-    return (
-      <tr key={item.id} className="transition hover:bg-slate-50">
-        <td className="px-6 py-4 font-medium text-slate-800 max-w-xs">
-          <span className="line-clamp-2">{getLabelTipo(item.tipoCertificado)}</span>
-        </td>
-        <td className="px-6 py-4 text-slate-600">
-          {getModalidadLabel(item.modalidadEnvio)}
-        </td>
-        <td className="px-6 py-4 text-slate-600">{item.fechaSolicitud}</td>
-        <td className="px-6 py-4 text-right font-semibold text-slate-800">
-          {formatPesos(getCosto(item))}
-        </td>
-        <td className="px-6 py-4 text-center">
-          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}>
-            {badge.label}
-          </span>
-        </td>
-        {/* ── Acciones — dentro del tr ── */}
-        <td className="px-6 py-4 text-center">
-          {item.estado === 'PENDIENTE_PAGO' ? (
-            <button
-              type="button"
-              onClick={() => handlePagar(item.id)}
-              disabled={pagando === item.id}
-              className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {pagando === item.id ? 'Procesando...' : 'Pagar'}
-            </button>
-          ) : (
-            <span className="text-xs text-slate-400">—</span>
-          )}
-        </td>
-      </tr>
-    );
-  })}
-</tbody>
+                      {historial.map((item) => {
+                        const badge = ESTADOS_BADGE[item.estado] || {
+                          label: item.estado,
+                          className: 'bg-slate-100 text-slate-600',
+                        };
+                        return (
+                          <tr key={item.id} className="transition hover:bg-slate-50">
+                            <td className="px-6 py-4 font-medium text-slate-800 max-w-xs">
+                              <span className="line-clamp-2">{getLabelTipo(item.tipoCertificado)}</span>
+                            </td>
+                            <td className="px-6 py-4 text-slate-600">
+                              {getModalidadLabel(item.modalidadEnvio)}
+                            </td>
+                            <td className="px-6 py-4 text-slate-600">{item.fechaSolicitud}</td>
+                            <td className="px-6 py-4 text-right font-semibold text-slate-800">
+                              {formatPesos(getCosto(item))}
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}>
+                                {badge.label}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              {item.estado === 'PENDIENTE_PAGO' ? (
+                                <button
+                                  type="button"
+                                  onClick={() => handlePagar(item.id)}
+                                  disabled={pagando === item.id}
+                                  className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
+                                >
+                                  {pagando === item.id ? 'Procesando...' : 'Pagar'}
+                                </button>
+                              ) : (
+                                <span className="text-xs text-slate-400">—</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
                   </table>
                 </div>
               </div>
