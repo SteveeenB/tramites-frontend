@@ -1,31 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
-// ──────────────────────────────────────────────
-// Constantes de certificados
-// ──────────────────────────────────────────────
-const CERTIFICADOS = [
-  {
-    id: 'CONSTANCIA_REGISTRO_CALIFICADO',
-    label: 'CONSTANCIA REGISTRO CALIFICADO DE UN PROGRAMA ACADEMICO',
-    precioDigital: 8800,
-    precioFisico: 12500,
-  },
-  {
-    id: 'CONSTANCIA_MATRICULA',
-    label: 'CONSTANCIA MATRICULA ACADEMICA POSGRADO',
-    precioDigital: 6500,
-    precioFisico: 9800,
-  },
-  {
-    id: 'CONSTANCIA_BUENA_CONDUCTA',
-    label: 'CONSTANCIA BUENA CONDUCTA POSGRADO',
-    precioDigital: 7200,
-    precioFisico: 11000,
-  },
-];
+const API = 'http://localhost:8080/api';
 
+// ── ESTADOS_BADGE (sin cambios) ───────────────────────────────────────
 const ESTADOS_BADGE = {
   PENDIENTE_PAGO: {
     label: 'Pendiente de pago',
@@ -43,14 +22,20 @@ const ESTADOS_BADGE = {
     label: 'Rechazada',
     className: 'bg-red-100 text-red-700 ring-1 ring-red-300',
   },
+  PAGADO: {
+    label: 'Pagado',
+    className: 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-300',
+  },
 };
 
 const formatPesos = (n) =>
-  new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    maximumFractionDigits: 0,
+  }).format(n);
 
-// ──────────────────────────────────────────────
-// Sub-componentes
-// ──────────────────────────────────────────────
+// ── Sub-componentes (sin cambios) ─────────────────────────────────────
 const SidebarLink = ({ children, active = false, onClick }) => (
   <button
     type="button"
@@ -89,20 +74,32 @@ const InfoIcon = () => (
   </svg>
 );
 
-// ──────────────────────────────────────────────
-// Página principal
-// ──────────────────────────────────────────────
+// ── Página principal ──────────────────────────────────────────────────
 const Certificados = () => {
   const navigate = useNavigate();
   const { usuario } = useAuth();
 
-  const [certSeleccionado, setCertSeleccionado] = useState(CERTIFICADOS[0].id);
+  // ── Estado ────────────────────────────────────────────────────────
+  const [certificados, setCertificados] = useState([]);      // tipos desde BD
+  const [certSeleccionado, setCertSeleccionado] = useState('');
   const [modalidad, setModalidad] = useState('DIGITAL');
   const [historial, setHistorial] = useState([]);
+  const [cargando, setCargando] = useState(true);
   const [generando, setGenerando] = useState(false);
+  const [error, setError] = useState('');
+  const [pagando, setPagando] = useState(null);
 
-  const cert = CERTIFICADOS.find((c) => c.id === certSeleccionado);
-  const precio = modalidad === 'DIGITAL' ? cert.precioDigital : cert.precioFisico;
+  // ── Computed ──────────────────────────────────────────────────────
+  const cert = certificados.find((c) => c.codigo === certSeleccionado);
+  const precio = cert
+    ? (modalidad === 'DIGITAL' ? cert.precioDigital : cert.precioFisico)
+    : 0;
+
+  const tieneVigente = historial.some(
+    (item) =>
+      item.tipoCertificado === certSeleccionado &&
+      item.estado === 'PENDIENTE_PAGO'
+  );
 
   const fechaActual = new Date().toLocaleDateString('es-CO', {
     month: 'long',
@@ -110,20 +107,94 @@ const Certificados = () => {
     year: 'numeric',
   });
 
-  const handleGenerarRecibo = () => {
+  // ── Cargar tipos de certificado desde BD ──────────────────────────
+  useEffect(() => {
+    const cargarTipos = async () => {
+      try {
+        const res = await fetch(`${API}/certificados/tipos`);
+        const data = await res.json();
+        setCertificados(data);
+        if (data.length > 0) setCertSeleccionado(data[0].codigo);
+      } catch (e) {
+        console.error('Error cargando tipos:', e);
+      }
+    };
+    cargarTipos();
+  }, []);
+
+  // ── Cargar historial al montar ────────────────────────────────────
+  useEffect(() => {
+    const cargarHistorial = async () => {
+      if (!usuario?.cedula) return;
+      try {
+        setCargando(true);
+        const res = await fetch(`${API}/certificados?cedula=${usuario.cedula}`, {
+          credentials: 'include',
+        });
+        if (!res.ok) throw new Error('No se pudo cargar el historial');
+        const data = await res.json();
+        setHistorial(data);
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setCargando(false);
+      }
+    };
+    cargarHistorial();
+  }, [usuario]);
+
+  // ── Generar recibo ────────────────────────────────────────────────
+  const handleGenerarRecibo = async () => {
+    if (!usuario?.cedula) return;
     setGenerando(true);
-    setTimeout(() => {
-      const nueva = {
-        id: Date.now(),
-        tipo: cert.label,
-        modalidad: modalidad === 'DIGITAL' ? 'Digital' : 'Física',
-        fecha: new Date().toLocaleDateString('es-CO'),
-        costo: precio,
-        estado: 'PENDIENTE_PAGO',
-      };
-      setHistorial((prev) => [nueva, ...prev]);
+    setError('');
+    try {
+      const res = await fetch(
+        `${API}/certificados/solicitar?cedula=${usuario.cedula}&tipo=${certSeleccionado}&modalidad=${modalidad}`,
+        { method: 'POST', credentials: 'include' }
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudo generar el recibo');
+      setHistorial((prev) => [data, ...prev]);
+    } catch (e) {
+      setError(e.message);
+    } finally {
       setGenerando(false);
-    }, 800);
+    }
+  };
+
+  // ── Pagar ─────────────────────────────────────────────────────────
+  const handlePagar = async (id) => {
+    if (!usuario?.cedula) return;
+    setPagando(id);
+    setError('');
+    try {
+      const res = await fetch(
+        `${API}/certificados/${id}/pagar?cedula=${usuario.cedula}`,
+        { method: 'POST', credentials: 'include' }
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudo procesar el pago');
+      setHistorial((prev) => prev.map((item) => (item.id === id ? data : item)));
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setPagando(null);
+    }
+  };
+
+  // ── Helpers ───────────────────────────────────────────────────────
+  const getLabelTipo = (tipoCertificado) => {
+    const c = certificados.find((ce) => ce.codigo === tipoCertificado);
+    return c ? c.label : tipoCertificado;
+  };
+
+  const getModalidadLabel = (m) => (m === 'DIGITAL' ? 'Digital' : 'Física');
+
+  const getCosto = (item) => {
+    const c = certificados.find((ce) => ce.codigo === item.tipoCertificado);
+    if (!c) return item.costo;
+    return item.modalidadEnvio === 'DIGITAL' ? c.precioDigital : c.precioFisico;
   };
 
   return (
@@ -132,7 +203,6 @@ const Certificados = () => {
         {/* ── SIDEBAR ── */}
         <aside className="flex w-full flex-col border-b border-slate-200 bg-white lg:w-80 lg:border-b-0 lg:border-r">
           <div className="flex-1 px-5 py-6">
-            {/* Info usuario */}
             <div className="mb-6 flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
               <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-red-100 text-lg font-bold text-red-700">
                 {(usuario?.nombre || 'E').slice(0, 2).toUpperCase()}
@@ -145,8 +215,6 @@ const Certificados = () => {
                 )}
               </div>
             </div>
-
-            {/* Navegación */}
             <nav className="space-y-2">
               <SidebarLink onClick={() => {}}>Información Estudiantil</SidebarLink>
               <SidebarLink onClick={() => {}}>Información Académica</SidebarLink>
@@ -166,8 +234,6 @@ const Certificados = () => {
               </div>
             </nav>
           </div>
-
-          {/* Acceso rápido proceso de grado */}
           <div className="border-t border-slate-200 p-5">
             <button
               type="button"
@@ -184,7 +250,6 @@ const Certificados = () => {
 
         {/* ── CONTENIDO PRINCIPAL ── */}
         <div className="flex min-w-0 flex-1 flex-col">
-          {/* Header */}
           <header className="flex items-center justify-between gap-4 bg-red-600 px-6 py-4 text-white shadow-sm md:px-8">
             <h1 className="text-lg font-bold uppercase tracking-[0.18em] md:text-xl">ESTUDIANTES</h1>
             <div className="flex items-center gap-3">
@@ -194,67 +259,51 @@ const Certificados = () => {
                 </div>
                 <p className="hidden text-sm font-semibold sm:block">{usuario?.nombre}</p>
               </div>
-              <svg viewBox="0 0 24 24" className="h-5 w-5 opacity-80 cursor-pointer hover:opacity-100" fill="currentColor">
-                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
-              </svg>
-              <svg
-                viewBox="0 0 24 24"
-                className="h-5 w-5 opacity-80 cursor-pointer hover:opacity-100"
-                fill="currentColor"
-                onClick={() => navigate('/tramites')}
-              >
-                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
-              </svg>
             </div>
           </header>
 
-          {/* Main */}
           <main className="flex-1 p-6 md:p-8">
-            {/* Breadcrumb */}
             <div className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-              <span
-                className="cursor-pointer hover:text-slate-600"
-                onClick={() => navigate('/tramites')}
-              >
+              <span className="cursor-pointer hover:text-slate-600" onClick={() => navigate('/tramites')}>
                 Trámites
               </span>
               <span>/</span>
               <span className="text-red-600">Certificados</span>
             </div>
 
-            {/* Título + fecha */}
             <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <h2 className="text-3xl font-bold text-slate-900">Certificados</h2>
-              <div className="text-right">
-                <p className="text-sm font-semibold text-slate-700">{fechaActual}</p>
-              </div>
+              <p className="text-sm font-semibold text-slate-700">{fechaActual}</p>
             </div>
 
-            {/* Advertencia */}
+            {error && (
+              <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                {error}
+              </div>
+            )}
+
             <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
               <div className="flex items-start gap-3">
                 <WarningIcon />
                 <div>
                   <p className="mb-2 text-sm font-bold text-amber-800">Advertencia</p>
                   <ul className="space-y-1 text-sm text-amber-700 list-disc list-inside leading-relaxed">
-                    <li>Dispone de 3 días hábiles para cancelar el recibo de pago generado. Vencido el plazo deberá generarlo nuevamente.</li>
+                    <li>Dispone de 3 días hábiles para cancelar el recibo de pago generado.</li>
                     <li>Solo puede tener una solicitud vigente por tipo de certificado.</li>
                     <li>El pago puede realizarse en Bancolombia, Davienda o Banco de Bogotá.</li>
-                    <li>Una vez realizado el pago, el certificado digital será enviado a su correo en un plazo de 3 a 5 minutos.</li>
+                    <li>Una vez realizado el pago, el certificado digital será enviado a su correo en 3 a 5 minutos.</li>
                   </ul>
                 </div>
               </div>
             </div>
 
-            {/* ── TARJETA SOLICITAR ── */}
+            {/* Tarjeta solicitar */}
             <div className="mb-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="mb-6 flex items-center gap-2">
                 <CertIcon />
                 <h3 className="text-lg font-bold text-slate-900">Solicitar Certificado</h3>
               </div>
-
               <div className="grid gap-6 sm:grid-cols-2">
-                {/* Tipo de certificado */}
                 <div>
                   <label className="mb-2 block text-xs font-bold uppercase tracking-[0.15em] text-slate-500">
                     Tipo de Certificado
@@ -265,8 +314,8 @@ const Certificados = () => {
                       onChange={(e) => setCertSeleccionado(e.target.value)}
                       className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 pr-10 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100"
                     >
-                      {CERTIFICADOS.map((c) => (
-                        <option key={c.id} value={c.id}>
+                      {certificados.map((c) => (
+                        <option key={c.codigo} value={c.codigo}>
                           {c.label}
                         </option>
                       ))}
@@ -277,17 +326,12 @@ const Certificados = () => {
                       </svg>
                     </div>
                   </div>
-
-                  {/* Precio */}
                   <div className="mt-4">
                     <p className="mb-1 text-xs font-bold uppercase tracking-[0.15em] text-slate-500">Valor</p>
-                    <p className="text-2xl font-extrabold text-red-600">
-                      {formatPesos(precio)}
-                    </p>
+                    <p className="text-2xl font-extrabold text-red-600">{formatPesos(precio)}</p>
                   </div>
                 </div>
 
-                {/* Modalidad */}
                 <div>
                   <label className="mb-2 block text-xs font-bold uppercase tracking-[0.15em] text-slate-500">
                     Modalidad de Entrega
@@ -310,7 +354,7 @@ const Certificados = () => {
                           className="h-4 w-4 accent-red-600"
                         />
                         <span className="text-sm font-medium text-slate-700">{opt.label}</span>
-                        {opt.value !== modalidad && (
+                        {opt.value !== modalidad && cert && (
                           <span className="ml-auto text-xs text-slate-400">
                             +{formatPesos(cert.precioFisico - cert.precioDigital)}
                           </span>
@@ -321,26 +365,29 @@ const Certificados = () => {
                 </div>
               </div>
 
-              {/* Botón generar */}
               <div className="mt-6 flex flex-col items-end gap-2">
                 <button
                   type="button"
                   onClick={handleGenerarRecibo}
-                  disabled={generando}
+                  disabled={generando || tieneVigente}
                   className="flex items-center gap-2 rounded-xl bg-red-700 px-6 py-3 text-sm font-bold text-white shadow transition hover:bg-red-800 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <RefreshIcon />
-                  {generando ? 'Generando…' : 'Generar Recibo de Pago'}
+                  {generando ? 'Generando…' : tieneVigente ? 'Ya tienes una solicitud vigente' : 'Generar Recibo de Pago'}
                 </button>
                 <p className="flex items-center gap-1 text-xs text-slate-500">
                   <InfoIcon />
-                  Nota: Si ya dispone de una solicitud vigente, esta no aparecerá como opción para crear un nuevo recibo.
+                  Si ya dispone de una solicitud vigente, no aparecerá como opción para crear un nuevo recibo.
                 </p>
               </div>
             </div>
 
-            {/* ── HISTORIAL ── */}
-            {historial.length > 0 && (
+            {/* Historial */}
+            {cargando ? (
+              <div className="flex justify-center py-12 text-sm text-slate-400">
+                Cargando historial...
+              </div>
+            ) : historial.length > 0 ? (
               <div className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                 <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
                   <h3 className="text-base font-bold text-slate-900">Historial de Solicitudes</h3>
@@ -357,6 +404,7 @@ const Certificados = () => {
                         <th className="px-6 py-3 text-left">Fecha</th>
                         <th className="px-6 py-3 text-right">Costo</th>
                         <th className="px-6 py-3 text-center">Estado</th>
+                        <th className="px-6 py-3 text-center">Acciones</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -368,19 +416,33 @@ const Certificados = () => {
                         return (
                           <tr key={item.id} className="transition hover:bg-slate-50">
                             <td className="px-6 py-4 font-medium text-slate-800 max-w-xs">
-                              <span className="line-clamp-2">{item.tipo}</span>
+                              <span className="line-clamp-2">{getLabelTipo(item.tipoCertificado)}</span>
                             </td>
-                            <td className="px-6 py-4 text-slate-600">{item.modalidad}</td>
-                            <td className="px-6 py-4 text-slate-600">{item.fecha}</td>
+                            <td className="px-6 py-4 text-slate-600">
+                              {getModalidadLabel(item.modalidadEnvio)}
+                            </td>
+                            <td className="px-6 py-4 text-slate-600">{item.fechaSolicitud}</td>
                             <td className="px-6 py-4 text-right font-semibold text-slate-800">
-                              {formatPesos(item.costo)}
+                              {formatPesos(getCosto(item))}
                             </td>
                             <td className="px-6 py-4 text-center">
-                              <span
-                                className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}
-                              >
+                              <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}>
                                 {badge.label}
                               </span>
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              {item.estado === 'PENDIENTE_PAGO' ? (
+                                <button
+                                  type="button"
+                                  onClick={() => handlePagar(item.id)}
+                                  disabled={pagando === item.id}
+                                  className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed"
+                                >
+                                  {pagando === item.id ? 'Procesando...' : 'Pagar'}
+                                </button>
+                              ) : (
+                                <span className="text-xs text-slate-400">—</span>
+                              )}
                             </td>
                           </tr>
                         );
@@ -389,10 +451,7 @@ const Certificados = () => {
                   </table>
                 </div>
               </div>
-            )}
-
-            {/* Estado vacío historial */}
-            {historial.length === 0 && (
+            ) : (
               <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-white py-12 text-center shadow-sm">
                 <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
                   <CertIcon />
