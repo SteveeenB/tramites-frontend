@@ -24,15 +24,15 @@ SPA desarrollada con React.js que consume la API REST del backend para la gesti�
 
 ## 1. Visión General
 
-El frontend permite a estudiantes, directores y administradores interactuar con los trámites académicos de posgrado de forma digital. Se conecta al backend vía HTTP/JSON y recibe actualizaciones en tiempo real mediante Server-Sent Events (SSE).
+El frontend permite a estudiantes, directores, coordinadores de posgrados y dependencias institucionales interactuar con los trámites académicos de posgrado de forma completamente digital. Se conecta al backend vía HTTP/JSON y recibe actualizaciones en tiempo real mediante Server-Sent Events (SSE).
 
 ### Stack Tecnológico
 
 | Componente | Tecnología | Detalle |
 |---|---|---|
-| Framework UI | React.js | SPA, hooks, Context API |
-| Estilos | Tailwind CSS | Clases utilitarias, diseño responsivo |
-| Enrutamiento | React Router DOM | Rutas protegidas por rol |
+| Framework UI | React.js 19 | SPA, hooks, Context API |
+| Estilos | Tailwind CSS 3 | Clases utilitarias, diseño responsivo |
+| Enrutamiento | React Router DOM 7 | Rutas protegidas por rol |
 | Cliente HTTP | `fetch` nativo | Wrappers en `src/api/` |
 | Notificaciones RT | `EventSource` (SSE) | Suscripción a `/api/notificaciones/subscribe` |
 | Gestión de estado | React Context + Hooks | `AuthContext` + hooks por módulo |
@@ -46,15 +46,18 @@ El frontend permite a estudiantes, directores y administradores interactuar con 
 
 ### Usuarios Demo (`src/config/menuConfig.js`)
 
-El sistema incluye cinco perfiles demo con cédulas registradas en Supabase:
-
 | Clave demo | Nombre | Cédula | Rol | Notas |
 |---|---|---|---|---|
 | `ESTUDIANTE` | Juan Perez | `1098765432` | `ESTUDIANTE` | 40/56 créditos — etapa 1 bloqueada |
 | `ESTUDIANTE_CON_CREDITOS` | Laura Gomez | `1098765435` | `ESTUDIANTE` | 56/56 créditos — solicitud APROBADA |
-| `ESTUDIANTE_TIC` | Ana Torres | `1098765440` | `ESTUDIANTE` | 77/77 créditos — puede crear solicitud |
+| `ESTUDIANTE_TIC` | Ana Torres | `1098765440` | `ESTUDIANTE` | 77/77 créditos — puede crear solicitud y certificados |
+| `ESTUDIANTE_KEDARVI` | Kevin Estudiante | `2000000011` | `ESTUDIANTE` | 56 créditos — perfil de prueba certificados |
+| `ESTUDIANTE_GRADO` | Andrea Prueba Grado | `2000000010` | `ESTUDIANTE` | Solicitud de grado activa — prueba paz y salvos |
 | `DIRECTOR` | Maria Director | `1098765433` | `DIRECTOR` | Maestría en Educación Matemáticas |
-| `ADMIN` | Admin User | `1098765434` | `ADMIN` | Especialización en Estructuras |
+| `POSGRADOS` | Coordinador Posgrados | `1098765434` | `POSGRADOS` | Coordinación de la Unidad de Posgrados |
+| `DEPENDENCIA_BIBLIOTECA` | Biblioteca Central | `3000000001` | `DEPENDENCIA` | Gestiona paz y salvos y certificados de buena conducta |
+| `DEPENDENCIA_TESORERIA` | Tesorería | `3000000002` | `DEPENDENCIA` | Gestiona paz y salvos y certificados de parqueadero |
+| `DEPENDENCIA_ADMISIONES` | Admisiones y Registro | `3000000003` | `DEPENDENCIA` | Gestiona paz y salvos y certificados de registro calificado |
 
 Para cambiar de usuario demo: usar el selector en el sidebar o agregar `?rol=DIRECTOR` a la URL.
 
@@ -66,20 +69,21 @@ Para cambiar de usuario demo: usar el selector en el sidebar o agregar `?rol=DIR
 tramites-frontend/
 ├── public/
 ├── src/
-│   ├── api/                          Clientes HTTP hacia el backend
-│   │   ├── apiClient.js              Funciones base: apiClient, uploadApiClient, downloadApiClient
+│   ├── api/
+│   │   ├── apiClient.js                  Funciones base: apiClient, uploadApiClient, downloadApiClient
 │   │   ├── convocatoriasApi.js
+│   │   ├── pazYSalvoApi.js               Endpoints de paz y salvos y estado de estudiantes
 │   │   ├── solicitudesApi.js
 │   │   └── tramitesApi.js
 │   ├── components/
-│   │   ├── bandeja-director/         Componentes de la bandeja del Director
+│   │   ├── bandeja-director/
 │   │   │   ├── BandejaListadoLayout.jsx
 │   │   │   ├── DirectorSidebar.jsx
 │   │   │   ├── EstadoBadge.jsx
 │   │   │   ├── ModalRechazo.jsx
 │   │   │   ├── SeccionSolicitudes.jsx
 │   │   │   └── TarjetaSolicitud.jsx
-│   │   ├── proceso-grado/            Wizard multi-etapa del proceso de grado
+│   │   ├── proceso-grado/
 │   │   │   ├── ConfirmacionGrado.jsx
 │   │   │   ├── DetalleEtapa1.jsx
 │   │   │   ├── DragDropZone.jsx
@@ -89,7 +93,8 @@ tramites-frontend/
 │   │   │   ├── ModalPagoPSE.jsx
 │   │   │   ├── ProcesoPGSidebar.jsx
 │   │   │   └── TarjetaLiquidacion.jsx
-│   │   └── tramites/                 Componentes de la vista principal
+│   │   └── tramites/
+│   │       ├── BotonActaTerminacion.jsx
 │   │       ├── ContenidoAdmin.jsx
 │   │       ├── ContenidoDirector.jsx
 │   │       ├── ContenidoEstudiante.jsx
@@ -97,31 +102,39 @@ tramites-frontend/
 │   │       ├── TramitesHeader.jsx
 │   │       └── TramitesSidebar.jsx
 │   ├── config/
-│   │   └── menuConfig.js             Menús por rol, usuarios demo, rutas
+│   │   └── menuConfig.js                 Menús por rol, usuarios demo, rutas y ALLOWED_ROLES
+│   ├── constants/
+│   │   ├── procesodeGrado.js
+│   │   └── tramitesColors.js
 │   ├── context/
-│   │   └── AuthContext.js            Contexto de autenticación global
+│   │   └── AuthContext.js
 │   ├── hooks/
-│   │   ├── useAuth.js                Consume AuthContext
+│   │   ├── useAuth.js
 │   │   ├── useBandejaDirector.js
 │   │   ├── useBandejaGrado.js
 │   │   ├── useProcesodeGrado.js
 │   │   └── useTramitesData.js
 │   ├── pages/
+│   │   ├── BandejaCertificadosDependencia.jsx  Gestión de certificados físicos (DEPENDENCIA)
+│   │   ├── BandejaDependencia.jsx              Bandeja de paz y salvos (DEPENDENCIA)
 │   │   ├── BandejaDirector.jsx
 │   │   ├── BandejaGrado.jsx
+│   │   ├── BandejaPosgrados.jsx
 │   │   ├── BandejaSolicitudes.jsx
-│   │   ├── Certificados.jsx
+│   │   ├── Certificados.jsx                    Solicitud, pago y descarga de certificados (ESTUDIANTE)
 │   │   ├── ConfiguracionAdmin.jsx
 │   │   ├── DetalleSolicitudGrado.jsx
+│   │   ├── EstadoEstudiantes.jsx               Estado del proceso de grado por estudiante (DIRECTOR)
 │   │   ├── ListaSolicitudesDirector.jsx
 │   │   ├── ListaSolicitudesGrado.jsx
 │   │   ├── NoAutorizado.js
+│   │   ├── PazYSalvoDirector.jsx               Gestión de paz y salvos del Director
 │   │   ├── ProcesodeGrado.jsx
 │   │   ├── SolicitudGradoPage.jsx
 │   │   └── TramitesView.jsx
-│   ├── App.js                        Configuración de rutas React Router
-│   └── index.js                      Punto de entrada, envuelve con AuthProvider
-├── .env                              Variables de entorno (no subir a Git)
+│   ├── App.js
+│   └── index.js
+├── .env
 └── package.json
 ```
 
@@ -135,39 +148,49 @@ URL base: `process.env.REACT_APP_API_URL || 'http://localhost:8080/api'`
 
 | Función | Método HTTP | Uso | Retorna |
 |---|---|---|---|
-| `apiClient(path, options)` | GET / POST / PUT | Peticiones JSON estándar. Incluye `credentials: 'include'` para mantener sesión. | `Promise<JSON>` — lanza `ApiError` si `!res.ok` |
-| `uploadApiClient(path, formData)` | POST (multipart) | Subida de archivos. No establece `Content-Type` para que el browser lo infiera. | `Promise<JSON>` — lanza `ApiError` si `!res.ok` |
+| `apiClient(path, options)` | GET / POST / PUT | Peticiones JSON estándar con `credentials: 'include'`. | `Promise<JSON>` — lanza `ApiError` si `!res.ok` |
+| `uploadApiClient(path, formData)` | POST (multipart) | Subida de archivos sin `Content-Type` explícito. | `Promise<JSON>` |
 | `downloadApiClient(path)` | GET | Descarga de archivos binarios (PDF, TXT). | `Promise<{blob, contentDisposition}>` |
 
 ### 3.2 `solicitudesApi.js`
 
-| Método | Endpoint | Parámetros | Descripción |
-|---|---|---|---|
-| `getMias(cedula)` | `GET /solicitudes?cedula=` | `cedula` | Lista todas las solicitudes del estudiante |
-| `crearTerminacion(cedula)` | `POST /solicitudes/terminacion-materias?cedula=` | `cedula` | Crea solicitud de terminación de materias |
-| `crearSolicitudGrado(cedula, datos)` | `POST /solicitudes/grado` (multipart) | `cedula` + `{tituloProyecto, resumen, tipoProyecto, foto, actaSustentacion, [certificadoIngles]}` | Crea solicitud de grado con documentos |
-| `getBandejaDirector(cedula)` | `GET /solicitudes/bandeja?cedula=` | `cedula` del Director | Solicitudes de terminación del programa |
-| `getBandejaGrado(cedula)` | `GET /solicitudes/bandeja-grado?cedula=` | `cedula` del Director | Solicitudes de grado del programa |
-| `obtenerDetalleGrado(id)` | `GET /solicitudes/grado/{id}` | `id` | Detalle de una solicitud de grado |
-| `aprobar(id, cedula)` | `POST /solicitudes/{id}/aprobar?cedula=` | `id` + `cedula` Director | Aprueba la solicitud |
-| `rechazar(id, cedula, motivo)` | `POST /solicitudes/{id}/rechazar` | `id` + `cedula` + `motivo` (opcional) | Rechaza la solicitud con motivo |
-| `descargarActa(id)` | `GET /solicitudes/{id}/acta` | `id` | Descarga el acta de grado en PDF |
-| `subirDocumento(id, file)` | `POST /solicitudes/{id}/documentos` (multipart) | `id` + `File` | Sube un documento de soporte |
-| `getDocumentos(id, cedula)` | `GET /solicitudes/{id}/documentos` | `id` + `cedula` | Lista documentos de la solicitud |
+| Método | Endpoint | Descripción |
+|---|---|---|
+| `getMias(cedula)` | `GET /solicitudes?cedula=` | Lista todas las solicitudes del estudiante |
+| `crearTerminacion(cedula)` | `POST /solicitudes/terminacion-materias?cedula=` | Crea solicitud de terminación |
+| `crearSolicitudGrado(cedula, datos)` | `POST /solicitudes/grado` (multipart) | Crea solicitud de grado con documentos |
+| `getBandejaDirector(cedula)` | `GET /solicitudes/bandeja?cedula=` | Bandeja de terminación del Director |
+| `getBandejaGrado(cedula)` | `GET /solicitudes/bandeja-grado?cedula=` | Bandeja de grado del Director |
+| `obtenerDetalleGrado(id)` | `GET /solicitudes/grado/{id}` | Detalle de solicitud de grado |
+| `aprobar(id, cedula)` | `POST /solicitudes/{id}/aprobar?cedula=` | Aprueba la solicitud |
+| `rechazar(id, cedula, motivo)` | `POST /solicitudes/{id}/rechazar` | Rechaza con motivo |
+| `descargarActa(id)` | `GET /solicitudes/{id}/acta` | Descarga acta de grado en PDF |
+| `subirDocumento(id, file)` | `POST /solicitudes/{id}/documentos` (multipart) | Sube documento de soporte |
+| `getDocumentos(id, cedula)` | `GET /solicitudes/{id}/documentos` | Lista documentos de la solicitud |
 
 ### 3.3 `tramitesApi.js`
 
 | Método | Endpoint | Descripción |
 |---|---|---|
-| `getModulo(cedula)` | `GET /tramites?cedula=` | Módulo de trámites disponibles según rol |
+| `getModulo(cedula)` | `GET /tramites?cedula=` | Módulo de trámites según rol |
 | `getProcesoGrado(cedula)` | `GET /tramites/proceso-grado?cedula=` | Estado, créditos y etapas del proceso de grado |
 
 ### 3.4 `convocatoriasApi.js`
 
 | Método | Endpoint | Descripción |
 |---|---|---|
-| `getActiva()` | `GET /convocatorias/activa` | Obtiene la convocatoria activa (`fechaInicio`, `fechaFin`) |
-| `actualizar(fechaInicio, fechaFin)` | `PUT /convocatorias` (body JSON) | Solo `ADMIN`. Actualiza el período habilitado |
+| `getActiva()` | `GET /convocatorias/activa` | Convocatoria activa actual |
+| `actualizar(fechaInicio, fechaFin)` | `PUT /convocatorias` | Actualiza el período habilitado (ADMIN/POSGRADOS) |
+
+### 3.5 `pazYSalvoApi.js`
+
+| Método | Endpoint | Descripción |
+|---|---|---|
+| `getMisSolicitudesPazYSalvo(cedula)` | `GET /paz-y-salvo/mis-solicitudes?cedula=` | Todos los paz y salvos del responsable |
+| `getPendientesPazYSalvo(cedula)` | `GET /paz-y-salvo/pendientes?cedula=` | Solo los pendientes del responsable |
+| `responderPazYSalvo(id, cedula, decision, obs)` | `POST /paz-y-salvo/{id}/responder` | Responder: `APROBADO` o `RECHAZADO` |
+| `getEstadoPazYSalvos(solicitudId)` | `GET /paz-y-salvo/solicitud/{solicitudId}` | Estado de todos los paz y salvos de una solicitud |
+| `getEstadoEstudiantes(cedula)` | `GET /paz-y-salvo/estado-estudiantes?cedula=` | Etapas de todos los estudiantes del programa |
 
 ---
 
@@ -175,45 +198,73 @@ URL base: `process.env.REACT_APP_API_URL || 'http://localhost:8080/api'`
 
 ### `AuthContext` (`src/context/AuthContext.js`)
 
-Contexto React que provee el usuario activo y la función para cambiar de rol demo. Se inicializa leyendo el parámetro `?rol=` de la URL; si no existe, usa `ESTUDIANTE` por defecto.
-
-| Valor del contexto | Tipo | Descripción |
+| Valor | Tipo | Descripción |
 |---|---|---|
 | `usuario` | `Object` | `{ cedula, nombre, programaAcademico, rol }` |
 | `cargando` | `Boolean` | `true` mientras resuelve el usuario inicial |
-| `cambiarRol(demoKey)` | `Function` | Cambia el usuario activo a cualquier perfil demo |
+| `cambiarRol(demoKey)` | `Function` | Cambia al perfil demo indicado |
 
-### `useAuth` (`src/hooks/useAuth.js`)
+### Rutas Protegidas
 
-Hook de conveniencia que retorna el valor de `AuthContext`. Todos los componentes que necesiten el usuario actual lo consumen a través de este hook.
+`ProtectedRoute` verifica el rol antes de renderizar. Redirige a `/no-autorizado` si el rol no está permitido. Roles válidos definidos en `ALLOWED_ROLES`: `ESTUDIANTE`, `DIRECTOR`, `POSGRADOS`, `DEPENDENCIA`.
+
+### Menús por Rol (`src/config/menuConfig.js`)
+
+| Rol | Ítems del menú |
+|---|---|
+| `ESTUDIANTE` | Proceso de Grado, Certificados |
+| `DIRECTOR` | Bandeja de Solicitudes, Historial, Mis Paz y Salvos, Estado Estudiantes |
+| `POSGRADOS` | Bandeja de Solicitudes, Configuración |
+| `DEPENDENCIA` | Paz y Salvos, Certificados |
 
 ### Hooks de Datos por Módulo
 
 | Hook | Módulo | Qué hace |
 |---|---|---|
-| `useTramitesData` | `TramitesView` | Carga el módulo de trámites del backend y gestiona la selección del menú lateral por rol |
-| `useProcesodeGrado` | `ProcesodeGrado` | Carga en paralelo el proceso de grado y las solicitudes del estudiante; expone `solicitarTerminacion()`, `porcentaje` y `faltantes` de créditos |
-| `useBandejaDirector` | `BandejaDirector` / `ListaSolicitudesDirector` | Carga la bandeja de terminación del Director, expone `aprobar()` y `rechazar()` |
-| `useBandejaGrado` | `BandejaGrado` / `ListaSolicitudesGrado` | Carga la bandeja de solicitudes de grado del Director |
+| `useTramitesData` | `TramitesView` | Carga trámites del backend y gestiona el menú lateral |
+| `useProcesodeGrado` | `ProcesodeGrado` | Carga proceso de grado; expone `solicitarTerminacion()`, `porcentaje` y `faltantes` |
+| `useBandejaDirector` | `BandejaDirector` | Carga bandeja de terminación; expone `aprobar()` y `rechazar()` |
+| `useBandejaGrado` | `BandejaGrado` | Carga bandeja de solicitudes de grado |
 
 ---
 
 ## 5. Páginas de la Aplicación
 
-| Página | Ruta | Rol | Descripción |
-|---|---|---|---|
-| `TramitesView.jsx` | `/tramites` | Todos | Vista principal. Renderiza `ContenidoEstudiante`, `ContenidoDirector` o `ContenidoAdmin` según el rol. |
-| `ProcesodeGrado.jsx` | `/proceso-de-grado` | `ESTUDIANTE` | Wizard que muestra créditos, terminación de materias (Etapa 1) y solicitud de grado (Etapa 2). |
-| `SolicitudGradoPage.jsx` | `/solicitud-grado` | `ESTUDIANTE` | Formulario con carga de foto, acta de sustentación y certificado de inglés usando `DragDropZone` y `FileSlot`. |
-| `BandejaDirector.jsx` | `/tramites/bandeja-solicitudes` | `DIRECTOR` | Bandeja de solicitudes de terminación del programa del Director. |
-| `ListaSolicitudesDirector.jsx` | (sub-vista) | `DIRECTOR` | Listado detallado con botones de aprobar/rechazar y `ModalRechazo`. |
-| `BandejaGrado.jsx` | `/bandeja-grado` | `DIRECTOR` | Bandeja de solicitudes de grado del programa. |
-| `ListaSolicitudesGrado.jsx` | (sub-vista) | `DIRECTOR` | Listado detallado de solicitudes de grado. |
-| `DetalleSolicitudGrado.jsx` | `/solicitudes/grado/:id` | `DIRECTOR` | Detalle de una solicitud de grado con documentos adjuntos descargables. |
-| `BandejaSolicitudes.jsx` | `/tramites/bandeja-posgrados` | `ADMIN` | Solicitudes de grado pendientes de validación para la Unidad de Posgrados. |
-| `ConfiguracionAdmin.jsx` | `/tramites/admin/configuracion` | `ADMIN` | Panel para actualizar las fechas de la convocatoria activa. |
-| `Certificados.jsx` | `/certificados` | `ESTUDIANTE` | Solicitud y descarga de certificados académicos. |
-| `NoAutorizado.js` | `*` | — | Página de acceso denegado para rutas no permitidas según el rol. |
+### Estudiante
+
+| Página | Ruta | Descripción |
+|---|---|---|
+| `TramitesView.jsx` | `/tramites` | Vista principal según rol activo |
+| `ProcesodeGrado.jsx` | `/proceso-de-grado` | Wizard: barra de créditos, Etapa 1 (terminación), Etapa 2 (grado) |
+| `SolicitudGradoPage.jsx` | `/proceso-de-grado/solicitud-grado` | Formulario con carga de foto, acta y certificado de inglés |
+| `Certificados.jsx` | `/certificados` | Solicitud por tipo/modalidad, pago simulado PSE, descarga de PDF e historial completo. Modal de confirmación antes de generar el recibo. Advertencias de vigencia (3 días) y restricción de una solicitud vigente por tipo. |
+
+### Director
+
+| Página | Ruta | Descripción |
+|---|---|---|
+| `BandejaSolicitudes.jsx` | `/tramites/bandeja-solicitudes` | Solicitudes de terminación agrupadas por estado |
+| `BandejaDirector.jsx` | `/tramites/bandeja-director` | Vista principal con navegación lateral |
+| `ListaSolicitudesDirector.jsx` | `/tramites/bandeja-director/:estado` | Listado con aprobar/rechazar y `ModalRechazo` |
+| `BandejaGrado.jsx` | `/tramites/bandeja-director/grado` | Solicitudes de grado del programa |
+| `ListaSolicitudesGrado.jsx` | `/tramites/bandeja-director/grado/:estado` | Listado detallado por estado |
+| `DetalleSolicitudGrado.jsx` | `/tramites/bandeja-director/grado/:estado/:id` | Detalle con documentos descargables |
+| `PazYSalvoDirector.jsx` | `/tramites/paz-y-salvo-director` | Paz y salvos asignados al Director. Filtros por estado. `ModalRespuesta` con decisión y observaciones. |
+| `EstadoEstudiantes.jsx` | `/tramites/estado-estudiantes` | Panel de seguimiento con etapa actual, barra de créditos y buscador por nombre/cédula/código para todos los estudiantes del programa. Tarjetas resumen por etapa con contador. |
+
+### Posgrados / Admin
+
+| Página | Ruta | Descripción |
+|---|---|---|
+| `BandejaPosgrados.jsx` | `/tramites/bandeja-posgrados` | Solicitudes de grado en `PENDIENTE_VALIDACION` |
+| `ConfiguracionAdmin.jsx` | `/tramites/admin/configuracion` | Actualiza fechas de convocatoria (ADMIN y POSGRADOS) |
+
+### Dependencia
+
+| Página | Ruta | Descripción |
+|---|---|---|
+| `BandejaDependencia.jsx` | `/tramites/bandeja-dependencia` | Paz y salvos asignados. Filtros + contador de pendientes. `ModalRespuesta` integrado. |
+| `BandejaCertificadosDependencia.jsx` | *(desde TramitesView)* | Certificados físicos asignados. Pestañas: Por imprimir, Listos, Entregados, Todos. Descarga PDF, marcar listo y confirmar entrega. Buscador por cédula/nombre. |
 
 ---
 
@@ -223,37 +274,38 @@ Hook de conveniencia que retorna el valor de `AuthContext`. Todos los componente
 
 | Componente | Descripción |
 |---|---|
-| `ProcesoPGSidebar` | Sidebar del wizard con avatar del estudiante y navegación |
-| `EtapasResumen` | Tarjetas de resumen con estado visual (completada / pendiente / bloqueada) |
-| `DetalleEtapa1` | Barra de créditos, liquidación y botón de solicitar terminación |
+| `ProcesoPGSidebar` | Sidebar del wizard con avatar y navegación |
+| `EtapasResumen` | Tarjetas de estado visual (completada / pendiente / bloqueada) |
+| `DetalleEtapa1` | Barra de créditos, liquidación y botón solicitar terminación |
 | `Etapa2` | Estado de la solicitud de grado o enlace al formulario |
-| `TarjetaLiquidacion` | Resumen del costo del trámite y botón de pago |
+| `TarjetaLiquidacion` | Resumen del costo y botón de pago |
 | `ModalPagoPSE` | Modal de pago simulado PSE |
-| `DragDropZone` | Zona de arrastrar y soltar para seleccionar archivos |
-| `FileSlot` | Slot individual para un archivo requerido (foto, acta, certificado de inglés) |
-| `ConfirmacionGrado` | Pantalla de confirmación posterior al envío del formulario |
+| `DragDropZone` | Zona de arrastrar y soltar archivos |
+| `FileSlot` | Slot individual para archivo requerido (foto, acta, certificado inglés) |
+| `ConfirmacionGrado` | Pantalla de confirmación tras enviar el formulario |
 
 ### `src/components/bandeja-director/`
 
 | Componente | Descripción |
 |---|---|
-| `BandejaListadoLayout` | Layout contenedor de la bandeja del Director |
-| `DirectorSidebar` | Sidebar con navegación entre bandeja e historial |
-| `EstadoBadge` | Badge de color por estado (`EN_REVISION`, `APROBADA`, `RECHAZADA`...) |
-| `ModalRechazo` | Modal para ingresar el motivo de rechazo |
-| `SeccionSolicitudes` | Sección colapsable que agrupa solicitudes por estado |
-| `TarjetaSolicitud` | Tarjeta individual de solicitud con acciones rápidas |
+| `BandejaListadoLayout` | Layout contenedor de la bandeja |
+| `DirectorSidebar` | Navegación: bandeja, historial, paz y salvos, estado estudiantes |
+| `EstadoBadge` | Badge de color por estado |
+| `ModalRechazo` | Modal para ingresar motivo de rechazo |
+| `SeccionSolicitudes` | Sección colapsable por estado |
+| `TarjetaSolicitud` | Tarjeta de solicitud con acciones rápidas |
 
 ### `src/components/tramites/`
 
 | Componente | Descripción |
 |---|---|
 | `TramitesHeader` | Header con nombre del usuario y selector de rol demo |
-| `TramitesSidebar` | Sidebar con ítems de menú según el rol activo |
+| `TramitesSidebar` | Menú lateral según rol activo |
 | `TarjetaAccion` | Tarjeta de un trámite disponible |
-| `ContenidoEstudiante` | Vista principal para el rol `ESTUDIANTE` |
-| `ContenidoDirector` | Vista principal para el rol `DIRECTOR` |
-| `ContenidoAdmin` | Vista principal para el rol `ADMIN` |
+| `ContenidoEstudiante` | Vista principal rol `ESTUDIANTE` |
+| `ContenidoDirector` | Vista principal rol `DIRECTOR` |
+| `ContenidoAdmin` | Vista principal rol `ADMIN` / `POSGRADOS` |
+| `BotonActaTerminacion` | Descarga acta de terminación cuando está disponible |
 
 ---
 
@@ -262,8 +314,8 @@ Hook de conveniencia que retorna el valor de `AuthContext`. Todos los componente
 ### Requisitos Previos
 
 - Node.js 18 o superior
-- npm 9+ (incluido con Node.js)
-- Backend `tramites-backend` ejecutándose en `http://localhost:8080`
+- npm 9+
+- Backend `tramites-backend` en `http://localhost:8080`
 
 ### Instalar Dependencias
 
@@ -274,13 +326,9 @@ npm install
 
 ### Configurar Variable de Entorno (opcional)
 
-Crear archivo `.env` en la raíz del proyecto (no subir a Git):
-
 ```env
 REACT_APP_API_URL=http://localhost:8080/api
 ```
-
-Si no existe el archivo, usa `http://localhost:8080/api` por defecto.
 
 ### Ejecutar en Modo Desarrollo
 
@@ -288,7 +336,7 @@ Si no existe el archivo, usa `http://localhost:8080/api` por defecto.
 npm start
 ```
 
-La aplicación queda disponible en: `http://localhost:3000`
+Disponible en `http://localhost:3000`
 
 ### Construir para Producción
 
@@ -296,16 +344,9 @@ La aplicación queda disponible en: `http://localhost:3000`
 npm run build
 ```
 
-El directorio `build/` contiene los archivos estáticos listos para desplegar.
-
-### Actualizar desde el Repositorio Remoto
+### Actualizar desde el Remoto
 
 ```bash
-# Traer todo del remoto descartando cambios locales
-git fetch origin
-git reset --hard origin/main
-
-# Si quieres conservar cambios locales primero
 git stash
 git pull origin main
 git stash pop
@@ -315,35 +356,79 @@ git stash pop
 
 ## 8. Flujos de Usuario
 
-### Estudiante — Proceso de Grado
+### Estudiante — Terminación de Materias
 
-| Paso | Acción en UI | Llamada al backend |
+| Paso | Acción | Endpoint |
 |---|---|---|
-| 1 | Ingresar con cédula de estudiante | `POST /api/usuarios/login-demo?cedula=...` |
-| 2 | Ir a "Proceso de Grado" | `GET /api/tramites/proceso-grado?cedula=...` |
-| 3 | Ver barra de créditos y etapas | Datos incluidos en la respuesta anterior |
-| 4 | Solicitar terminación de materias (Etapa 1) | `POST /api/solicitudes/terminacion-materias?cedula=...` |
-| 5 | Ver liquidación y simular pago | *(flujo de pago pendiente — TP-37)* |
-| 6 | Completar formulario de grado (Etapa 2) | `POST /api/solicitudes/grado` (multipart) |
-| 7 | Recibir notificación SSE cuando Director decide | `GET /api/notificaciones/subscribe?cedula=...` |
-| 8 | Descargar acta de grado cuando está `APROBADA` | `GET /api/solicitudes/{id}/acta` |
+| 1 | Ingresar con cédula | `POST /api/usuarios/login-demo?cedula=...` |
+| 2 | Ir a Proceso de Grado | `GET /api/tramites/proceso-grado?cedula=...` |
+| 3 | Solicitar terminación | `POST /api/solicitudes/terminacion-materias?cedula=...` |
+| 4 | Simular pago PSE | *(TP-37 pendiente)* |
+| 5 | Recibir notificación SSE | `GET /api/notificaciones/subscribe?cedula=...` |
+| 6 | Descargar acta | `GET /api/solicitudes/{id}/acta` |
 
-### Director — Gestión de Solicitudes
+### Estudiante — Solicitud de Grado
 
-| Paso | Acción en UI | Llamada al backend |
+| Paso | Acción | Endpoint |
 |---|---|---|
-| 1 | Ingresar con cédula de Director | `POST /api/usuarios/login-demo?cedula=...` |
-| 2 | Ir a "Bandeja de Solicitudes" (terminación) | `GET /api/solicitudes/bandeja?cedula=...` |
-| 3 | Aprobar solicitud | `POST /api/solicitudes/{id}/aprobar?cedula=...` |
-| 4 | Rechazar solicitud con motivo | `POST /api/solicitudes/{id}/rechazar?cedula=...&motivo=...` |
-| 5 | Ir a Bandeja Grado | `GET /api/solicitudes/bandeja-grado?cedula=...` |
-| 6 | Ver detalle de solicitud de grado | `GET /api/solicitudes/grado/{id}` |
+| 1 | Verificar Etapa 2 habilitada | `GET /api/tramites/proceso-grado?cedula=...` |
+| 2 | Completar formulario con documentos | `POST /api/solicitudes/grado` (multipart) |
+| 3 | Recibir notificación de decisión | `GET /api/notificaciones/subscribe?cedula=...` |
+| 4 | Descargar acta de grado | `GET /api/solicitudes/{id}/acta` |
 
-### Admin — Configuración y Validación
+### Estudiante — Certificados Académicos
 
-| Paso | Acción en UI | Llamada al backend |
+| Paso | Acción | Endpoint |
 |---|---|---|
-| 1 | Ingresar con cédula de Admin | `POST /api/usuarios/login-demo?cedula=...` |
-| 2 | Actualizar fechas de convocatoria | `PUT /api/convocatorias?cedula=...` (body JSON) |
-| 3 | Ver solicitudes de grado pendientes | `GET /api/solicitudes/posgrados/pendientes?cedula=...` |
-| 4 | Aprobar o rechazar validación | `POST /api/solicitudes/{id}/validar-grado` |
+| 1 | Ver tipos disponibles | `GET /api/certificados/tipos` |
+| 2 | Seleccionar tipo y modalidad | *(filtrado automático)* |
+| 3 | Confirmar y generar recibo | `POST /api/certificados/solicitar` |
+| 4 | Simular pago | `POST /api/certificados/{id}/pagar?cedula=...` |
+| 5 | Descargar PDF con QR y radicado | `GET /api/certificados/{id}/pdf?cedula=...` |
+| 6 | Consultar historial | `GET /api/certificados?cedula=...` |
+
+### Director — Solicitudes de Terminación
+
+| Paso | Acción | Endpoint |
+|---|---|---|
+| 1 | Ver bandeja | `GET /api/solicitudes/bandeja?cedula=...` |
+| 2 | Aprobar | `POST /api/solicitudes/{id}/aprobar?cedula=...` |
+| 3 | Rechazar con motivo | `POST /api/solicitudes/{id}/rechazar` |
+
+### Director — Paz y Salvos
+
+| Paso | Acción | Endpoint |
+|---|---|---|
+| 1 | Ver mis paz y salvos | `GET /api/paz-y-salvo/mis-solicitudes?cedula=...` |
+| 2 | Responder con decisión | `POST /api/paz-y-salvo/{id}/responder` |
+
+### Director — Estado de Estudiantes
+
+| Paso | Acción | Endpoint |
+|---|---|---|
+| 1 | Ver panel de etapas | `GET /api/paz-y-salvo/estado-estudiantes?cedula=...` |
+| 2 | Filtrar por etapa o buscar | *(filtrado en cliente)* |
+
+### Posgrados — Validación y Configuración
+
+| Paso | Acción | Endpoint |
+|---|---|---|
+| 1 | Ver pendientes de validación | `GET /api/solicitudes/posgrados/pendientes?cedula=...` |
+| 2 | Validar solicitud de grado | `POST /api/solicitudes/{id}/validar-grado` |
+| 3 | Actualizar convocatoria | `PUT /api/convocatorias?cedula=...` |
+
+### Dependencia — Paz y Salvos
+
+| Paso | Acción | Endpoint |
+|---|---|---|
+| 1 | Ver todos los paz y salvos | `GET /api/paz-y-salvo/mis-solicitudes?cedula=...` |
+| 2 | Responder con observaciones | `POST /api/paz-y-salvo/{id}/responder` |
+
+### Dependencia — Certificados Físicos
+
+| Paso | Acción | Endpoint |
+|---|---|---|
+| 1 | Ver bandeja de certificados | `GET /api/certificados/dependencia/{cedula}` |
+| 2 | Descargar PDF para imprimir | `GET /api/certificados/{id}/pdf?cedula=...` |
+| 3 | Marcar listo para retiro | `POST /api/certificados/{id}/marcar-listo` |
+| 4 | Confirmar entrega al estudiante | `POST /api/certificados/{id}/marcar-entregado` |
