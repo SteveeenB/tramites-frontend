@@ -5,6 +5,7 @@ import TramitesHeader from '../components/tramites/TramitesHeader';
 import ContenidoEstudiante from '../components/tramites/ContenidoEstudiante';
 import ContenidoDirector from '../components/tramites/ContenidoDirector';
 import BandejaDependencia from './BandejaDependencia';
+import BandejaCertificadosDependencia from './BandejaCertificadosDependencia';
 import PazYSalvoDirector from './PazYSalvoDirector';
 import EstadoEstudiantes from './EstadoEstudiantes';
 import BandejaPosgrados from './BandejaPosgrados';
@@ -19,6 +20,7 @@ const TramitesView = () => {
 
   const renderContenido = () => {
     // DEPENDENCIA
+    if (rol === 'DEPENDENCIA' && selectedMenuId === 'certificados') return <BandejaCertificadosDependencia />;
     if (rol === 'DEPENDENCIA') return <BandejaDependencia />;
 
     // DIRECTOR
