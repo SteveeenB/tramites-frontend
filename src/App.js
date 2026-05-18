@@ -108,7 +108,7 @@ function App() {
           <Route
             path="/tramites/admin/configuracion"
             element={
-              <ProtectedRoute rolesPermitidos={['ADMIN']}>
+              <ProtectedRoute rolesPermitidos={['ADMIN', 'POSGRADOS']}>
                 <ConfiguracionAdmin />
               </ProtectedRoute>
             }

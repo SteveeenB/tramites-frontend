@@ -1,6 +1,7 @@
 export const MENU_BY_ROLE = {
   DEPENDENCIA: [
-    { id: 'paz-y-salvo', label: 'Paz y Salvos', route: '/tramites' },
+    { id: 'paz-y-salvo',  label: 'Paz y Salvos',  route: '/tramites' },
+    { id: 'certificados', label: 'Certificados',  route: '/tramites' },
   ],
   ESTUDIANTE: [
     { id: 'proceso-de-grado', label: 'Proceso de Grado', route: '/proceso-de-grado' },
