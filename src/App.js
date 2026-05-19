@@ -18,6 +18,7 @@ import BandejaDependencia from './pages/BandejaDependencia';
 import PazYSalvoDirector from './pages/PazYSalvoDirector';
 import EstadoEstudiantes from './pages/EstadoEstudiantes';
 import { ALLOWED_ROLES } from './config/menuConfig';
+import VerificarCertificado from './pages/VerificarCertificado';
 import './App.css';
 
 function App() {
@@ -25,6 +26,12 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          <Route 
+            path="/verificar" 
+            element={
+              <VerificarCertificado />
+            } 
+          />
           <Route
             path="/tramites"
             element={
