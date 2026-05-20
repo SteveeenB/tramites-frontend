@@ -131,13 +131,11 @@ const Etapa2 = ({ etapa2Disponible, solicitudGrado, onSolicitudGradoCreada }) =>
         </>
       )}
 
-       {/* ── Sin solicitud o rechazada: botón para iniciar ──────────────── */}
-       {etapa2Disponible && (!solicitudGrado || solicitudGrado?.estado === 'RECHAZADA') && (
+       {/* ── Sin solicitud: botón para iniciar ────────────────────────── */}
+       {etapa2Disponible && !solicitudGrado && (
          <>
            <p className="text-sm leading-6 text-slate-600">
-             {!solicitudGrado
-               ? 'Todos los requisitos académicos están cumplidos. Puedes iniciar tu solicitud de grado.'
-               : 'Tu solicitud de grado fue rechazada. Puedes iniciar una nueva solicitud.'}
+             Todos los requisitos académicos están cumplidos. Puedes iniciar tu solicitud de grado.
            </p>
            <button
              type="button"
@@ -145,7 +143,7 @@ const Etapa2 = ({ etapa2Disponible, solicitudGrado, onSolicitudGradoCreada }) =>
              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
            >
              <SendIcon />
-             {!solicitudGrado ? 'Iniciar Proceso de Grado' : 'Iniciar Nueva Solicitud'}
+             Iniciar Proceso de Grado
            </button>
          </>
        )}
