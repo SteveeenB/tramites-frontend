@@ -1,9 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import { DEMO_OPTIONS, DEMO_OPTIONS_PAZ_Y_SALVO, DEMO_USERS } from '../../config/menuConfig';
 import { ROLE_LABELS, ROLE_COLORS } from '../../constants/tramitesColors';
 
 const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion, cambiarRol }) => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const colores = ROLE_COLORS[rol] || ROLE_COLORS.ESTUDIANTE;
+
+  const handleLogout = () => { logout(); navigate('/login'); };
 
   return (
     <aside className="flex w-full flex-col border-b border-slate-200 bg-white lg:w-80 lg:border-b-0 lg:border-r">
@@ -48,6 +54,17 @@ const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion,
             </div>
           </div>
         </nav>
+      </div>
+
+      {/* Cerrar sesión */}
+      <div className="border-t border-slate-200 px-5 py-3">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="w-full rounded-xl px-4 py-2.5 text-left text-sm font-semibold text-slate-500 hover:bg-red-50 hover:text-red-600 transition"
+        >
+          Cerrar sesión
+        </button>
       </div>
 
       {/* Selector de rol demo */}
