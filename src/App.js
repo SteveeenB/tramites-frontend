@@ -19,6 +19,7 @@ import PazYSalvoDirector from './pages/PazYSalvoDirector';
 import EstadoEstudiantes from './pages/EstadoEstudiantes';
 import { ALLOWED_ROLES } from './config/menuConfig';
 import VerificarCertificado from './pages/VerificarCertificado';
+import Login from './pages/Login';
 import './App.css';
 
 function App() {
@@ -26,7 +27,8 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route 
+          <Route path="/login" element={<Login />} />
+          <Route
             path="/verificar" 
             element={
               <VerificarCertificado />

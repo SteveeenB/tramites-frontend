@@ -2,9 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { convocatoriasApi } from '../api/convocatoriasApi';
-import { BASE_URL } from '../api/apiClient';
-
-const API = BASE_URL;
+import { apiClient } from '../api/apiClient';
 
 const formatPesos = (n) =>
   new Intl.NumberFormat('es-CO', {
@@ -96,13 +94,12 @@ const SeccionTiposCertificado = () => {
   const cargar = useCallback(async () => {
     setCargando(true);
     try {
-      const [resTipos, resDeps] = await Promise.all([
-        fetch(`${API}/admin/tipos-certificado`, { credentials: 'include' }),
-        fetch(`${API}/dependencias`, { credentials: 'include' }),
+      const [tipos, deps] = await Promise.all([
+        apiClient('/admin/tipos-certificado'),
+        apiClient('/dependencias'),
       ]);
-      if (!resTipos.ok || !resDeps.ok) throw new Error('No se pudo cargar la información');
-      setTipos(await resTipos.json());
-      setDependencias(await resDeps.json());
+      setTipos(tipos || []);
+      setDependencias(deps || []);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -114,11 +111,7 @@ const SeccionTiposCertificado = () => {
 
   const toggleActivo = async (tipo) => {
     try {
-      const res = await fetch(
-        `${API}/admin/tipos-certificado/${tipo.id}/activo?valor=${!tipo.activo}`,
-        { method: 'PATCH', credentials: 'include' }
-      );
-      if (!res.ok) throw new Error('No se pudo cambiar el estado');
+      await apiClient(`/admin/tipos-certificado/${tipo.id}/activo?valor=${!tipo.activo}`, { method: 'PATCH' });
       cargar();
     } catch (e) { setError(e.message); }
   };
@@ -139,19 +132,11 @@ const SeccionTiposCertificado = () => {
     setGuardando(true); setError(null);
     try {
       const esNuevo = !edicion.id;
-      const url = esNuevo
-        ? `${API}/admin/tipos-certificado`
-        : `${API}/admin/tipos-certificado/${edicion.id}`;
-      const res = await fetch(url, {
+      const path = esNuevo ? '/admin/tipos-certificado' : `/admin/tipos-certificado/${edicion.id}`;
+      await apiClient(path, {
         method: esNuevo ? 'POST' : 'PUT',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(edicion),
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'No se pudo guardar');
-      }
       setEdicion(null);
       await cargar();
     } catch (e) {

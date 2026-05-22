@@ -36,7 +36,7 @@ const ModalRechazo = ({ solicitud, cedulaPosgrados, onClose, onExito }) => {
         setEnviando(true);
         setError(null);
         try {
-            await solicitudesApi.rechazarPosgrados(solicitud.id, cedulaPosgrados, motivo.trim());
+            await solicitudesApi.rechazarPosgrados(solicitud.id, motivo.trim());
             onExito();
         } catch (e) {
             setError(e.message || 'No se pudo rechazar la solicitud.');
@@ -103,9 +103,9 @@ const TarjetaSolicitud = ({ solicitud, cedulaPosgrados, tipo, onActualizar }) =>
         try {
             let blob;
             if (solicitud.estado === 'APROBADA_DIRECTOR') {
-                ({ blob } = await solicitudesApi.aprobarPosgrados(solicitud.id, cedulaPosgrados));
+                ({ blob } = await solicitudesApi.aprobarPosgrados(solicitud.id));
             } else {
-                ({ blob } = await solicitudesApi.descargarCertificadoPdf(solicitud.id, cedulaPosgrados));
+                ({ blob } = await solicitudesApi.descargarCertificadoPdf(solicitud.id));
             }
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -219,18 +219,18 @@ export default function BandejaPosgrados() {
     const [filtroEstado, setFiltroEstado] = useState('TODOS');
 
     const cargar = useCallback(async () => {
-        if (!usuario?.cedula) return;
+        if (!usuario) return;
         setCargando(true);
         setError(null);
         try {
-            const data = await solicitudesApi.getBandejaPosgrados(usuario.cedula);
+            const data = await solicitudesApi.getBandejaPosgrados();
             setDatos(data);
         } catch (e) {
             setError(e.message || 'No se pudo cargar la bandeja.');
         } finally {
             setCargando(false);
         }
-    }, [usuario?.cedula]);
+    }, [usuario]);
 
     useEffect(() => { cargar(); }, [cargar]);
 

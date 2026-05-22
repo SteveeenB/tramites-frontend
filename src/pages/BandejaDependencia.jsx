@@ -94,22 +94,22 @@ export default function BandejaDependencia() {
   const [filtro, setFiltro] = useState('PENDIENTE');
 
   const cargar = useCallback(async () => {
-    if (!usuario?.cedula) return;
+    if (!usuario) return;
     setLoading(true);
     try {
-      const data = await getMisSolicitudesPazYSalvo(usuario.cedula);
+      const data = await getMisSolicitudesPazYSalvo();
       setSolicitudes(data);
     } catch (e) {
       setError(e.message);
     } finally {
       setLoading(false);
     }
-  }, [usuario?.cedula]);
+  }, [usuario]);
 
   useEffect(() => { cargar(); }, [cargar]);
 
   const handleConfirmar = async (id, decision, observaciones) => {
-    await responderPazYSalvo(id, usuario.cedula, decision, observaciones);
+    await responderPazYSalvo(id, decision, observaciones);
     await cargar();
   };
 

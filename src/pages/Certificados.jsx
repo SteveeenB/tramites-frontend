@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { BASE_URL } from '../api/apiClient';
-
-const API = BASE_URL;
+import { apiClient, downloadApiClient } from '../api/apiClient';
 
 // ── Badges por estado de la solicitud ─────────────────────────────────
 const ESTADOS_BADGE = {
@@ -124,9 +122,9 @@ const Certificados = () => {
 
   // ── Carga inicial ──────────────────────────────────────────────────
   useEffect(() => {
-    fetch(`${API}/certificados/tipos`)
-      .then((r) => r.json())
+    apiClient('/certificados/tipos')
       .then((data) => {
+        if (!data) return;
         setTipos(data);
         if (data.length > 0) setCertSeleccionado(data[0].codigo);
       })
@@ -135,12 +133,11 @@ const Certificados = () => {
 
   useEffect(() => {
     const cargarHistorial = async () => {
-      if (!usuario?.cedula) return;
+      if (!usuario) return;
       try {
         setCargando(true);
-        const res = await fetch(`${API}/certificados?cedula=${usuario.cedula}`, { credentials: 'include' });
-        if (!res.ok) throw new Error('No se pudo cargar el historial');
-        setHistorial(await res.json());
+        const data = await apiClient('/certificados');
+        setHistorial(data || []);
       } catch (e) {
         setError(e.message);
       } finally {
@@ -152,16 +149,14 @@ const Certificados = () => {
 
   // ── Acciones ──────────────────────────────────────────────────────
   const handleGenerarRecibo = async () => {
-    if (!usuario?.cedula) return;
+    if (!usuario) return;
     setGenerando(true);
     setError('');
     try {
-      const res = await fetch(
-        `${API}/certificados/solicitar?cedula=${usuario.cedula}&tipo=${certSeleccionado}&modalidad=${modalidad}`,
-        { method: 'POST', credentials: 'include' }
+      const data = await apiClient(
+        `/certificados/solicitar?tipo=${certSeleccionado}&modalidad=${modalidad}`,
+        { method: 'POST' }
       );
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'No se pudo generar el recibo');
       setHistorial((prev) => [data, ...prev]);
     } catch (e) {
       setError(e.message);
@@ -171,15 +166,11 @@ const Certificados = () => {
   };
 
   const handlePagar = async (id) => {
-    if (!usuario?.cedula) return;
+    if (!usuario) return;
     setPagando(id);
     setError('');
     try {
-      const res = await fetch(`${API}/certificados/${id}/pagar?cedula=${usuario.cedula}`, {
-        method: 'POST', credentials: 'include',
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'No se pudo procesar el pago');
+      const data = await apiClient(`/certificados/${id}/pagar`, { method: 'POST' });
       setHistorial((prev) => prev.map((item) => (item.id === id ? data : item)));
     } catch (e) {
       setError(e.message);
@@ -189,19 +180,11 @@ const Certificados = () => {
   };
 
   const handleDescargarPdf = async (id) => {
-    if (!usuario?.cedula) return;
+    if (!usuario) return;
     setDescargandoId(id);
     setError('');
     try {
-      const res = await fetch(`${API}/certificados/${id}/pdf?cedula=${usuario.cedula}`, {
-        credentials: 'include',
-      });
-      if (!res.ok) {
-        let msg = 'No se pudo descargar el certificado';
-        try { msg = (await res.json()).error || msg; } catch (_) {}
-        throw new Error(msg);
-      }
-      const blob = await res.blob();
+      const { blob } = await downloadApiClient(`/certificados/${id}/pdf`);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
