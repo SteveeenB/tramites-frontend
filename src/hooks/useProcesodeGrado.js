@@ -22,8 +22,8 @@ export const useProcesodeGrado = () => {
     setErrorPagina('');
     try {
       const [dataProc, dataSol] = await Promise.all([
-        tramitesApi.getProcesoGrado(usuario.cedula),
-        solicitudesApi.getMias(usuario.cedula),
+        tramitesApi.getProcesoGrado(),
+        solicitudesApi.getMias(),
       ]);
 
       setDatos(dataProc);
@@ -52,7 +52,7 @@ export const useProcesodeGrado = () => {
     setEnviando(true);
     setErrorSolicitud('');
     try {
-      const json = await solicitudesApi.crearTerminacion(usuario.cedula);
+      const json = await solicitudesApi.crearTerminacion();
       setSolicitud(json);
     } catch (e) {
       setErrorSolicitud(e.message || 'No se pudo conectar con el servidor');
@@ -65,7 +65,7 @@ export const useProcesodeGrado = () => {
     if (!solicitud?.id || !usuario?.cedula) return;
     setDescargandoActa(true);
     try {
-      const { blob } = await solicitudesApi.descargarCertificadoPdf(solicitud.id, usuario.cedula);
+      const { blob } = await solicitudesApi.descargarCertificadoPdf(solicitud.id);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

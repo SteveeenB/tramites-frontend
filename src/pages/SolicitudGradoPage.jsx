@@ -41,7 +41,7 @@ const SolicitudGradoPage = () => {
     setEnviando(true);
     setError('');
     try {
-      await solicitudesApi.crearSolicitudGrado(usuario.cedula, {
+      await solicitudesApi.crearSolicitudGrado({
         tituloProyecto,
         resumen,
         tipoProyecto,

@@ -84,22 +84,22 @@ export default function PazYSalvoDirector() {
   const [filtro, setFiltro] = useState('PENDIENTE');
 
   const cargar = useCallback(async () => {
-    if (!usuario?.cedula) return;
+    if (!usuario) return;
     setLoading(true);
     try {
-      const data = await getMisSolicitudesPazYSalvo(usuario.cedula);
+      const data = await getMisSolicitudesPazYSalvo();
       setSolicitudes(data);
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
     }
-  }, [usuario?.cedula]);
+  }, [usuario]);
 
   useEffect(() => { cargar(); }, [cargar]);
 
   const handleConfirmar = async (id, decision, obs) => {
-    await responderPazYSalvo(id, usuario.cedula, decision, obs);
+    await responderPazYSalvo(id, decision, obs);
     await cargar();
   };
 
