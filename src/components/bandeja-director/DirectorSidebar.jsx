@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 const SidebarLink = ({ children, active = false, onClick }) => (
   <button
@@ -18,6 +19,9 @@ const SidebarLink = ({ children, active = false, onClick }) => (
 const DirectorSidebar = ({ usuario }) => {
   const navigate  = useNavigate();
   const location  = useLocation();
+  const { logout } = useAuth();
+
+  const handleLogout = () => { logout(); navigate('/login'); };
   const path      = location.pathname;
 
   const enBandejaSolicitudes = path.startsWith('/tramites/bandeja') && !path.includes('/proceso') && !path.includes('/certif');
@@ -73,6 +77,15 @@ const DirectorSidebar = ({ usuario }) => {
              </div>
            </div>
          </nav>
+      </div>
+      <div className="border-t border-slate-200 px-5 py-3">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="w-full rounded-xl px-4 py-2.5 text-left text-sm font-semibold text-slate-500 hover:bg-red-50 hover:text-red-600 transition"
+        >
+          Cerrar sesión
+        </button>
       </div>
     </aside>
   );

@@ -19,7 +19,9 @@ const SidebarLink = ({ children, active = false, onClick }) => (
 
 const ProcesoPGSidebar = ({ usuario }) => {
   const navigate = useNavigate();
-  const { usuario: usuarioAuth, cambiarRol } = useAuth();
+  const { usuario: usuarioAuth, cambiarRol, logout } = useAuth();
+
+  const handleLogout = () => { logout(); navigate('/login'); };
 
   const handleCambiarRol = (demoKey) => {
     cambiarRol(demoKey);
@@ -64,6 +66,17 @@ const ProcesoPGSidebar = ({ usuario }) => {
             </div>
           </div>
         </nav>
+      </div>
+
+      {/* Cerrar sesión */}
+      <div className="border-t border-slate-200 px-5 py-3">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="w-full rounded-xl px-4 py-2.5 text-left text-sm font-semibold text-slate-500 hover:bg-red-50 hover:text-red-600 transition"
+        >
+          Cerrar sesión
+        </button>
       </div>
 
       {/* ── Selector de usuario demo ── */}
