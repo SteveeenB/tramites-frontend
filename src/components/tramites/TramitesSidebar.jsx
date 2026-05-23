@@ -4,6 +4,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { DEMO_OPTIONS, DEMO_OPTIONS_PAZ_Y_SALVO, DEMO_USERS } from '../../config/menuConfig';
 import { ROLE_LABELS, ROLE_COLORS } from '../../constants/tramitesColors';
 
+const DEMO_MODE = process.env.REACT_APP_DEMO_MODE !== 'false';
+
 const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion, cambiarRol }) => {
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -68,52 +70,54 @@ const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion,
       </div>
 
       {/* Selector de rol demo */}
-      <div className="border-t border-slate-200 p-5">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
-          Demo — cambiar usuario
-        </p>
-        <div className="flex flex-col gap-2">
-          {DEMO_OPTIONS.map((opt) => {
-            const esTIC = rol === 'ESTUDIANTE' && usuario?.cedula === '1098765440';
-            const esConCreditos = rol === 'ESTUDIANTE' && usuario?.cedula === '1098765435';
-            const esActivo =
-              (opt.key === 'ESTUDIANTE_TIC'          && esTIC) ||
-              (opt.key === 'ESTUDIANTE_CON_CREDITOS' && esConCreditos) ||
-              (opt.key === 'ESTUDIANTE'              && rol === 'ESTUDIANTE' && !esConCreditos && !esTIC) ||
-              (opt.key !== 'ESTUDIANTE' && opt.key !== 'ESTUDIANTE_CON_CREDITOS' && opt.key !== 'ESTUDIANTE_TIC' && opt.key === rol);
-            return (
-              <button
-                key={opt.key}
-                type="button"
-                onClick={() => cambiarRol(opt.key)}
-                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
-                  esActivo ? colores.active : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                {opt.label}
-              </button>
-            );
-          })}
-          <p className="mt-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
-            Paz y Salvos
+      {DEMO_MODE && (
+        <div className="border-t border-slate-200 p-5">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
+            Demo — cambiar usuario
           </p>
-          {DEMO_OPTIONS_PAZ_Y_SALVO.map((opt) => {
-            const esActivo = usuario?.cedula === DEMO_USERS[opt.key]?.cedula;
-            return (
-              <button
-                key={opt.key}
-                type="button"
-                onClick={() => cambiarRol(opt.key)}
-                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
-                  esActivo ? colores.active : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                {opt.label}
-              </button>
-            );
-          })}
+          <div className="flex flex-col gap-2">
+            {DEMO_OPTIONS.map((opt) => {
+              const esTIC = rol === 'ESTUDIANTE' && usuario?.cedula === '1098765440';
+              const esConCreditos = rol === 'ESTUDIANTE' && usuario?.cedula === '1098765435';
+              const esActivo =
+                (opt.key === 'ESTUDIANTE_TIC'          && esTIC) ||
+                (opt.key === 'ESTUDIANTE_CON_CREDITOS' && esConCreditos) ||
+                (opt.key === 'ESTUDIANTE'              && rol === 'ESTUDIANTE' && !esConCreditos && !esTIC) ||
+                (opt.key !== 'ESTUDIANTE' && opt.key !== 'ESTUDIANTE_CON_CREDITOS' && opt.key !== 'ESTUDIANTE_TIC' && opt.key === rol);
+              return (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => cambiarRol(opt.key)}
+                  className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
+                    esActivo ? colores.active : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+            <p className="mt-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
+              Paz y Salvos
+            </p>
+            {DEMO_OPTIONS_PAZ_Y_SALVO.map((opt) => {
+              const esActivo = usuario?.cedula === DEMO_USERS[opt.key]?.cedula;
+              return (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => cambiarRol(opt.key)}
+                  className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
+                    esActivo ? colores.active : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </aside>
   );
 };
