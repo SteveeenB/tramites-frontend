@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { DEMO_OPTIONS } from '../../config/menuConfig';
 
+const DEMO_MODE = process.env.REACT_APP_DEMO_MODE !== 'false';
+
 const SidebarLink = ({ children, active = false, onClick }) => (
   <button
     type="button"
@@ -80,36 +82,38 @@ const ProcesoPGSidebar = ({ usuario }) => {
       </div>
 
       {/* ── Selector de usuario demo ── */}
-      <div className="border-t border-slate-200 p-5">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
-          Demo — cambiar usuario
-        </p>
-        <div className="flex flex-col gap-2">
-          {DEMO_OPTIONS.map((opt) => {
-            const esTIC = usuarioAuth?.rol === 'ESTUDIANTE' && usuarioAuth?.cedula === '1098765440';
-            const esConCreditos = usuarioAuth?.rol === 'ESTUDIANTE' && usuarioAuth?.cedula === '1098765435';
-            const esActivo =
-              (opt.key === 'ESTUDIANTE_TIC'          && esTIC) ||
-              (opt.key === 'ESTUDIANTE_CON_CREDITOS' && esConCreditos) ||
-              (opt.key === 'ESTUDIANTE'              && usuarioAuth?.rol === 'ESTUDIANTE' && !esConCreditos && !esTIC) ||
-              (opt.key !== 'ESTUDIANTE' && opt.key !== 'ESTUDIANTE_CON_CREDITOS' && opt.key !== 'ESTUDIANTE_TIC' && opt.key === usuarioAuth?.rol);
-            return (
-              <button
-                key={opt.key}
-                type="button"
-                onClick={() => handleCambiarRol(opt.key)}
-                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
-                  esActivo
-                    ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
-                    : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                {opt.label}
-              </button>
-            );
-          })}
+      {DEMO_MODE && (
+        <div className="border-t border-slate-200 p-5">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
+            Demo — cambiar usuario
+          </p>
+          <div className="flex flex-col gap-2">
+            {DEMO_OPTIONS.map((opt) => {
+              const esTIC = usuarioAuth?.rol === 'ESTUDIANTE' && usuarioAuth?.cedula === '1098765440';
+              const esConCreditos = usuarioAuth?.rol === 'ESTUDIANTE' && usuarioAuth?.cedula === '1098765435';
+              const esActivo =
+                (opt.key === 'ESTUDIANTE_TIC'          && esTIC) ||
+                (opt.key === 'ESTUDIANTE_CON_CREDITOS' && esConCreditos) ||
+                (opt.key === 'ESTUDIANTE'              && usuarioAuth?.rol === 'ESTUDIANTE' && !esConCreditos && !esTIC) ||
+                (opt.key !== 'ESTUDIANTE' && opt.key !== 'ESTUDIANTE_CON_CREDITOS' && opt.key !== 'ESTUDIANTE_TIC' && opt.key === usuarioAuth?.rol);
+              return (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => handleCambiarRol(opt.key)}
+                  className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
+                    esActivo
+                      ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
+                      : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </aside>
   );
 };
