@@ -277,8 +277,8 @@ const Certificados = () => {
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Estudiante</p>
                 <p className="font-semibold text-slate-900">{usuario?.nombre || 'Estudiante'}</p>
-                {usuario?.programaAcademico && (
-                  <p className="mt-0.5 text-xs text-slate-500">{usuario.programaAcademico}</p>
+                {usuario?.programaNombre && (
+                  <p className="mt-0.5 text-xs text-slate-500">{usuario.programaNombre}</p>
                 )}
               </div>
             </div>
