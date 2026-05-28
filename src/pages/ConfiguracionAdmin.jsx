@@ -2,9 +2,8 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { convocatoriasApi } from '../api/convocatoriasApi';
-import { BASE_URL } from '../api/apiClient';
-
-const API = BASE_URL;
+import { apiClient } from '../api/apiClient';
+import { dependenciasApi } from '../api/dependenciasApi';
 
 const formatPesos = (n) =>
   new Intl.NumberFormat('es-CO', {
@@ -96,13 +95,12 @@ const SeccionTiposCertificado = () => {
   const cargar = useCallback(async () => {
     setCargando(true);
     try {
-      const [resTipos, resDeps] = await Promise.all([
-        fetch(`${API}/admin/tipos-certificado`, { credentials: 'include' }),
-        fetch(`${API}/dependencias`, { credentials: 'include' }),
+      const [tipos, deps] = await Promise.all([
+        apiClient('/admin/tipos-certificado'),
+        apiClient('/dependencias'),
       ]);
-      if (!resTipos.ok || !resDeps.ok) throw new Error('No se pudo cargar la información');
-      setTipos(await resTipos.json());
-      setDependencias(await resDeps.json());
+      setTipos(tipos || []);
+      setDependencias(deps || []);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -114,11 +112,7 @@ const SeccionTiposCertificado = () => {
 
   const toggleActivo = async (tipo) => {
     try {
-      const res = await fetch(
-        `${API}/admin/tipos-certificado/${tipo.id}/activo?valor=${!tipo.activo}`,
-        { method: 'PATCH', credentials: 'include' }
-      );
-      if (!res.ok) throw new Error('No se pudo cambiar el estado');
+      await apiClient(`/admin/tipos-certificado/${tipo.id}/activo?valor=${!tipo.activo}`, { method: 'PATCH' });
       cargar();
     } catch (e) { setError(e.message); }
   };
@@ -139,19 +133,11 @@ const SeccionTiposCertificado = () => {
     setGuardando(true); setError(null);
     try {
       const esNuevo = !edicion.id;
-      const url = esNuevo
-        ? `${API}/admin/tipos-certificado`
-        : `${API}/admin/tipos-certificado/${edicion.id}`;
-      const res = await fetch(url, {
+      const path = esNuevo ? '/admin/tipos-certificado' : `/admin/tipos-certificado/${edicion.id}`;
+      await apiClient(path, {
         method: esNuevo ? 'POST' : 'PUT',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(edicion),
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'No se pudo guardar');
-      }
       setEdicion(null);
       await cargar();
     } catch (e) {
@@ -319,6 +305,383 @@ const SeccionTiposCertificado = () => {
   );
 };
 
+// ── Sección: Dependencias ──────────────────────────────────────────────
+const DEP_VACIO  = { nombre: '', descripcion: '' };
+const USER_VACIO = { nombreCompleto: '', cedula: '', codigo: '', correo: '', contrasena: '', dependenciaId: '' };
+
+const SeccionDependencias = () => {
+  const [items, setItems]               = useState([]);
+  const [usuarios, setUsuarios]         = useState([]);
+  const [cargando, setCargando]         = useState(true);
+  const [error, setError]               = useState(null);
+  const [edicion, setEdicion]           = useState(null);
+  const [guardando, setGuardando]       = useState(false);
+  const [nuevoUser, setNuevoUser]       = useState(null);
+  const [guardandoUser, setGuardandoUser] = useState(false);
+
+  const cargar = useCallback(async () => {
+    setCargando(true);
+    try {
+      const [deps, users] = await Promise.all([
+        dependenciasApi.listarCatalogo(),
+        dependenciasApi.listarUsuarios(),
+      ]);
+      setItems(deps || []);
+      setUsuarios(users || []);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setCargando(false);
+    }
+  }, []);
+
+  useEffect(() => { cargar(); }, [cargar]);
+
+  const toggleActivo = async (dep) => {
+    try {
+      await dependenciasApi.toggleActivo(dep.id, !dep.activa);
+      cargar();
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const guardar = async (e) => {
+    e.preventDefault();
+    setGuardando(true);
+    setError(null);
+    try {
+      if (edicion.id) {
+        await dependenciasApi.actualizar(edicion.id, edicion);
+      } else {
+        await dependenciasApi.crear(edicion);
+      }
+      setEdicion(null);
+      await cargar();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setGuardando(false);
+    }
+  };
+
+  const guardarUsuario = async (e) => {
+    e.preventDefault();
+    setGuardandoUser(true);
+    setError(null);
+    try {
+      await dependenciasApi.crearUsuario({
+        ...nuevoUser,
+        dependenciaId: nuevoUser.dependenciaId ? Number(nuevoUser.dependenciaId) : null,
+      });
+      setNuevoUser(null);
+      await cargar();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setGuardandoUser(false);
+    }
+  };
+
+  const eliminarUsuario = async (cedula, nombre) => {
+    if (!window.confirm(`¿Eliminar a "${nombre}" como responsable?`)) return;
+    try {
+      await dependenciasApi.eliminarUsuario(cedula);
+      cargar();
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      {/* Cabecera con acento rojo institucional */}
+      <div className="mb-5 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="h-9 w-1.5 rounded-full bg-red-600" />
+          <div>
+            <h3 className="text-lg font-bold text-slate-900">Dependencias</h3>
+            <p className="text-xs text-slate-500">
+              Unidades que participan en el proceso de paz y salvos.
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setEdicion({ ...DEP_VACIO })}
+          className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+        >
+          + Nueva dependencia
+        </button>
+      </div>
+
+      {error && (
+        <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+          {error}
+        </div>
+      )}
+
+      {cargando ? (
+        <div className="py-8 text-center text-sm text-slate-400">Cargando…</div>
+      ) : items.length === 0 ? (
+        <div className="rounded-xl border-2 border-dashed border-slate-200 py-10 text-center">
+          <p className="text-sm font-medium text-slate-400">No hay dependencias registradas.</p>
+          <p className="mt-1 text-xs text-slate-400">
+            Crea la primera con el botón de arriba.
+          </p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-slate-50 text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
+                <th className="px-3 py-2 text-left">Nombre</th>
+                <th className="px-3 py-2 text-left">Descripción</th>
+                <th className="px-3 py-2 text-center">Estado</th>
+                <th className="px-3 py-2 text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {items.map((dep) => (
+                <tr key={dep.id} className="hover:bg-slate-50">
+                  <td className="px-3 py-3 font-semibold text-slate-900">{dep.nombre}</td>
+                  <td className="px-3 py-3 text-slate-500 text-xs max-w-xs truncate">
+                    {dep.descripcion || <span className="italic text-slate-300">Sin descripción</span>}
+                  </td>
+                  <td className="px-3 py-3 text-center">
+                    <button
+                      type="button"
+                      onClick={() => toggleActivo(dep)}
+                      title={dep.activa ? 'Click para desactivar' : 'Click para reactivar'}
+                      className={`rounded-full px-3 py-0.5 text-xs font-semibold transition hover:opacity-80 ${
+                        dep.activa
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : 'bg-slate-100 text-slate-500'
+                      }`}
+                    >
+                      {dep.activa ? 'Activa' : 'Inactiva'}
+                    </button>
+                  </td>
+                  <td className="px-3 py-3 text-center">
+                    <button
+                      type="button"
+                      disabled={!dep.activa}
+                      onClick={() => setEdicion({ ...dep })}
+                      className="rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Editar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* ── Subsección: Responsables ── */}
+      <hr className="my-6 border-slate-100" />
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div>
+          <h4 className="font-semibold text-slate-800">Responsables</h4>
+          <p className="text-xs text-slate-500">
+            Usuarios que validan paz y salvos en el proceso de grado.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setNuevoUser({ ...USER_VACIO })}
+          className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-100"
+        >
+          + Agregar responsable
+        </button>
+      </div>
+
+      {usuarios.length === 0 ? (
+        <div className="rounded-xl border-2 border-dashed border-slate-200 py-8 text-center">
+          <p className="text-sm font-medium text-slate-400">No hay responsables registrados.</p>
+          <p className="mt-1 text-xs text-slate-400">
+            Agrega el primero con el botón de arriba.
+          </p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-slate-50 text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
+                <th className="px-3 py-2 text-left">Nombre</th>
+                <th className="px-3 py-2 text-left">Cédula</th>
+                <th className="px-3 py-2 text-left">Correo</th>
+                <th className="px-3 py-2 text-left">Dependencia</th>
+                <th className="px-3 py-2 text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {usuarios.map((u) => (
+                <tr key={u.cedula} className="hover:bg-slate-50">
+                  <td className="px-3 py-3 font-semibold text-slate-900">{u.nombreCompleto}</td>
+                  <td className="px-3 py-3 font-mono text-xs text-slate-600">{u.cedula}</td>
+                  <td className="px-3 py-3 text-xs text-slate-500">{u.correo || '—'}</td>
+                  <td className="px-3 py-3">
+                    {u.dependenciaNombre ? (
+                      <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+                        {u.dependenciaNombre}
+                      </span>
+                    ) : (
+                      <span className="text-xs italic text-slate-300">Sin asignar</span>
+                    )}
+                  </td>
+                  <td className="px-3 py-3 text-center">
+                    <button
+                      type="button"
+                      onClick={() => eliminarUsuario(u.cedula, u.nombreCompleto)}
+                      className="rounded-lg border border-red-200 px-3 py-1 text-xs font-semibold text-red-600 transition hover:bg-red-50"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Modal crear / editar catálogo */}
+      {edicion && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <form
+            onSubmit={guardar}
+            className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"
+          >
+            <div className="mb-5 flex items-center gap-3">
+              <div className="h-8 w-1.5 rounded-full bg-red-600" />
+              <h3 className="text-lg font-bold text-slate-900">
+                {edicion.id ? 'Editar dependencia' : 'Nueva dependencia'}
+              </h3>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Nombre <span className="text-red-500">*</span>
+                </label>
+                <input type="text" required value={edicion.nombre}
+                  onChange={(e) => setEdicion({ ...edicion, nombre: e.target.value })}
+                  placeholder="Ej: Biblioteca Central"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100" />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Descripción
+                </label>
+                <textarea rows={3} value={edicion.descripcion || ''}
+                  onChange={(e) => setEdicion({ ...edicion, descripcion: e.target.value })}
+                  placeholder="Descripción breve de la dependencia…"
+                  className="w-full resize-none rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100" />
+              </div>
+            </div>
+            {error && <div className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-600">{error}</div>}
+            <div className="mt-6 flex justify-end gap-2">
+              <button type="button" onClick={() => { setEdicion(null); setError(null); }}
+                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Cancelar
+              </button>
+              <button type="submit" disabled={guardando}
+                className="rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:opacity-50">
+                {guardando ? 'Guardando…' : 'Guardar'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Modal nuevo responsable */}
+      {nuevoUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <form onSubmit={guardarUsuario}
+            className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="h-8 w-1.5 rounded-full bg-red-600" />
+              <h3 className="text-lg font-bold text-slate-900">Agregar responsable</h3>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Nombre completo <span className="text-red-500">*</span>
+                </label>
+                <input type="text" required value={nuevoUser.nombreCompleto}
+                  onChange={(e) => setNuevoUser({ ...nuevoUser, nombreCompleto: e.target.value })}
+                  placeholder="Ej: Biblioteca Central"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100" />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Cédula <span className="text-red-500">*</span>
+                </label>
+                <input type="text" required value={nuevoUser.cedula}
+                  onChange={(e) => setNuevoUser({ ...nuevoUser, cedula: e.target.value })}
+                  placeholder="1234567890"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100" />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Código
+                </label>
+                <input type="text" value={nuevoUser.codigo}
+                  onChange={(e) => setNuevoUser({ ...nuevoUser, codigo: e.target.value })}
+                  placeholder="DEP004"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100" />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Correo
+                </label>
+                <input type="email" value={nuevoUser.correo}
+                  onChange={(e) => setNuevoUser({ ...nuevoUser, correo: e.target.value })}
+                  placeholder="dependencia@ufps.edu.co"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100" />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Contraseña <span className="text-red-500">*</span>
+                </label>
+                <input type="password" required value={nuevoUser.contrasena}
+                  onChange={(e) => setNuevoUser({ ...nuevoUser, contrasena: e.target.value })}
+                  placeholder="••••••••"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100" />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Dependencia asignada
+                </label>
+                <select value={nuevoUser.dependenciaId}
+                  onChange={(e) => setNuevoUser({ ...nuevoUser, dependenciaId: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100">
+                  <option value="">— Sin asignar —</option>
+                  {items.filter(d => d.activa).map((d) => (
+                    <option key={d.id} value={d.id}>{d.nombre}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {error && <div className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-600">{error}</div>}
+            <div className="mt-6 flex justify-end gap-2">
+              <button type="button" onClick={() => { setNuevoUser(null); setError(null); }}
+                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                Cancelar
+              </button>
+              <button type="submit" disabled={guardandoUser}
+                className="rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:opacity-50">
+                {guardandoUser ? 'Guardando…' : 'Guardar'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ── Página principal ──────────────────────────────────────────────────
 const ConfiguracionAdmin = () => {
   const navigate = useNavigate();
@@ -353,6 +716,7 @@ const ConfiguracionAdmin = () => {
         <div className="space-y-8">
           <SeccionConvocatoria />
           <SeccionTiposCertificado />
+          <SeccionDependencias />
         </div>
       </main>
     </div>

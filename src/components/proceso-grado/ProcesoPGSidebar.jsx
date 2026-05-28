@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { DEMO_OPTIONS } from '../../config/menuConfig';
 
+const DEMO_MODE = process.env.REACT_APP_DEMO_MODE !== 'false';
+
 const SidebarLink = ({ children, active = false, onClick }) => (
   <button
     type="button"
@@ -19,7 +21,9 @@ const SidebarLink = ({ children, active = false, onClick }) => (
 
 const ProcesoPGSidebar = ({ usuario }) => {
   const navigate = useNavigate();
-  const { usuario: usuarioAuth, cambiarRol } = useAuth();
+  const { usuario: usuarioAuth, cambiarRol, logout } = useAuth();
+
+  const handleLogout = () => { logout(); navigate('/login'); };
 
   const handleCambiarRol = (demoKey) => {
     cambiarRol(demoKey);
@@ -41,8 +45,8 @@ const ProcesoPGSidebar = ({ usuario }) => {
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Estudiante</p>
             <p className="font-semibold text-slate-900">{usuario?.nombre}</p>
-            {usuario?.programaAcademico && (
-              <p className="mt-0.5 text-xs text-slate-500">{usuario.programaAcademico}</p>
+            {usuario?.programaNombre && (
+              <p className="mt-0.5 text-xs text-slate-500">{usuario.programaNombre}</p>
             )}
           </div>
         </div>
@@ -66,37 +70,50 @@ const ProcesoPGSidebar = ({ usuario }) => {
         </nav>
       </div>
 
-      {/* ── Selector de usuario demo ── */}
-      <div className="border-t border-slate-200 p-5">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
-          Demo — cambiar usuario
-        </p>
-        <div className="flex flex-col gap-2">
-          {DEMO_OPTIONS.map((opt) => {
-            const esTIC = usuarioAuth?.rol === 'ESTUDIANTE' && usuarioAuth?.cedula === '1098765440';
-            const esConCreditos = usuarioAuth?.rol === 'ESTUDIANTE' && usuarioAuth?.cedula === '1098765435';
-            const esActivo =
-              (opt.key === 'ESTUDIANTE_TIC'          && esTIC) ||
-              (opt.key === 'ESTUDIANTE_CON_CREDITOS' && esConCreditos) ||
-              (opt.key === 'ESTUDIANTE'              && usuarioAuth?.rol === 'ESTUDIANTE' && !esConCreditos && !esTIC) ||
-              (opt.key !== 'ESTUDIANTE' && opt.key !== 'ESTUDIANTE_CON_CREDITOS' && opt.key !== 'ESTUDIANTE_TIC' && opt.key === usuarioAuth?.rol);
-            return (
-              <button
-                key={opt.key}
-                type="button"
-                onClick={() => handleCambiarRol(opt.key)}
-                className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
-                  esActivo
-                    ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
-                    : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                {opt.label}
-              </button>
-            );
-          })}
-        </div>
+      {/* Cerrar sesión */}
+      <div className="border-t border-slate-200 px-5 py-3">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="w-full rounded-xl px-4 py-2.5 text-left text-sm font-semibold text-slate-500 hover:bg-red-50 hover:text-red-600 transition"
+        >
+          Cerrar sesión
+        </button>
       </div>
+
+      {/* ── Selector de usuario demo ── */}
+      {DEMO_MODE && (
+        <div className="border-t border-slate-200 p-5">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
+            Demo — cambiar usuario
+          </p>
+          <div className="flex flex-col gap-2">
+            {DEMO_OPTIONS.map((opt) => {
+              const esTIC = usuarioAuth?.rol === 'ESTUDIANTE' && usuarioAuth?.cedula === '1098765440';
+              const esConCreditos = usuarioAuth?.rol === 'ESTUDIANTE' && usuarioAuth?.cedula === '1098765435';
+              const esActivo =
+                (opt.key === 'ESTUDIANTE_TIC'          && esTIC) ||
+                (opt.key === 'ESTUDIANTE_CON_CREDITOS' && esConCreditos) ||
+                (opt.key === 'ESTUDIANTE'              && usuarioAuth?.rol === 'ESTUDIANTE' && !esConCreditos && !esTIC) ||
+                (opt.key !== 'ESTUDIANTE' && opt.key !== 'ESTUDIANTE_CON_CREDITOS' && opt.key !== 'ESTUDIANTE_TIC' && opt.key === usuarioAuth?.rol);
+              return (
+                <button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => handleCambiarRol(opt.key)}
+                  className={`w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition ${
+                    esActivo
+                      ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
+                      : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </aside>
   );
 };

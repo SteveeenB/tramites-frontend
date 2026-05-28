@@ -25,14 +25,14 @@ export const useBandejaDirector = () => {
   const [errorAccion, setErrorAccion]   = useState('');
 
   const cargarBandeja = useCallback(async () => {
-    if (!usuario?.cedula) return;
+    if (!usuario) return;
     try {
-      const data = await solicitudesApi.getBandejaDirector(usuario.cedula);
+      const data = await solicitudesApi.getBandejaDirector();
       setBandeja(data);
     } catch (e) {
       setError(mensajeDeError(e));
     }
-  }, [usuario?.cedula]);
+  }, [usuario]);
 
   useEffect(() => {
     setCargando(true);
@@ -43,7 +43,7 @@ export const useBandejaDirector = () => {
     setAccion(id);
     setErrorAccion('');
     try {
-      await solicitudesApi.aprobar(id, usuario.cedula);
+      await solicitudesApi.aprobar(id);
       await cargarBandeja();
     } catch (e) {
       setErrorAccion(mensajeDeError(e));
@@ -56,7 +56,7 @@ export const useBandejaDirector = () => {
     setAccion(id);
     setErrorAccion('');
     try {
-      await solicitudesApi.rechazar(id, usuario.cedula, motivo);
+      await solicitudesApi.rechazar(id, motivo);
       await cargarBandeja();
     } catch (e) {
       setErrorAccion(mensajeDeError(e));

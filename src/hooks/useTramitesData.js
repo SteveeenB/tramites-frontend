@@ -21,11 +21,11 @@ export const useTramitesData = () => {
 
   // Carga datos del módulo desde el backend
   useEffect(() => {
-    if (!usuario?.cedula) return;
+    if (!usuario) return;
 
     const fetchModulo = async () => {
       try {
-        const json = await tramitesApi.getModulo(usuario.cedula);
+        const json = await tramitesApi.getModulo();
         setDatosModulo(json);
       } catch {
         // el contenido se muestra igual con datos del menuConfig
@@ -33,7 +33,7 @@ export const useTramitesData = () => {
     };
 
     fetchModulo();
-  }, [usuario?.cedula]);
+  }, [usuario]);
 
   const manejarSeleccion = (item) => {
     setSelectedMenuId(item.id);
