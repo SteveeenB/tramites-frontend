@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { BASE_URL } from '../api/apiClient';
-
-const API = BASE_URL;
+import { apiClient, downloadApiClient } from '../api/apiClient';
 
 const TABS = [
   { id: 'GENERADO',     label: 'Por imprimir' },
@@ -44,13 +42,8 @@ export default function BandejaCertificadosDependencia() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API}/certificados/dependencia/${usuario.cedula}`,
-                              { credentials: 'include' });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'No se pudo cargar la bandeja');
-      }
-      setSolicitudes(await res.json());
+      const data = await apiClient(`/certificados/dependencia/${usuario.cedula}`);
+      setSolicitudes(data || []);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -64,14 +57,8 @@ export default function BandejaCertificadosDependencia() {
     setAccionando(id);
     setError(null);
     try {
-      const res = await fetch(
-        `${API}/certificados/${id}/marcar-listo?cedulaDependencia=${usuario.cedula}`,
-        { method: 'POST', credentials: 'include' }
-      );
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'No se pudo actualizar');
-      }
+      await apiClient(`/certificados/${id}/marcar-listo?cedulaDependencia=${usuario.cedula}`,
+                      { method: 'POST' });
       await cargar();
     } catch (e) {
       setError(e.message);
@@ -84,14 +71,8 @@ export default function BandejaCertificadosDependencia() {
     setAccionando(id);
     setError(null);
     try {
-      const res = await fetch(
-        `${API}/certificados/${id}/marcar-entregado?cedulaDependencia=${usuario.cedula}`,
-        { method: 'POST', credentials: 'include' }
-      );
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'No se pudo actualizar');
-      }
+      await apiClient(`/certificados/${id}/marcar-entregado?cedulaDependencia=${usuario.cedula}`,
+                      { method: 'POST' });
       await cargar();
     } catch (e) {
       setError(e.message);
@@ -104,14 +85,7 @@ export default function BandejaCertificadosDependencia() {
     setDescargando(id);
     setError(null);
     try {
-      const res = await fetch(`${API}/certificados/${id}/pdf?cedula=${usuario.cedula}`, {
-        credentials: 'include',
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'No se pudo descargar el PDF');
-      }
-      const blob = await res.blob();
+      const { blob } = await downloadApiClient(`/certificados/${id}/pdf`);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

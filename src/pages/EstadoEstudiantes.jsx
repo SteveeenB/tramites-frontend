@@ -46,18 +46,18 @@ export default function EstadoEstudiantes() {
   const [busqueda, setBusqueda]       = useState('');
 
   const cargar = useCallback(async () => {
-    if (!usuario?.cedula) return;
+    if (!usuario) return;
     setLoading(true);
     setError(null);
     try {
-      const data = await getEstadoEstudiantes(usuario.cedula);
+      const data = await getEstadoEstudiantes();
       setEstudiantes(data);
     } catch (e) {
       setError(e.message);
     } finally {
       setLoading(false);
     }
-  }, [usuario?.cedula]);
+  }, [usuario]);
 
   useEffect(() => { cargar(); }, [cargar]);
 
