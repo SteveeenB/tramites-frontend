@@ -9,9 +9,38 @@ import BandejaCertificadosDependencia from './BandejaCertificadosDependencia';
 import PazYSalvoDirector from './PazYSalvoDirector';
 import EstadoEstudiantes from './EstadoEstudiantes';
 import BandejaPosgrados from './BandejaPosgrados';
+import {
+  SeccionConvocatoria,
+  SeccionTiposCertificado,
+  SeccionUsuarios,
+  SeccionProgramas,
+  SeccionDependencias,
+  SeccionPlantillasCorreo,
+  SeccionDocumentosRequeridos,
+  SeccionTiposTramite,
+  SeccionReportes,
+  SeccionAuditoria,
+  SeccionConfiguracionGlobal,
+} from './posgrados';
 
 const CONTENIDO_POR_ROL = {
   DIRECTOR: ContenidoDirector,
+};
+
+// Mapeo de cada pestaña del sidebar POSGRADOS al componente que renderiza.
+const POSGRADOS_SECCIONES = {
+  'bandeja-posgrados':     BandejaPosgrados,
+  'reportes':              SeccionReportes,
+  'tipos-certificado':     SeccionTiposCertificado,
+  'tipos-tramite':         SeccionTiposTramite,
+  'dependencias':          SeccionDependencias,
+  'documentos-requeridos': SeccionDocumentosRequeridos,
+  'usuarios':              SeccionUsuarios,
+  'programas':             SeccionProgramas,
+  'convocatorias':         SeccionConvocatoria,
+  'plantillas-correo':     SeccionPlantillasCorreo,
+  'auditoria':             SeccionAuditoria,
+  'configuracion-global':  SeccionConfiguracionGlobal,
 };
 
 const TramitesView = () => {
@@ -27,8 +56,11 @@ const TramitesView = () => {
     if (rol === 'DIRECTOR' && selectedMenuId === 'paz-y-salvo')        return <PazYSalvoDirector />;
     if (rol === 'DIRECTOR' && selectedMenuId === 'estado-estudiantes') return <EstadoEstudiantes />;
 
-    // POSGRADOS
-    if (rol === 'POSGRADOS') return <BandejaPosgrados />;
+    // POSGRADOS — multiples secciones por sidebar
+    if (rol === 'POSGRADOS') {
+      const Seccion = POSGRADOS_SECCIONES[selectedMenuId] || BandejaPosgrados;
+      return <Seccion />;
+    }
 
     // Default por rol
     const Contenido = CONTENIDO_POR_ROL[rol] || ContenidoEstudiante;
