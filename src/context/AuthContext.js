@@ -25,6 +25,8 @@ const payloadToUsuario = (claims) => ({
   codigo:         claims.codigo,
   email:          claims.email,
   rol:            claims.rol,
+  estudianteId:   claims.estudianteId   || null,
+  programaNombre: claims.programaNombre || null,
 });
 
 export const AuthProvider = ({ children }) => {
@@ -57,6 +59,8 @@ export const AuthProvider = ({ children }) => {
       codigo:         responseData.codigo,
       email:          responseData.email,
       rol:            responseData.rol,
+      estudianteId:   responseData.estudianteId   || null,
+      programaNombre: responseData.programaNombre || null,
     });
   }, []);
 
