@@ -14,8 +14,27 @@ export const MENU_BY_ROLE = {
     { id: 'estado-estudiantes', label: 'Estado Estudiantes',     route: '/tramites'                   },
   ],
   POSGRADOS: [
-    { id: 'bandeja-posgrados', label: 'Bandeja de Solicitudes', route: '/tramites'                        },
-    { id: 'configuracion',     label: 'Configuración',          route: '/tramites/admin/configuracion'    },
+    // ── Operación ─────────────────────────────────────────────────
+    { id: 'bandeja-posgrados', label: 'Bandeja de Solicitudes', route: '/tramites', group: 'Operación' },
+    { id: 'reportes',          label: 'Reportes',               route: '/tramites', group: 'Operación' },
+
+    // ── Catálogos ─────────────────────────────────────────────────
+    { id: 'tipos-certificado',     label: 'Tipos de Certificado', route: '/tramites', group: 'Catálogos' },
+    { id: 'tipos-tramite',         label: 'Tipos de Trámite',     route: '/tramites', group: 'Catálogos' },
+    { id: 'dependencias',          label: 'Dependencias y Paz y Salvos', route: '/tramites', group: 'Catálogos' },
+    { id: 'documentos-requeridos', label: 'Documentos Requeridos', route: '/tramites', group: 'Catálogos' },
+
+    // ── Personas ─────────────────────────────────────────────────
+    { id: 'usuarios',  label: 'Usuarios',             route: '/tramites', group: 'Personas' },
+    { id: 'programas', label: 'Programas Académicos', route: '/tramites', group: 'Personas' },
+
+    // ── Comunicación ─────────────────────────────────────────────
+    { id: 'convocatorias',      label: 'Convocatorias',      route: '/tramites', group: 'Comunicación' },
+    { id: 'plantillas-correo',  label: 'Plantillas de Correo', route: '/tramites', group: 'Comunicación' },
+
+    // ── Sistema ──────────────────────────────────────────────────
+    { id: 'auditoria',            label: 'Auditoría',            route: '/tramites', group: 'Sistema' },
+    { id: 'configuracion-global', label: 'Configuración Global', route: '/tramites', group: 'Sistema' },
   ],
 };
 

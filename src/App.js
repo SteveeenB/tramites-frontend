@@ -114,10 +114,17 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/*
+            Configuración del admin: la página vieja "ConfiguracionAdmin" queda
+            como compatibilidad por si alguien tiene el link directo. La
+            navegación nueva vive como pestañas dentro de /tramites (ver
+            POSGRADOS en menuConfig.js + TramitesView).
+            Sin rolesPermitidos para no romper la demo cuando se cambia de rol.
+          */}
           <Route
             path="/tramites/admin/configuracion"
             element={
-              <ProtectedRoute rolesPermitidos={['ADMIN', 'POSGRADOS']}>
+              <ProtectedRoute>
                 <ConfiguracionAdmin />
               </ProtectedRoute>
             }
