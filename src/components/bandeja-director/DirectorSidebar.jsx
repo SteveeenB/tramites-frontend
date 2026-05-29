@@ -41,8 +41,8 @@ const DirectorSidebar = ({ usuario }) => {
               Director de Programa
             </p>
             <p className="truncate font-semibold text-slate-900">{usuario?.nombre}</p>
-            {usuario?.programaAcademico && (
-              <p className="mt-0.5 truncate text-xs text-slate-500">{usuario.programaAcademico}</p>
+            {usuario?.programaNombre && (
+              <p className="mt-0.5 truncate text-xs text-slate-500">{usuario.programaNombre}</p>
             )}
           </div>
         </div>
