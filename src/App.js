@@ -11,7 +11,6 @@ import BandejaGrado from './pages/BandejaGrado';
 import ListaSolicitudesGrado from './pages/ListaSolicitudesGrado';
 import DetalleSolicitudGrado from './pages/DetalleSolicitudGrado';
 import BandejaSolicitudes from './pages/BandejaSolicitudes';
-import ConfiguracionAdmin from './pages/ConfiguracionAdmin';
 import SolicitudGradoPage from './pages/SolicitudGradoPage';
 import NoAutorizado from './pages/NoAutorizado';
 import BandejaDependencia from './pages/BandejaDependencia';
@@ -114,14 +113,12 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/tramites/admin/configuracion"
-            element={
-              <ProtectedRoute rolesPermitidos={['ADMIN', 'POSGRADOS']}>
-                <ConfiguracionAdmin />
-              </ProtectedRoute>
-            }
-          />
+          {/*
+            La ruta /tramites/admin/configuracion fue eliminada.
+            Toda la administración vive ahora como pestañas del sidebar en
+            /tramites cuando el rol es POSGRADOS (ver POSGRADOS en
+            menuConfig.js + TramitesView).
+          */}
           <Route
             path="/tramites/bandeja-dependencia"
             element={

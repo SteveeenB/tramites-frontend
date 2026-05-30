@@ -36,7 +36,7 @@ const ContenidoAdmin = ({ datosModulo }) => {
           titulo="Configuración"
           descripcion="Configura los parámetros del sistema, convocatorias, créditos requeridos por programa y más."
           etiqueta="Configurar"
-          onClick={() => navigate('/tramites/admin/configuracion')}
+          onClick={() => navigate('/tramites')}
           deshabilitada={!puedeGestionar}
         />
       </div>

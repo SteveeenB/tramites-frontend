@@ -6,6 +6,65 @@ import { ROLE_LABELS, ROLE_COLORS } from '../../constants/tramitesColors';
 
 const DEMO_MODE = process.env.REACT_APP_DEMO_MODE !== 'false';
 
+/**
+ * Renderiza los items del menú lateral. Si los items tienen `group`,
+ * agrupa visualmente con un header por grupo. Si no, los lista plano.
+ * Esto permite que roles con muchas pestañas (POSGRADOS) tengan secciones
+ * claras sin romper el patrón de roles con pocas (ESTUDIANTE, DIRECTOR).
+ */
+const renderMenuItems = (menuItems, selectedMenuId, onSeleccion, colores) => {
+  const tieneGrupos = menuItems.some((it) => it.group);
+  if (!tieneGrupos) {
+    return menuItems.map((item) => (
+      <button
+        key={item.id}
+        type="button"
+        onClick={() => onSeleccion(item)}
+        className={`w-full rounded-xl px-4 py-2.5 text-left text-sm font-medium transition ${
+          selectedMenuId === item.id
+            ? colores.active
+            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+        }`}
+      >
+        {item.label}
+      </button>
+    ));
+  }
+
+  // Agrupar conservando el orden de aparición
+  const grupos = [];
+  for (const item of menuItems) {
+    const g = item.group || 'Otros';
+    let entry = grupos.find((x) => x.nombre === g);
+    if (!entry) { entry = { nombre: g, items: [] }; grupos.push(entry); }
+    entry.items.push(item);
+  }
+
+  return grupos.map((g) => (
+    <div key={g.nombre} className="mb-3 last:mb-0">
+      <p className="px-4 pt-2 pb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+        {g.nombre}
+      </p>
+      <div className="space-y-1">
+        {g.items.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => onSeleccion(item)}
+            className={`w-full rounded-xl px-4 py-2 text-left text-xs font-medium transition ${
+              selectedMenuId === item.id
+                ? colores.active
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  ));
+};
+
 const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion, cambiarRol }) => {
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -39,20 +98,7 @@ const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion,
               Trámites
             </button>
             <div className="mt-2 space-y-1 pl-3">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => onSeleccion(item)}
-                  className={`w-full rounded-xl px-4 py-2.5 text-left text-sm font-medium transition ${
-                    selectedMenuId === item.id
-                      ? colores.active
-                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+              {renderMenuItems(menuItems, selectedMenuId, onSeleccion, colores)}
             </div>
           </div>
         </nav>
