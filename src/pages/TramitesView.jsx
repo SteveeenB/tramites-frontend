@@ -9,9 +9,44 @@ import BandejaCertificadosDependencia from './BandejaCertificadosDependencia';
 import PazYSalvoDirector from './PazYSalvoDirector';
 import EstadoEstudiantes from './EstadoEstudiantes';
 import BandejaPosgrados from './BandejaPosgrados';
+import {
+  SeccionConvocatoria,
+  SeccionTiposCertificado,
+  SeccionUsuarios,
+  SeccionProgramas,
+  SeccionDependencias,
+  SeccionPlantillasCorreo,
+  SeccionDocumentosRequeridos,
+  SeccionTiposTramite,
+  SeccionReportes,
+  SeccionAuditoria,
+  SeccionConfiguracionGlobal,
+} from './posgrados';
 
 const CONTENIDO_POR_ROL = {
   DIRECTOR: ContenidoDirector,
+};
+
+// Pestañas exclusivas del ADMIN (configurador) — coinciden con los IDs
+// definidos en MENU_BY_ROLE.ADMIN en menuConfig.js.
+const ADMIN_SECCIONES = {
+  'reportes':              SeccionReportes,
+  'tipos-certificado':     SeccionTiposCertificado,
+  'tipos-tramite':         SeccionTiposTramite,
+  'dependencias':          SeccionDependencias,
+  'documentos-requeridos': SeccionDocumentosRequeridos,
+  'usuarios':              SeccionUsuarios,
+  'programas':             SeccionProgramas,
+  'convocatorias':         SeccionConvocatoria,
+  'plantillas-correo':     SeccionPlantillasCorreo,
+  'auditoria':             SeccionAuditoria,
+  'configuracion-global':  SeccionConfiguracionGlobal,
+};
+
+// Pestañas del POSGRADOS (operativo) — bandeja y reportes únicamente.
+const POSGRADOS_SECCIONES = {
+  'bandeja-posgrados': BandejaPosgrados,
+  'reportes':          SeccionReportes,
 };
 
 const TramitesView = () => {
@@ -27,8 +62,17 @@ const TramitesView = () => {
     if (rol === 'DIRECTOR' && selectedMenuId === 'paz-y-salvo')        return <PazYSalvoDirector />;
     if (rol === 'DIRECTOR' && selectedMenuId === 'estado-estudiantes') return <EstadoEstudiantes />;
 
-    // POSGRADOS
-    if (rol === 'POSGRADOS') return <BandejaPosgrados />;
+    // POSGRADOS (operativo) — solo atiende bandejas y consulta reportes.
+    if (rol === 'POSGRADOS') {
+      const Seccion = POSGRADOS_SECCIONES[selectedMenuId] || BandejaPosgrados;
+      return <Seccion />;
+    }
+
+    // ADMIN (configurador) — sidebar con todas las pestañas de configuración.
+    if (rol === 'ADMIN') {
+      const Seccion = ADMIN_SECCIONES[selectedMenuId] || SeccionTiposCertificado;
+      return <Seccion />;
+    }
 
     // Default por rol
     const Contenido = CONTENIDO_POR_ROL[rol] || ContenidoEstudiante;
