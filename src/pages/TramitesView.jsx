@@ -27,9 +27,9 @@ const CONTENIDO_POR_ROL = {
   DIRECTOR: ContenidoDirector,
 };
 
-// Mapeo de cada pestaña del sidebar POSGRADOS al componente que renderiza.
-const POSGRADOS_SECCIONES = {
-  'bandeja-posgrados':     BandejaPosgrados,
+// Pestañas exclusivas del ADMIN (configurador) — coinciden con los IDs
+// definidos en MENU_BY_ROLE.ADMIN en menuConfig.js.
+const ADMIN_SECCIONES = {
   'reportes':              SeccionReportes,
   'tipos-certificado':     SeccionTiposCertificado,
   'tipos-tramite':         SeccionTiposTramite,
@@ -41,6 +41,12 @@ const POSGRADOS_SECCIONES = {
   'plantillas-correo':     SeccionPlantillasCorreo,
   'auditoria':             SeccionAuditoria,
   'configuracion-global':  SeccionConfiguracionGlobal,
+};
+
+// Pestañas del POSGRADOS (operativo) — bandeja y reportes únicamente.
+const POSGRADOS_SECCIONES = {
+  'bandeja-posgrados': BandejaPosgrados,
+  'reportes':          SeccionReportes,
 };
 
 const TramitesView = () => {
@@ -56,9 +62,15 @@ const TramitesView = () => {
     if (rol === 'DIRECTOR' && selectedMenuId === 'paz-y-salvo')        return <PazYSalvoDirector />;
     if (rol === 'DIRECTOR' && selectedMenuId === 'estado-estudiantes') return <EstadoEstudiantes />;
 
-    // POSGRADOS — multiples secciones por sidebar
+    // POSGRADOS (operativo) — solo atiende bandejas y consulta reportes.
     if (rol === 'POSGRADOS') {
       const Seccion = POSGRADOS_SECCIONES[selectedMenuId] || BandejaPosgrados;
+      return <Seccion />;
+    }
+
+    // ADMIN (configurador) — sidebar con todas las pestañas de configuración.
+    if (rol === 'ADMIN') {
+      const Seccion = ADMIN_SECCIONES[selectedMenuId] || SeccionTiposCertificado;
       return <Seccion />;
     }
 
