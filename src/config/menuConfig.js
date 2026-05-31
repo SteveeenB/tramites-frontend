@@ -51,11 +51,13 @@ export const DEMO_USERS = {
   ESTUDIANTE_CON_CREDITOS: { cedula: '1098765435', nombre: 'Laura Gomez',         programaAcademico: 'Maestría en Gerencia de Empresas'          },
   ESTUDIANTE_TIC:          { cedula: '1098765440', nombre: 'Ana Torres',          programaAcademico: 'Maestría en TIC aplicadas a la Educación'  },
   DIRECTOR:                { cedula: '1098765433', nombre: 'Maria Director',      programaAcademico: 'Maestría en Educación Matemáticas'         },
-  POSGRADOS:               { cedula: '4000000001', nombre: 'Oficina Posgrados',   programaAcademico: null                                        },
-  ADMIN:                   { cedula: '9999999990', nombre: 'Administrador',       programaAcademico: null                                        },
-  DEPENDENCIA_BIBLIOTECA:  { cedula: '3000000001', nombre: 'Biblioteca Central',  programaAcademico: null                                        },
-  DEPENDENCIA_TESORERIA:   { cedula: '3000000002', nombre: 'Tesorería',           programaAcademico: null                                        },
-  DEPENDENCIA_ADMISIONES:  { cedula: '3000000003', nombre: 'Admisiones y Registro', programaAcademico: null                                      },
+  // Admins viven en la tabla `admins` (refactor plan_roles_v2). El demo
+  // endpoint /auth/login-demo busca por código cuando no encuentra cédula.
+  POSGRADOS:               { cedula: 'POS001',     nombre: 'Oficina Posgrados',     programaAcademico: null                                        },
+  ADMIN:                   { cedula: 'ADMIN1',     nombre: 'Administrador',         programaAcademico: null                                        },
+  DEPENDENCIA_BIBLIOTECA:  { cedula: 'DEP001',     nombre: 'Biblioteca Central',    programaAcademico: null                                        },
+  DEPENDENCIA_TESORERIA:   { cedula: 'DEP002',     nombre: 'División Financiera',   programaAcademico: null                                        },
+  DEPENDENCIA_ADMISIONES:  { cedula: 'DEP003',     nombre: 'Admisiones y Registro', programaAcademico: null                                        },
   ESTUDIANTE_GRADO:        { cedula: '2000000010', nombre: 'Andrea Prueba Grado', programaAcademico: 'Maestría en Gerencia de Empresas'          },
   ESTUDIANTE_KEDARVI:      { cedula: '2000000011', nombre: 'Kevin Estudiante',    programaAcademico: 'Maestría en Gerencia de Empresas'          },
 };

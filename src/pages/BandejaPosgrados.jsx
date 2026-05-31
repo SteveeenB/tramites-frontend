@@ -224,7 +224,7 @@ export default function BandejaPosgrados() {
         setError(null);
         try {
             const data = await solicitudesApi.getBandejaPosgrados();
-            setDatos(data);
+            setDatos(data || { terminacion: [], grado: [] });
         } catch (e) {
             setError(e.message || 'No se pudo cargar la bandeja.');
         } finally {

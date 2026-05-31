@@ -14,7 +14,7 @@ import PosgradosHeader from '../../components/posgrados/PosgradosHeader';
  */
 
 const DEP_VACIO  = { nombre: '', descripcion: '' };
-const USER_VACIO = { nombreCompleto: '', cedula: '', codigo: '', correo: '', contrasena: '', dependenciaId: '' };
+const USER_VACIO = { nombreCompleto: '', codigo: '', correo: '', contrasena: '', dependenciaId: '' };
 
 const SeccionDependencias = () => {
   const [items, setItems]               = useState([]);
@@ -90,10 +90,10 @@ const SeccionDependencias = () => {
     }
   };
 
-  const eliminarUsuario = async (cedula, nombre) => {
+  const eliminarUsuario = async (codigo, nombre) => {
     if (!window.confirm(`¿Eliminar a "${nombre}" como responsable?`)) return;
     try {
-      await dependenciasApi.eliminarUsuario(cedula);
+      await dependenciasApi.eliminarUsuario(codigo);
       cargar();
     } catch (e) {
       setError(e.message);
@@ -202,7 +202,7 @@ const SeccionDependencias = () => {
               <thead>
                 <tr className="bg-slate-50 text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
                   <th className="px-4 py-3 text-left">Nombre</th>
-                  <th className="px-4 py-3 text-left">Cédula</th>
+                  <th className="px-4 py-3 text-left">Código</th>
                   <th className="px-4 py-3 text-left">Correo</th>
                   <th className="px-4 py-3 text-left">Dependencia</th>
                   <th className="px-4 py-3 text-center">Acciones</th>
@@ -210,9 +210,9 @@ const SeccionDependencias = () => {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {usuarios.map((u) => (
-                  <tr key={u.cedula} className="hover:bg-slate-50">
+                  <tr key={u.codigo} className="hover:bg-slate-50">
                     <td className="px-4 py-3 font-semibold text-slate-900">{u.nombreCompleto}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-600">{u.cedula}</td>
+                    <td className="px-4 py-3 font-mono text-xs text-slate-600">{u.codigo}</td>
                     <td className="px-4 py-3 text-xs text-slate-500">{u.correo || '—'}</td>
                     <td className="px-4 py-3">
                       {u.dependenciaNombre ? (
@@ -224,7 +224,7 @@ const SeccionDependencias = () => {
                       )}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      <button type="button" onClick={() => eliminarUsuario(u.cedula, u.nombreCompleto)}
+                      <button type="button" onClick={() => eliminarUsuario(u.codigo, u.nombreCompleto)}
                         className="rounded-lg border border-red-200 px-3 py-1 text-xs font-semibold text-red-600 transition hover:bg-red-50">
                         Eliminar
                       </button>
@@ -295,21 +295,12 @@ const SeccionDependencias = () => {
                   placeholder="Nombre del responsable"
                   className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
               </div>
-              <div>
+              <div className="sm:col-span-2">
                 <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Cédula <span className="text-red-500">*</span>
+                  Código <span className="text-red-500">*</span>
                 </label>
-                <input type="text" required value={nuevoUser.cedula}
-                  onChange={(e) => setNuevoUser({ ...nuevoUser, cedula: e.target.value })}
-                  placeholder="1234567890"
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-              </div>
-              <div>
-                <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Código
-                </label>
-                <input type="text" value={nuevoUser.codigo}
-                  onChange={(e) => setNuevoUser({ ...nuevoUser, codigo: e.target.value })}
+                <input type="text" required value={nuevoUser.codigo}
+                  onChange={(e) => setNuevoUser({ ...nuevoUser, codigo: e.target.value.toUpperCase() })}
                   placeholder="DEP004"
                   className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
               </div>

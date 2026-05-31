@@ -38,18 +38,18 @@ export default function BandejaCertificadosDependencia() {
   // en cliente. Esto es lo que permite que los contadores de cada pestaña
   // ((0), (2), ...) reflejen el total real, no solo lo que cabe en el tab actual.
   const cargar = useCallback(async () => {
-    if (!usuario?.cedula) return;
+    if (!usuario?.dependenciaId) return;
     setLoading(true);
     setError(null);
     try {
-      const data = await apiClient(`/certificados/dependencia/${usuario.cedula}`);
+      const data = await apiClient(`/certificados/dependencia/${usuario.dependenciaId}`);
       setSolicitudes(data || []);
     } catch (e) {
       setError(e.message);
     } finally {
       setLoading(false);
     }
-  }, [usuario?.cedula]);
+  }, [usuario?.dependenciaId]);
 
   useEffect(() => { cargar(); }, [cargar]);
 
@@ -57,8 +57,7 @@ export default function BandejaCertificadosDependencia() {
     setAccionando(id);
     setError(null);
     try {
-      await apiClient(`/certificados/${id}/marcar-listo?cedulaDependencia=${usuario.cedula}`,
-                      { method: 'POST' });
+      await apiClient(`/certificados/${id}/marcar-listo`, { method: 'POST' });
       await cargar();
     } catch (e) {
       setError(e.message);
@@ -71,8 +70,7 @@ export default function BandejaCertificadosDependencia() {
     setAccionando(id);
     setError(null);
     try {
-      await apiClient(`/certificados/${id}/marcar-entregado?cedulaDependencia=${usuario.cedula}`,
-                      { method: 'POST' });
+      await apiClient(`/certificados/${id}/marcar-entregado`, { method: 'POST' });
       await cargar();
     } catch (e) {
       setError(e.message);
