@@ -27,6 +27,9 @@ const payloadToUsuario = (claims) => ({
   rol:            claims.rol,
   estudianteId:   claims.estudianteId   || null,
   programaNombre: claims.programaNombre || null,
+  principalType:  claims.principalType  || 'USUARIO',
+  dependenciaId:  claims.dependenciaId  || null,
+  esSuperAdmin:   claims.esSuperAdmin   || false,
 });
 
 export const AuthProvider = ({ children }) => {
@@ -61,6 +64,9 @@ export const AuthProvider = ({ children }) => {
       rol:            responseData.rol,
       estudianteId:   responseData.estudianteId   || null,
       programaNombre: responseData.programaNombre || null,
+      principalType:  responseData.principalType  || 'USUARIO',
+      dependenciaId:  responseData.dependenciaId  || null,
+      esSuperAdmin:   responseData.esSuperAdmin   || false,
     });
   }, []);
 
