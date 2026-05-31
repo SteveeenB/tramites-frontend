@@ -1,5 +1,13 @@
 # Plan de refactor — Modelo híbrido de identidad (admins / usuarios)
 
+> 📜 **HISTÓRICO — v1.** Este archivo refleja la **visión original** del refactor (cronograma optimista, alcance conceptual). Quedó superado en orden por:
+> - [`plan_roles_v2.md`](plan_roles_v2.md) — análisis más profundo tras inventario real del código.
+> - [`plan_roles_v3.md`](plan_roles_v3.md) — **plan vivo del equipo** (estado actual + Bloque 5).
+>
+> No edites este archivo. Si necesitas saber qué está hecho o qué falta hoy, ve a v3.
+
+---
+
 > Plan ejecutable para alinear el modelo de identidad del módulo trámites con el patrón híbrido de la BD oficial de Posgrados. Permite demostrar la viabilidad de la integración en el MVP sin esperar a la integración real, y reduce el costo de esa integración a renombrar tablas.
 
 ---
