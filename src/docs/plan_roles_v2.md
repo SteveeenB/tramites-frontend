@@ -1,5 +1,13 @@
 # Plan de refactor — Modelo híbrido de identidad (v2)
 
+> ⚠️ **SUPERADO COMO PLAN OPERATIVO POR [`plan_roles_v3.md`](plan_roles_v3.md) (2026-05-31).**
+>
+> Este v2 se mantiene como **referencia detallada del análisis y las decisiones** que se tomaron durante el sprint de implementación de Bloques 0-4. Lee este archivo cuando quieras saber **por qué** se tomó una decisión específica, **qué alternativas se consideraron** o **qué inventario de código sirvió de base** para los bloques.
+>
+> Para saber **qué está hecho hoy y qué falta**, ir a [`plan_roles_v3.md`](plan_roles_v3.md).
+
+---
+
 > **Versión 2** del plan original [`plan_roles.md`](plan_roles.md). Se reescribe tras un inventario exhaustivo del código real que reveló que la estimación de la v1 (~19h, "Fases 2 y 3 cuestan ~5h juntas") subestimaba significativamente el costo. Esta versión separa el alcance en lo que **realmente se puede hacer en una sesión** vs lo que requiere sprints dedicados con QA real.
 
 ---
