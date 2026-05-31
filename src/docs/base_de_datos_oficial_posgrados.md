@@ -1,3 +1,10 @@
+# Esquema de la BD oficial de Posgrados
+
+> **Última actualización:** 2026-05-31  
+> Campos añadidos tras cruzar con `clientes_finales_sistema.md` (compartido por el equipo oficial). Cambios resumidos al final del archivo en la sección "Cambios 2026-05-31".
+
+---
+
 📋 MÓDULO: DIVISIT (Sincronización externa)
 estudiantes_divisit
 codigo, active, desc_tipo_car, documento, email, fecha_nacimiento, fecha_sincronizacion, moodle_id, nom_carrera, primer_apellido, primer_nombre, segundo_apellido, t_matriculado, tipo_documento
@@ -14,7 +21,7 @@ cod_carrera, cod_materia, active, cod_dpto, creditos, fecha_sincronizacion, finc
 
 👩‍🎓 MÓDULO: ESTUDIANTES Y MATRÍCULAS
 estudiantes
-id, apellido1, apellido2, cedula, codigo, esPregrado, fechaIngreso, fechaNacimiento, migrado, moodleid, nombre, nombre2, telefono, estado_estudiante_id, cohorte_id
+id, apellido1, apellido2, cedula, codigo, email, esPregrado, fechaIngreso, fechaNacimiento, migrado, moodleid, nombre, nombre2, telefono, estado_estudiante_id, cohorte_id, pensum_id, programa_id, usuario_id
 matriculas
 id, correcEnviado, fechaCorrEnviado, fechaMatricula, notaAbierta, nuevaMatricula, semestre, estado_matricula_id, fechoHolista, nota, grupo_cohorte_id
 cambio_estado_matriculas
@@ -114,7 +121,7 @@ id, extension, fecha_subida, mime_type, nombre, peso, rate, tamano_bytes, tipo, 
 
 👤 MÓDULO: USUARIOS Y ROLES
 usuarios
-id, cedula, codigo, foto_url, grupo_id, moodleid, nombreCompleto, primerApellido, primerNombre, segundoApellido, segundoNombre, telefono, rol_id
+id, cedula, codigo, email, foto_url, google_id, grupo_id, moodleid, nombreCompleto, primerApellido, primerNombre, segundoApellido, segundoNombre, telefono, rol_id
 roles
 id, nombre
 admins
@@ -127,3 +134,43 @@ historial_cierre_notas
 id, cod_carrera, cod_grupo, grupo_cohorte_id, matricula_id, realizado_por
 trabajos_social
 id, encid_id, titulo, tipo, autor, revista, doc, password, credito_ait, programa_en, codigo_profesor
+
+---
+
+## Cambios 2026-05-31
+
+Tras cruzar este archivo con `clientes_finales_sistema.md` (compartido por el equipo oficial), se añadieron campos que faltaban en la versión anterior. Lo que sigue es el detalle de los cambios para que el equipo no se confunda y nadie asuma que faltan campos.
+
+### Campos añadidos
+
+**`estudiantes`** (módulo Estudiantes y Matrículas):
+- `email` — correo institucional (también está duplicado en `usuarios` por trazabilidad).
+- `pensum_id` — FK a `pensum` (plan de estudios del estudiante).
+- `programa_id` — FK a `programas` (carrera del estudiante).
+- `usuario_id` — FK a `usuarios.id` (relación directa estudiante↔usuario). Este campo ya estaba en la última versión pero se documenta aquí por su importancia.
+
+**`usuarios`** (módulo Usuarios y Roles):
+- `email` — correo electrónico, usado para sesión y como dato compartido con `estudiantes`/`admins`.
+- `google_id` — identificador OAuth para SSO con Google.
+
+### Divergencias de nomenclatura pendientes de confirmar con el equipo oficial
+
+Estas son **inconsistencias entre los dos documentos oficiales que recibimos**, no errores de transcripción. Se mantienen los nombres que aparecen en este archivo (el más detallado a nivel de módulos), y se anotan aquí para evitar ambigüedad.
+
+| Tabla | Este archivo | `clientes_finales_sistema.md` | Comentario |
+|---|---|---|---|
+| `estudiantes` | `esPregrado` | `esPosgrado` | Mismo campo con interpretación inversa (`true` = pregrado vs `true` = posgrado). Funcionalmente equivalente pero **el nombre canónico hay que confirmarlo** con el equipo oficial antes de cualquier integración. |
+| (tabla de sesiones) | `sesiones_archivo` | `sesiones_activas` | Mismos campos (`correoUsuario`, `token`, `fecha_expiracion`, `ultima_actividad`). Probablemente sea la misma tabla con dos nombres documentados. |
+| `estudiantes` | `apellido1, apellido2, nombre, nombre2` | `apellido, apellido2, nombre, nombre2` | Mismo campo, primer apellido nombrado de forma diferente. |
+
+### Cómo usar este documento
+
+- Este archivo es **descriptivo** del esquema oficial — refleja lo que el equipo oficial nos ha compartido sobre su BD.
+- **No es el esquema de nuestro módulo de trámites.** Para nuestro modelo ver `SQL_BD_Tramites_posgrados.txt` y `plan_integracion_bd_oficial.md`.
+- Cualquier discrepancia entre este archivo y la BD real del equipo oficial debe resolverse pidiendo aclaración directa, no asumiendo.
+
+**Documentos relacionados:**
+- [`clientes_finales_sistema.md`](clientes_finales_sistema.md) — análisis enfocado en las entidades de identidad (usuarios, estudiantes, admins, roles, sesiones).
+- [`Roles_bd_oficial.docx`](Roles_bd_oficial.docx) — desglose de roles globales vs contextuales en la oficial.
+- [`plan_integracion_bd_oficial.md`](plan_integracion_bd_oficial.md) — estrategia de integración con la BD oficial.
+- [`plan_roles_v2.md`](plan_roles_v2.md) §11 — auditoría de nuestro modelo contra los anteriores.
