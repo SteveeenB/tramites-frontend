@@ -743,6 +743,37 @@ Acompañar el script con un breve `INTEGRACION_README.md` (no más de una págin
 
 ---
 
+## 9b. Trabajo en `main` que el experimento debe absorber
+
+El experimento `migracion-railway` corre en paralelo a otras tareas que siguen en `main`. Cuando esas tareas mergeen a `main`, hay que traerlas a `migracion-railway` (merge o rebase) y ajustar este plan.
+
+### 9b.1 Cambio venidero: Certificados solo en POSGRADOS
+
+**Tarea en curso en rama `certificados-David`** (ver [`../Certificados/certificados_posgrados.md`](../Certificados/certificados_posgrados.md)):
+- Se elimina la pestaña Certificados del rol DEPENDENCIA.
+- Se elimina el selector "Dependencia encargada" del formulario de tipos de certificado.
+- La columna `tipo_certificado.dependencia_id` (FK a `dependencias.id`) se elimina de la BD del módulo.
+- La columna `tipo_certificado.dependencia_cedula` (zombie del esquema anterior) se elimina definitivamente del seed.
+- La bandeja de gestión de certificados físicos pasa de DEPENDENCIA → POSGRADOS.
+
+**Impacto en este plan cuando se mergee a `main` y luego a `migracion-railway`:**
+
+| Sección de este plan | Ajuste necesario |
+|---|---|
+| §3.3 tabla `tipo_certificado` | Eliminar la FK `dependencia_id → dependencias.id`. Eliminar `direccion_oficina` si solo aplicaba a dependencias externas; mantenerlo si POSGRADOS también lo usa. |
+| §3.3 tabla `solicitud_certificado` | El campo `cedula_dependencia` ya estaba marcado como zombie; con este cambio queda confirmado eliminarlo. |
+| §1.3 decisión #12 (frontend) | Un formulario admin menos que migra (el selector "Dependencia encargada" deja de existir antes de la migración). |
+| §3.5 Total experimento | Recuento de tablas igual; conteo de columnas eliminadas aumenta. |
+| Roles operativos | DEPENDENCIA pierde acceso a certificados. Solo conserva paz y salvos. POSGRADOS gana la bandeja de impresión/entrega. |
+
+**Orden recomendado:**
+1. Terminar el cambio de certificados sobre Supabase en `main`.
+2. Mergear `main` → `migracion-railway`.
+3. Actualizar §3.3 de este plan para reflejar el `tipo_certificado` ya sin `dependencia_id`.
+4. Seguir con las fases pendientes del experimento.
+
+---
+
 ## 10. Documentos relacionados
 
 - [`bd_tablas_completas.md`](bd_tablas_completas.md) — **esquema oficial completo (fuente de verdad)**.
