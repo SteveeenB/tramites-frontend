@@ -35,6 +35,8 @@
 | Frontend: `AuthContext` con `principalType`, `BandejaCertificadosDependencia` con `dependenciaId`, etc. | ✅ Producción | frontend `e151e3b` | Smoke test E2E pasó |
 | Estudiante.usuario_id FK formal a usuario.id | ✅ Producción | backend `4387691` (Bug C fix) | Hibernate sin stacktrace al arrancar |
 | **Cleanup Bloque 4**: drop columnas zombie + Usuario.dependencia + UsuarioService dead code | ✅ Producción | backend `685dea4` | SQL `migracion_admins_bloque4.sql` aplicado |
+| **Sprint A — Bloque 5e**: catálogo `estados_estudiantes` + entidad `EstadoEstudiante` + FK formal + refactor servicios | ✅ Producción | backend `b0a3005` + fix `64885af` | SQL `migracion_bloque5e_estados_estudiantes.sql` aplicado; 5 estudiantes en `ACTIVO` |
+| **Sprint B — Bloque 5a**: `solicitud`/`solicitud_certificado`/`paz_y_salvo` con FK `estudiante_id` (doble-write) | ✅ Producción | backend `7ae0111` | SQL `migracion_bloque5a_estudiante_id.sql` aplicado; backfill parcial (ver §8) |
 
 ### 1.2 SQLs aplicados en Supabase
 
@@ -43,6 +45,8 @@ Ejecutados en orden:
 2. [`migracion_admins_bloque1.sql`](../../../tramites-backend/.docs/sql/migracion_admins_bloque1.sql) — `tipo_certificado.dependencia_id`
 3. [`migracion_admins_bloque2_3.sql`](../../../tramites-backend/.docs/sql/migracion_admins_bloque2_3.sql) — INSERT admins + DELETE viejos + ALTER solicitud + ALTER paz_y_salvo + FKs
 4. [`migracion_admins_bloque4.sql`](../../../tramites-backend/.docs/sql/migracion_admins_bloque4.sql) — DROP columnas zombie + DROP usuario.dependencia_id
+5. [`migracion_bloque5e_estados_estudiantes.sql`](../../../tramites-backend/.docs/sql/migracion_bloque5e_estados_estudiantes.sql) — catálogo `estados_estudiantes` + backfill desde `estado_grado`
+6. [`migracion_bloque5a_estudiante_id.sql`](../../../tramites-backend/.docs/sql/migracion_bloque5a_estudiante_id.sql) — FK `estudiante_id` en 3 tablas + backfill por cédula
 
 ### 1.3 Credenciales de prueba en producción
 
@@ -63,22 +67,20 @@ Todas con contraseña `123456`. Hash BCrypt único: `$2a$10$TCpV633Sg7xBIMP/VpL8
 
 ---
 
-## 2. Lo que falta — resumen ejecutivo del Bloque 5
+## 2. Estado del Bloque 5 (actualizado 2026-05-31)
 
-| Sub-bloque | Alcance | Estado | Tiempo | Depende de |
-|---|---|---|---|---|
-| **5a** | `cedula` (string) → `estudiante_id` (Long FK) en `solicitud`, `solicitud_certificado`, `paz_y_salvo` | Pendiente | 4-5h | Nada — ejecutable |
-| **5b** | `Solicitud.cedulaDirector` (string) → `directorUsuario` (FK Long, sin tabla nueva) | Pendiente | 2-3h | Nada — ejecutable |
-| **5c** | Adoptar `tipos_solicitudes` oficial | Pendiente | 2-3h | Acceso a tabla oficial |
-| **5d** | Cleanup denormalización en `usuario` (drop `programa_id`, `creditos_aprobados`, `estado_grado`, `correo`, `nombre`, `rol` string) | Pendiente | 2-3h | 5a hecho |
-| **5e** | Catálogo `estados_estudiantes` (reemplaza `Estudiante.estadoGrado` string) | Pendiente | 3-4h | Nada — ejecutable |
-| **5f** | Auth con SSO Moodle/Google + `sesiones_activas` | Diferido | 6-10h | SSO disponible |
+| Sub-bloque | Alcance | Estado | Notas |
+|---|---|---|---|
+| **5a** | `cedula` → `estudiante_id` FK en `solicitud`, `solicitud_certificado`, `paz_y_salvo` | ✅ **En producción** (Sprint B) | Doble-write; backfill parcial (ver §8 huérfanos) |
+| **5e** | Catálogo `estados_estudiantes` | ✅ **En producción** (Sprint A) | 5 estudiantes en `ACTIVO`; nuevos flujos escriben FK |
+| **5b** | `cedulaDirector` → FK `directorUsuario` | 🛑 **Diferido — ver §9** | No se ejecuta en este plan |
+| **5c** | Adoptar `tipos_solicitudes` oficial | 🛑 **Diferido — ver §9** | Movido a plan de migración Railway |
+| **5d** | Cleanup denormalización en `usuario` | 🛑 **Diferido — ver §9** | Movido a plan de migración Railway |
+| **5f** | Auth con SSO + `sesiones_activas` | 🛑 **Diferido — ver §9** | Sigue esperando SSO Moodle/Google |
 
-**Total ejecutable sin coordinación externa (5a + 5b + 5d + 5e):** 11-15h.
+**Lo que se ejecutó (Sprints A + B) no rompe nada del funcionamiento actual.** Ver §8 abajo para el detalle de huérfanos detectados y por qué no son bloqueantes.
 
-**Bloques 5c y 5f** quedan **diferidos hasta**:
-- 5c: el equipo oficial confirme acceso a su tabla `tipos_solicitudes`.
-- 5f: SSO Moodle/Google esté operativo.
+**Lo que falta del Bloque 5 (sub-bloques 5b/5c/5d/5f)** se decidió **no ejecutar** sobre la BD actual de Supabase. La razón está en §9: se pivota a un experimento de migración a Railway con MySQL siguiendo el esquema oficial completo. Ese plan está en [`TABLAS BD OFICIAL/plan_migracion_railway.md`](TABLAS%20BD%20OFICIAL/plan_migracion_railway.md).
 
 ---
 
@@ -330,7 +332,96 @@ Roles_bd_oficial.docx     ← Documento original del equipo oficial sobre el
 
 ---
 
-**Versión:** 3.0  
-**Última actualización:** 2026-05-31  
-**Estado:** plan vivo del equipo.  
+## 8. Deuda de datos identificada (2026-05-31)
+
+> Al ejecutar la verificación post-Sprint B detectamos inconsistencias **preexistentes en la BD de Supabase**. No son bugs del refactor — son datos sucios de seeds históricos y pruebas iterativas. Se documentan acá para que el equipo no se sorprenda y como insumo del plan de migración a Railway (§9).
+
+### 8.1 Huérfanos: usuarios con rol ESTUDIANTE sin perfil en `estudiante`
+
+El backfill del Sprint B reveló que hay solicitudes con `cedula` que NO tiene contraparte en la tabla `estudiante`:
+
+```
+solicitud:             29 total · 15 con FK · 14 sin FK
+solicitud_certificado: 25 total · 13 con FK · 12 sin FK
+paz_y_salvo:           12 total · 12 con FK ·  0 sin FK
+```
+
+Las **7 cédulas huérfanas** identificadas son usuarios que existen en `usuario` con `rol='ESTUDIANTE'` pero nunca tuvieron su fila correspondiente en `estudiante`:
+
+| Cédula | Código | Nombre |
+|---|---|---|
+| 1098765440 | 20261010 | Ana Torres |
+| 1098765438 | 20261008 | Ana Torres |
+| 1098765439 | 20261009 | Luis Mora |
+| 1098765441 | 1152381  | Angel Vesga |
+| 9999999999 | 20261099 | Estudiante Prueba |
+| 5000000001 | EST020   | Roberto Demo Posgrados |
+| 2000000011 | EST011   | Kevin Estudiante |
+
+### 8.2 Otras inconsistencias observadas
+
+- **Solicitudes de grado duplicadas:** Carlos Director (DIR001) ve 2 solicitudes "En revisión" del mismo estudiante (Laura Gomez, CC 1098765435). La validación de "ya existe activa" del backend asume que solo hay una en estado activo; probablemente la primera quedó en un estado distinto y se creó otra.
+- **Datos de seed inconsistentes:** algunos usuarios fueron pensados como "el estudiante de pruebas" (Kevin) pero realmente no se usan en los flujos demo del frontend.
+- **Sin mapeo coherente Usuario↔Estudiante:** la tabla `estudiante` no se actualizó cada vez que se añadía un nuevo usuario estudiante al seed.
+
+### 8.3 ¿Esto rompe algo del funcionamiento actual?
+
+**No.** La estrategia de doble-write garantiza que:
+
+- Las columnas string viejas (`cedula`, `cedula_estudiante`, `estado_grado`) siguen pobladas igual que antes.
+- Todas las queries existentes (`findByCedula`, `findFirstByCedulaAndTipo`, etc.) **siguen funcionando idéntico** — el código del Bloque 0-4 no fue alterado, solo se le añadió escritura adicional al FK.
+- Los flujos críticos del MVP funcionan: login, solicitar certificado, pagar, generar acta, paz y salvos.
+- Las filas huérfanas tienen `estudiante_id = NULL` pero la cédula sigue allí. Las queries que necesitan el estudiante pueden caer al lookup viejo.
+
+### 8.4 ¿Cuándo importa la deuda?
+
+Esto importa **solo en el momento del DROP futuro** de las columnas `cedula` zombie (Sprint posterior, originalmente planeado como Sprint C). En ese momento hay que:
+
+- O bien crear los perfiles de `estudiante` faltantes para esos usuarios.
+- O bien purgar las filas huérfanas si son de pruebas obsoletas.
+
+**Decisión:** no resolvemos los huérfanos sobre Supabase porque pivotamos a Railway con BD limpia (§9).
+
+---
+
+## 9. Cierre del plan v3 — pivot a migración Railway
+
+### 9.1 Decisión (2026-05-31)
+
+**No se ejecutan los sub-bloques 5b, 5c, 5d, 5f sobre la BD actual de Supabase.**
+
+Razón: la deuda de datos descrita en §8 y la duplicidad de "es nuestra BD" vs "queremos imitar la oficial" sugieren que pulir más Supabase es invertir en una base que no es la objetivo. La integración real apunta a un esquema MySQL alineado con el oficial.
+
+### 9.2 Qué reemplaza lo que falta
+
+Un **experimento documentado** de montar una BD MySQL en Railway que:
+
+- Sigue el esquema oficial al máximo (las 56 tablas analizadas en [`TABLAS BD OFICIAL/bd_tablas_completas.md`](TABLAS%20BD%20OFICIAL/bd_tablas_completas.md), con omisiones justificadas).
+- Cumple con la decisión #9 del plan v3 (importar el dominio cohortes cuando exista la integración) — porque ahora SÍ se importa.
+- Permite revalidar el flujo completo del MVP sobre un esquema fiel al oficial.
+- Se ejecuta **en rama paralela o repo nuevo** para no tocar `main` actual.
+- Si funciona, se propone como la BD oficial del MVP.
+
+Detalle completo en [`TABLAS BD OFICIAL/plan_migracion_railway.md`](TABLAS%20BD%20OFICIAL/plan_migracion_railway.md).
+
+### 9.3 Qué se mantiene del refactor Bloques 0-5 (A+B)
+
+Todo lo desplegado en Supabase queda como está. El refactor de identidad híbrida, los FKs nuevos, el catálogo de estados y los doble-writes **siguen siendo válidos como modelo** y se trasladan al esquema Railway con muy poca adaptación (cambio de dialecto Hibernate, conversión PostgreSQL → MySQL).
+
+### 9.4 Lo que sí sigue ejecutable sobre Supabase (si surge la necesidad)
+
+Si en algún momento se decide que el experimento Railway no avanza y hay que limpiar Supabase, los sub-bloques 5b/5c/5d quedan **especificados en §4 de este documento** y se pueden ejecutar tal cual. La planeación no se pierde. Pero no son la dirección prioritaria.
+
+### 9.5 Pasos inmediatos
+
+1. **Cerrar el v3 con este estado.** (← lo que estás leyendo ahora.)
+2. **Diseñar el plan Railway** en [`plan_migracion_railway.md`](TABLAS%20BD%20OFICIAL/plan_migracion_railway.md): qué tablas adoptamos, qué tablas nuestras se mantienen, cómo se mapea el modelo actual al esquema oficial, cómo se gestiona créditos como snapshot + cómputo, etc.
+3. **Ejecutar el experimento Railway** en rama o repo paralelo. Sin tiempos.
+
+---
+
+**Versión:** 3.1  
+**Última actualización:** 2026-05-31 — añadidos Sprints A y B en §1.1 y §1.2; §2 actualizado (5a/5e en producción, resto diferido); §8 nueva con deuda de datos; §9 nueva con cierre y pivot a plan de migración Railway.  
+**Revisión anterior:** 2026-05-31 v3.0 — versión inicial como plan vivo.  
+**Estado:** plan cerrado a nivel de ejecución. Las decisiones documentadas siguen siendo referencia. La actividad de alineamiento académico continúa en [`TABLAS BD OFICIAL/plan_migracion_railway.md`](TABLAS%20BD%20OFICIAL/plan_migracion_railway.md).  
 **Reemplaza como referencia operativa:** [`plan_roles_v2.md`](plan_roles_v2.md) (queda como detalle histórico de decisiones) y [`plan_roles.md`](plan_roles.md) v1 (queda como visión original).
