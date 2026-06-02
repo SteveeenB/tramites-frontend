@@ -5,8 +5,9 @@ export const tramitesApi = {
   getProcesoGrado: () => apiClient('/tramites/proceso-grado'),
 
   // ── TP-126 Mis Trámites ──────────────────────────────────────────
-  getMisTramites: () => apiClient('/tramites/mis'),
-  getHistorial:   (id) => apiClient(`/tramites/${id}/historial`),
+  getMisTramites:          () => apiClient('/tramites/mis'),
+  getHistorial:            (id) => apiClient(`/tramites/${id}/historial`),
+  getHistorialCertificado: (id) => apiClient(`/tramites/certificado/${id}/historial`),
 };
 
 // SSE — fuera del objeto porque EventSource no soporta headers
