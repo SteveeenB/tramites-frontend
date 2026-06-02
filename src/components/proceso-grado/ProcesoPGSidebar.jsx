@@ -27,11 +27,8 @@ const ProcesoPGSidebar = ({ usuario }) => {
 
   const handleCambiarRol = (demoKey) => {
     cambiarRol(demoKey);
-    // Si es un rol distinto a ESTUDIANTE, redirigir a /tramites
     const esEstudiante = demoKey === 'ESTUDIANTE' || demoKey === 'ESTUDIANTE_CON_CREDITOS';
-    if (!esEstudiante) {
-      navigate('/tramites');
-    }
+    if (!esEstudiante) navigate('/tramites');
   };
 
   return (
@@ -65,6 +62,8 @@ const ProcesoPGSidebar = ({ usuario }) => {
                 Proceso de Grado
               </button>
               <SidebarLink onClick={() => navigate('/certificados')}>Certificados</SidebarLink>
+              {/* ── Nuevo ── */}
+              <SidebarLink onClick={() => navigate('/tramites')}>Mis Trámites</SidebarLink>
             </div>
           </div>
         </nav>
@@ -119,4 +118,3 @@ const ProcesoPGSidebar = ({ usuario }) => {
 };
 
 export default ProcesoPGSidebar;
-

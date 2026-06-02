@@ -72,8 +72,8 @@ const TramitesView = () => {
       return <Seccion />;
     }
 
-    // ESTUDIANTE — MisTramites es la vista principal
-    if (rol === 'ESTUDIANTE') return <MisTramites />;
+    // ESTUDIANTE
+    if (rol === 'ESTUDIANTE' && selectedMenuId === 'mis-tramites') return <MisTramites />;
 
     // Default por rol
     const Contenido = CONTENIDO_POR_ROL[rol] || ContenidoEstudiante;

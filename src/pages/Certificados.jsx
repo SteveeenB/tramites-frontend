@@ -283,19 +283,23 @@ const Certificados = () => {
               </div>
             </div>
             <nav className="space-y-2">
-              <SidebarLink onClick={() => {}}>Información Estudiantil</SidebarLink>
-              <SidebarLink onClick={() => {}}>Información Académica</SidebarLink>
-              <div className="rounded-2xl bg-slate-50 p-3">
-                <SidebarLink onClick={() => navigate('/tramites')}>Trámites</SidebarLink>
-                <div className="mt-2 space-y-2 pl-3">
-                  <SidebarLink onClick={() => navigate('/proceso-de-grado')}>Proceso de Grado</SidebarLink>
-                  <button type="button"
-                    className="w-full rounded-xl bg-red-50 px-4 py-3 text-left text-sm font-semibold text-red-700 ring-1 ring-red-200">
-                    Certificados
-                  </button>
-                </div>
-              </div>
-            </nav>
+  <SidebarLink onClick={() => {}}>Información Estudiantil</SidebarLink>
+  <SidebarLink onClick={() => {}}>Información Académica</SidebarLink>
+  <div className="rounded-2xl bg-slate-50 p-3">
+    <SidebarLink onClick={() => navigate('/tramites')}>Trámites</SidebarLink>
+    <div className="mt-2 space-y-2 pl-3">
+      <SidebarLink onClick={() => navigate('/proceso-de-grado')}>Proceso de Grado</SidebarLink>
+      <button type="button"
+        className="w-full rounded-xl bg-red-50 px-4 py-3 text-left text-sm font-semibold text-red-700 ring-1 ring-red-200">
+        Certificados
+      </button>
+      {/* ── Nuevo ── */}
+      <SidebarLink onClick={() => navigate('/tramites?menu=mis-tramites')}>
+        Mis Trámites
+      </SidebarLink>
+    </div>
+  </div>
+</nav>
           </div>
           <div className="border-t border-slate-200 p-5">
             <button type="button" onClick={() => navigate('/tramites')}
