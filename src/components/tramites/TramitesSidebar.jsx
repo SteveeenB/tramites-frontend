@@ -92,11 +92,16 @@ const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion,
         <nav className="space-y-2">
           <div className="rounded-2xl bg-slate-50 p-3">
             <button
-              type="button"
-              className={`w-full rounded-xl px-4 py-3 text-left text-sm font-semibold ${colores.active}`}
-            >
-              Trámites
-            </button>
+  type="button"
+  onClick={() => onSeleccion({ id: '', route: '/tramites' })}
+  className={`w-full rounded-xl px-4 py-3 text-left text-sm font-semibold transition ${
+    selectedMenuId === ''
+      ? colores.active
+      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+  }`}
+>
+  Trámites
+</button>
             <div className="mt-2 space-y-1 pl-3">
               {renderMenuItems(menuItems, selectedMenuId, onSeleccion, colores)}
             </div>

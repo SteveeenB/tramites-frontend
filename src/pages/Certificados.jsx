@@ -294,9 +294,7 @@ const Certificados = () => {
         Certificados
       </button>
       {/* ── Nuevo ── */}
-      <SidebarLink onClick={() => navigate('/tramites?menu=mis-tramites')}>
-        Mis Trámites
-      </SidebarLink>
+      <SidebarLink onClick={() => navigate('/tramites?menu=mis-tramites')}>Mis Trámites</SidebarLink>
     </div>
   </div>
 </nav>
