@@ -9,6 +9,7 @@ import BandejaCertificadosDependencia from './BandejaCertificadosDependencia';
 import PazYSalvoDirector from './PazYSalvoDirector';
 import EstadoEstudiantes from './EstadoEstudiantes';
 import BandejaPosgrados from './BandejaPosgrados';
+import MisTramites from './MisTramites';
 import {
   SeccionConvocatoria,
   SeccionTiposCertificado,
@@ -27,8 +28,6 @@ const CONTENIDO_POR_ROL = {
   DIRECTOR: ContenidoDirector,
 };
 
-// Pestañas exclusivas del ADMIN (configurador) — coinciden con los IDs
-// definidos en MENU_BY_ROLE.ADMIN en menuConfig.js.
 const ADMIN_SECCIONES = {
   'reportes':              SeccionReportes,
   'tipos-certificado':     SeccionTiposCertificado,
@@ -43,7 +42,6 @@ const ADMIN_SECCIONES = {
   'configuracion-global':  SeccionConfiguracionGlobal,
 };
 
-// Pestañas del POSGRADOS (operativo) — bandeja y reportes únicamente.
 const POSGRADOS_SECCIONES = {
   'bandeja-posgrados': BandejaPosgrados,
   'reportes':          SeccionReportes,
@@ -62,21 +60,24 @@ const TramitesView = () => {
     if (rol === 'DIRECTOR' && selectedMenuId === 'paz-y-salvo')        return <PazYSalvoDirector />;
     if (rol === 'DIRECTOR' && selectedMenuId === 'estado-estudiantes') return <EstadoEstudiantes />;
 
-    // POSGRADOS (operativo) — solo atiende bandejas y consulta reportes.
+    // POSGRADOS
     if (rol === 'POSGRADOS') {
       const Seccion = POSGRADOS_SECCIONES[selectedMenuId] || BandejaPosgrados;
       return <Seccion />;
     }
 
-    // ADMIN (configurador) — sidebar con todas las pestañas de configuración.
+    // ADMIN
     if (rol === 'ADMIN') {
       const Seccion = ADMIN_SECCIONES[selectedMenuId] || SeccionTiposCertificado;
       return <Seccion />;
     }
 
-    // Default por rol
-    const Contenido = CONTENIDO_POR_ROL[rol] || ContenidoEstudiante;
-    return <Contenido datosModulo={datosModulo} />;
+    // ESTUDIANTE
+if (rol === 'ESTUDIANTE' && selectedMenuId === 'mis-tramites') return <MisTramites />;
+
+// Default por rol — incluye selectedMenuId === '' para ESTUDIANTE
+const Contenido = CONTENIDO_POR_ROL[rol] || ContenidoEstudiante;
+return <Contenido datosModulo={datosModulo} />;
   };
 
   return (
