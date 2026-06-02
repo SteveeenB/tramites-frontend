@@ -14,10 +14,14 @@ export const useTramitesData = () => {
   const rol = usuario?.rol || 'ESTUDIANTE';
   const menuItems = getMenuByRole(rol);
 
-  // Selecciona el primer ítem al cambiar de rol
-  useEffect(() => {
-    setSelectedMenuId(menuItems[0]?.id || '');
-  }, [rol]);
+// eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+    if (rol === 'ESTUDIANTE') {
+      setSelectedMenuId('');
+    } else {
+      setSelectedMenuId(menuItems[0]?.id || '');
+    }
+}, [rol]);
 
   // Carga datos del módulo desde el backend
   useEffect(() => {
