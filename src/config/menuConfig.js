@@ -6,7 +6,8 @@ export const MENU_BY_ROLE = {
   ESTUDIANTE: [
     { id: 'proceso-de-grado', label: 'Proceso de Grado', route: '/proceso-de-grado' },
     { id: 'certificados',     label: 'Certificados',     route: '/certificados'      },
-  ],
+    { id: 'mis-tramites',     label: 'Mis Trámites',     route: '/tramites'          },
+],
   DIRECTOR: [
     { id: 'bandeja',            label: 'Bandeja de Solicitudes',  route: '/tramites/bandeja-solicitudes' },
     { id: 'historial',          label: 'Historial de Decisiones', route: '/tramites'                     },
