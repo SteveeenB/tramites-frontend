@@ -19,6 +19,7 @@ import EstadoEstudiantes from './pages/EstadoEstudiantes';
 import { ALLOWED_ROLES } from './config/menuConfig';
 import VerificarCertificado from './pages/VerificarCertificado';
 import Login from './pages/Login';
+import ResultadoPago from './pages/ResultadoPago';
 import './App.css';
 
 function App() {
@@ -26,6 +27,8 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+
+          <Route path="/pago/resultado" element={<ResultadoPago />} />
           <Route path="/login" element={<Login />} />
           <Route
             path="/verificar" 
