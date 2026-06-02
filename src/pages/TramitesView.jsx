@@ -73,11 +73,11 @@ const TramitesView = () => {
     }
 
     // ESTUDIANTE
-    if (rol === 'ESTUDIANTE' && selectedMenuId === 'mis-tramites') return <MisTramites />;
+if (rol === 'ESTUDIANTE' && selectedMenuId === 'mis-tramites') return <MisTramites />;
 
-    // Default por rol
-    const Contenido = CONTENIDO_POR_ROL[rol] || ContenidoEstudiante;
-    return <Contenido datosModulo={datosModulo} />;
+// Default por rol — incluye selectedMenuId === '' para ESTUDIANTE
+const Contenido = CONTENIDO_POR_ROL[rol] || ContenidoEstudiante;
+return <Contenido datosModulo={datosModulo} />;
   };
 
   return (

@@ -63,7 +63,7 @@ const ProcesoPGSidebar = ({ usuario }) => {
               </button>
               <SidebarLink onClick={() => navigate('/certificados')}>Certificados</SidebarLink>
               {/* ── Nuevo ── */}
-              <SidebarLink onClick={() => navigate('/tramites')}>Mis Trámites</SidebarLink>
+              <SidebarLink onClick={() => navigate('/tramites?menu=mis-tramites')}>Mis Trámites</SidebarLink>
             </div>
           </div>
         </nav>
