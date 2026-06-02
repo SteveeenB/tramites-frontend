@@ -26,4 +26,9 @@ export const ROLE_COLORS = {
     active:  'bg-teal-50 text-teal-700 ring-1 ring-teal-200',
     badge:   'bg-teal-100 text-teal-700',
   },
+  POSGRADOS: {
+    header: 'bg-indigo-700',
+    active:  'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200',
+    badge:   'bg-indigo-100 text-indigo-700',
+  },
 };

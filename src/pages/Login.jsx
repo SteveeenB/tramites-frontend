@@ -86,6 +86,7 @@ export default function Login() {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
+        <img src="/UFPS_Logo.png" alt="Logo UFPS" style={styles.logo} />
         <h2 style={styles.title}>Trámites de Posgrado</h2>
         <p style={styles.subtitle}>UFPS — Ingresa a tu cuenta</p>
 
@@ -153,6 +154,7 @@ const styles = {
     width: 360,
     boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
   },
+  logo: { display: 'block', margin: '0 auto 20px', width: 100, height: 'auto' },
   title: { margin: '0 0 4px', fontSize: 22, color: '#1a202c', textAlign: 'center' },
   subtitle: { margin: '0 0 24px', color: '#718096', textAlign: 'center', fontSize: 14 },
   separator: {
