@@ -1,5 +1,6 @@
 import React from 'react';
 import { ROLE_LABELS, ROLE_COLORS } from '../../constants/tramitesColors';
+import BellNotificaciones from '../notificaciones/BellNotificaciones';
 
 const TramitesHeader = ({ usuario, rol }) => {
   const colores = ROLE_COLORS[rol] || ROLE_COLORS.ESTUDIANTE;
@@ -13,6 +14,8 @@ const TramitesHeader = ({ usuario, rol }) => {
       </h1>
 
       <div className="flex items-center gap-3">
+        <BellNotificaciones rol={rol} />
+
         <div className="flex items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold">
             {(usuario?.nombre || 'U').slice(0, 2).toUpperCase()}
