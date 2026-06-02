@@ -24,11 +24,31 @@ const ModalPagoGrado = ({ solicitud, onClose, onExito }) => {
   const [banco, setBanco] = useState('');
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [procesando, setProcesando] = useState(false);
-  const [exito, setExito] = useState(false);
 
   const puedeConfirmar = tipoPersona && banco && aceptaTerminos && !procesando;
   const valorFmt = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(solicitud?.costo ?? 250000);
-  const handleConfirmar = () => { setProcesando(true); setTimeout(() => { setProcesando(false); setExito(true); }, 2200); };
+
+  const handleConfirmar = async () => {
+    setProcesando(true);
+    try {
+      const token = localStorage.getItem('auth_token');
+      const resp = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080/api'}/pagos/crear`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          solicitudId: solicitud.id,
+          tipoPago: 'GRADO',
+          cedula: solicitud.cedula,
+        }),
+      });
+      const data = await resp.json();
+      console.log('Respuesta pagos/crear:', data);
+      window.location.href = data.checkoutUrl;
+    } catch (e) {
+      setProcesando(false);
+      alert('Error al conectar con el servicio de pagos');
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
@@ -51,23 +71,7 @@ const ModalPagoGrado = ({ solicitud, onClose, onExito }) => {
           </div>
         </div>
         <div className="px-6 py-5">
-          {exito ? (
-            <div className="flex flex-col items-center py-6 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h3 className="mb-2 text-xl font-bold text-slate-900">¡Pago confirmado!</h3>
-              <p className="mb-1 text-sm text-slate-600">Pago procesado por <strong>{banco}</strong>.</p>
-              <p className="mb-5 text-xs text-slate-400">Recibirás una notificación de confirmación.</p>
-              <div className="mb-5 rounded-2xl border border-green-200 bg-green-50 px-5 py-3">
-                <p className="text-xs font-semibold uppercase tracking-wide text-green-600">Valor pagado</p>
-                <p className="text-2xl font-bold text-green-700">{valorFmt}</p>
-              </div>
-              <button onClick={onExito} className="rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800">Continuar al proceso</button>
-            </div>
-          ) : (
+          {(
             <>
               <div className="mb-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 flex items-center justify-between">
                 <div>
@@ -250,16 +254,34 @@ const SeccionPazYSalvo = ({ solicitudId, onTodosAprobados }) => {
 };
 
 /* ─── Modal pago adicional ceremonia ─────────────────────────────────── */
-const ModalPagoCeremonia = ({ fecha, onClose, onExito }) => {
+const ModalPagoCeremonia = ({ fecha, solicitudId, cedula, onClose, onExito }) => {
   const [tipoPersona, setTipoPersona] = useState('');
   const [banco, setBanco] = useState('');
   const [acepta, setAcepta] = useState(false);
   const [procesando, setProcesando] = useState(false);
-  const [exitoso, setExitoso] = useState(false);
 
   const valorFmt = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(COSTO_CEREMONIA_EXTRA);
   const puedeConfirmar = tipoPersona && banco && acepta && !procesando;
-  const handlePagar = () => { setProcesando(true); setTimeout(() => { setProcesando(false); setExitoso(true); }, 2000); };
+  const handlePagar = async () => {
+    setProcesando(true);
+    try {
+      const token = localStorage.getItem('auth_token');
+      const resp = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080/api'}/pagos/crear`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          solicitudId: solicitudId,
+          tipoPago: 'MODALIDAD_CEREMONIA',
+          cedula: cedula,
+        }),
+      });
+      const data = await resp.json();
+      window.location.href = data.checkoutUrl;
+    } catch (e) {
+      setProcesando(false);
+      alert('Error al conectar con el servicio de pagos');
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
@@ -278,20 +300,7 @@ const ModalPagoCeremonia = ({ fecha, onClose, onExito }) => {
           </div>
         </div>
         <div className="px-6 py-5">
-          {exitoso ? (
-            <div className="flex flex-col items-center py-6 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-              </div>
-              <h3 className="mb-2 text-xl font-bold text-slate-900">¡Pago de ceremonia confirmado!</h3>
-              <p className="mb-1 text-sm text-slate-600">Procesado por <strong>{banco}</strong>.</p>
-              <div className="mb-5 mt-3 rounded-2xl border border-green-200 bg-green-50 px-5 py-3">
-                <p className="text-xs font-semibold uppercase tracking-wide text-green-600">Valor pagado</p>
-                <p className="text-2xl font-bold text-green-700">{valorFmt}</p>
-              </div>
-              <button onClick={onExito} className="rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800">Confirmar fecha y finalizar</button>
-            </div>
-          ) : (
+          {(
             <>
               <div className="mb-5 rounded-2xl border border-purple-100 bg-purple-50 p-4">
                 <p className="text-xs font-semibold uppercase tracking-wide text-purple-400 mb-1">Fecha seleccionada</p>
@@ -432,7 +441,15 @@ const SeccionFechaGrado = ({ solicitudGrado, onFechaConfirmada }) => {
         </button>
       </div>
 
-      {mostrarPagoCeremonia && <ModalPagoCeremonia fecha={fechaSeleccionada} onClose={() => setMostrarPagoCeremonia(false)} onExito={handlePagoCeremoniaExitoso} />}
+      {mostrarPagoCeremonia && (
+        <ModalPagoCeremonia
+          fecha={fechaSeleccionada}
+          solicitudId={solicitudGrado.id}
+          cedula={solicitudGrado.cedula}
+          onClose={() => setMostrarPagoCeremonia(false)}
+          onExito={handlePagoCeremoniaExitoso}
+        />
+      )}
 
       {mostrarConfirmacion && fechaSeleccionada && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
