@@ -36,8 +36,9 @@ export const MENU_BY_ROLE = {
     { id: 'programas', label: 'Programas Académicos', route: '/tramites', group: 'Personas' },
 
     // ── Comunicación ─────────────────────────────────────────────
-    { id: 'convocatorias',      label: 'Convocatorias',      route: '/tramites', group: 'Comunicación' },
-    { id: 'plantillas-correo',  label: 'Plantillas de Correo', route: '/tramites', group: 'Comunicación' },
+    { id: 'convocatorias',           label: 'Convocatorias',              route: '/tramites', group: 'Comunicación' },
+    { id: 'plantillas-correo',       label: 'Plantillas de Correo',       route: '/tramites', group: 'Comunicación' },
+    { id: 'plantillas-certificado',  label: 'Plantillas de Certificado',  route: '/tramites', group: 'Comunicación' },
 
     // ── Sistema ──────────────────────────────────────────────────
     { id: 'auditoria',            label: 'Auditoría',            route: '/tramites', group: 'Sistema' },

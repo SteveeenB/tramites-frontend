@@ -11,7 +11,8 @@ export { default as SeccionTiposCertificado }     from './SeccionTiposCertificad
 export { default as SeccionUsuarios }             from './SeccionUsuarios';
 export { default as SeccionProgramas }            from './SeccionProgramas';
 export { default as SeccionDependencias }         from './SeccionDependencias';
-export { default as SeccionPlantillasCorreo }     from './SeccionPlantillasCorreo';
+export { default as SeccionPlantillasCorreo }         from './SeccionPlantillasCorreo';
+export { default as SeccionPlantillasCertificado }   from './SeccionPlantillasCertificado';
 export { default as SeccionDocumentosRequeridos } from './SeccionDocumentosRequeridos';
 export { default as SeccionTiposTramite }         from './SeccionTiposTramite';
 export { default as SeccionReportes }             from './SeccionReportes';

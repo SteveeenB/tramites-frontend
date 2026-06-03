@@ -16,6 +16,7 @@ import {
   SeccionProgramas,
   SeccionDependencias,
   SeccionPlantillasCorreo,
+  SeccionPlantillasCertificado,
   SeccionDocumentosRequeridos,
   SeccionTiposTramite,
   SeccionReportes,
@@ -38,7 +39,8 @@ const ADMIN_SECCIONES = {
   'usuarios':              SeccionUsuarios,
   'programas':             SeccionProgramas,
   'convocatorias':         SeccionConvocatoria,
-  'plantillas-correo':     SeccionPlantillasCorreo,
+  'plantillas-correo':       SeccionPlantillasCorreo,
+  'plantillas-certificado':  SeccionPlantillasCertificado,
   'auditoria':             SeccionAuditoria,
   'configuracion-global':  SeccionConfiguracionGlobal,
 };
