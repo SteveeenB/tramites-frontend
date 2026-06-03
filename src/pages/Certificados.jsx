@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { apiClient, downloadApiClient } from '../api/apiClient';
+import BellNotificaciones from '../components/notificaciones/BellNotificaciones';
 
 // ── Badges por estado de la solicitud ─────────────────────────────────
 const ESTADOS_BADGE = {
@@ -137,7 +138,10 @@ const Certificados = () => {
       try {
         setCargando(true);
         const data = await apiClient('/certificados');
-        setHistorial(data || []);
+        setHistorial((data || []).sort((a, b) => {
+          const diff = new Date(b.fechaSolicitud) - new Date(a.fechaSolicitud);
+          return diff !== 0 ? diff : b.id - a.id;
+        }));
       } catch (e) {
         setError(e.message);
       } finally {
@@ -312,6 +316,7 @@ const Certificados = () => {
           <header className="flex items-center justify-between gap-4 bg-red-600 px-6 py-4 text-white shadow-sm md:px-8">
             <h1 className="text-lg font-bold uppercase tracking-[0.18em] md:text-xl">ESTUDIANTES</h1>
             <div className="flex items-center gap-3">
+              <BellNotificaciones rol={usuario?.rol} />
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold">
                 {(usuario?.nombre || 'U').slice(0, 2).toUpperCase()}
               </div>
