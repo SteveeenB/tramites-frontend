@@ -19,7 +19,7 @@ export default function ResultadoPago() {
 
         const verificar = async () => {
             try {
-                const token = localStorage.getItem('token');
+                const token = localStorage.getItem('auth_token');
                 const resp = await fetch(`${apiBase}/pagos/estado/${referencia}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
