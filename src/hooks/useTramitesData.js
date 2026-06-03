@@ -37,7 +37,7 @@ export const useTramitesData = () => {
 
   const manejarSeleccion = (item) => {
     setSelectedMenuId(item.id);
-    if (item.route && item.route !== '/tramites') {
+    if (item.route) {
       navigate(item.route);
     }
   };
