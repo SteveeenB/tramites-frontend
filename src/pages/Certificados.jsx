@@ -170,11 +170,13 @@ const Certificados = () => {
     setPagando(id);
     setError('');
     try {
-      const data = await apiClient(`/certificados/${id}/pagar`, { method: 'POST' });
-      setHistorial((prev) => prev.map((item) => (item.id === id ? data : item)));
+      const data = await apiClient('/pagos/certificado/crear', {
+        method: 'POST',
+        body: JSON.stringify({ certificadoId: id, cedula: usuario.cedula }),
+      });
+      window.location.href = data.checkoutUrl;
     } catch (e) {
       setError(e.message);
-    } finally {
       setPagando(null);
     }
   };
