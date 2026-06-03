@@ -6,14 +6,14 @@ const PLANTILLAS_MOCK = [
   {
     codigo: 'CERTIFICADO_GENERADO',
     asunto: '[UFPS Posgrados] Tu certificado está listo',
-    cuerpo: 'Estimado/a {{nombre}},\n\nTu certificado {{tipo_certificado}} ha sido generado y está adjunto a este correo.\n\nNúmero de solicitud: {{numero_solicitud}}\nFecha de expedición: {{fecha_expedicion}}\n\nAtentamente,\nSección de Posgrados — UFPS',
+    cuerpo: 'Estimado/a {{nombre}},\n\nTu certificado {{tipo_certificado}} ha sido generado y está adjunto a este correo.\n\nNúmero de solicitud: {{numero_solicitud}}\nFecha de expedición: {{fecha_expedicion}}\n\nAtentamente,\nOficina de Posgrados — UFPS',
     variables: ['nombre', 'tipo_certificado', 'numero_solicitud', 'fecha_expedicion'],
     activo: true,
   },
   {
     codigo: 'GRADO_APROBADO_POSGRADOS',
     asunto: '[UFPS Posgrados] Solicitud de grado aprobada',
-    cuerpo: 'Estimado/a {{nombre}},\n\nTu solicitud de grado para el programa de {{programa}} ha sido aprobada. La ceremonia está programada para el {{fecha_grado}}.\n\nNúmero de radicado: {{radicado}}\n\nAtentamente,\nSección de Posgrados — UFPS',
+    cuerpo: 'Estimado/a {{nombre}},\n\nTu solicitud de grado para el programa de {{programa}} ha sido aprobada. La ceremonia está programada para el {{fecha_grado}}.\n\nNúmero de radicado: {{radicado}}\n\nAtentamente,\nOficina de Posgrados — UFPS',
     variables: ['nombre', 'programa', 'fecha_grado', 'radicado'],
     activo: true,
   },

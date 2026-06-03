@@ -25,7 +25,7 @@ const DATOS_PREVIEW = {
   fecha_aprobacion:   '15 de mayo de 2026',
   numero_solicitud:   '42',
   codigo_verificacion:'UFPS-TM-42-5440',
-  dependencia:        'Sección de Posgrados',
+  dependencia:        'Oficina de Posgrados',
 };
 
 const PLANTILLA_DEFAULT = `<!DOCTYPE html>
@@ -52,7 +52,7 @@ const PLANTILLA_DEFAULT = `<!DOCTYPE html>
 <body>
   <div class="encabezado">
     <h1>UNIVERSIDAD FRANCISCO DE PAULA SANTANDER</h1>
-    <p>Vicerrectoría Académica · Sección de Posgrados</p>
+    <p>Vicerrectoría Académica · Oficina de Posgrados</p>
   </div>
   <div class="barra-dorada"></div>
 
