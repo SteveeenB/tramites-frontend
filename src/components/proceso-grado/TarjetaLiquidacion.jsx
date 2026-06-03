@@ -3,7 +3,7 @@ import { ReceiptIcon } from './icons';
 import { ESTADO_CONFIG, formatFecha, formatCOP } from '../../constants/procesodeGrado';
 import ModalPagoPSE from './ModalPagoPSE';
 
-const TarjetaLiquidacion = ({ solicitud }) => {
+const TarjetaLiquidacion = ({ solicitud, tipoPago = 'TERMINACION' }) => {
   const [mostrarModal, setMostrarModal] = useState(false);
 
   const cfg = ESTADO_CONFIG[solicitud.estado] || {
@@ -86,6 +86,7 @@ const TarjetaLiquidacion = ({ solicitud }) => {
       {mostrarModal && (
         <ModalPagoPSE
           solicitud={solicitud}
+          tipoPago={tipoPago}
           onClose={() => setMostrarModal(false)}
         />
       )}
