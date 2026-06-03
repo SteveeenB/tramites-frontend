@@ -4,6 +4,7 @@ import ProcesoPGSidebar from '../components/proceso-grado/ProcesoPGSidebar';
 import EtapasResumen from '../components/proceso-grado/EtapasResumen';
 import DetalleEtapa1 from '../components/proceso-grado/DetalleEtapa1';
 import Etapa2 from '../components/proceso-grado/Etapa2';
+import BellNotificaciones from '../components/notificaciones/BellNotificaciones';
 
 const ProcesodeGrado = () => {
   const {
@@ -36,7 +37,8 @@ const ProcesodeGrado = () => {
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="flex items-center justify-between gap-4 bg-red-600 px-6 py-4 text-white shadow-sm md:px-8">
             <h1 className="text-lg font-bold uppercase tracking-[0.18em] md:text-xl">ESTUDIANTES</h1>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
+              <BellNotificaciones rol={usuario?.rol} />
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold">
                 {usuario?.nombre?.slice(0, 2).toUpperCase()}
               </div>

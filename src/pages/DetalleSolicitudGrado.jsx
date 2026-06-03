@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useBandejaGrado } from '../hooks/useBandejaGrado';
-import DirectorSidebar from '../components/bandeja-director/DirectorSidebar';
 import EstadoBadge from '../components/bandeja-director/EstadoBadge';
 import ModalRechazo from '../components/bandeja-director/ModalRechazo';
 import { solicitudesApi } from '../api/solicitudesApi';
@@ -107,22 +106,7 @@ const DetalleSolicitudGrado = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-800">
-      <div className="flex min-h-screen flex-col lg:flex-row">
-        <DirectorSidebar usuario={usuario} />
-
-        <div className="flex min-w-0 flex-1 flex-col">
-          <header className="flex items-center justify-between gap-4 bg-blue-700 px-6 py-4 text-white shadow-sm md:px-8">
-            <h1 className="text-lg font-bold uppercase tracking-[0.18em] md:text-xl">DIRECTOR DE PROGRAMA</h1>
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold">
-                {(usuario?.nombre || 'D').slice(0, 2).toUpperCase()}
-              </div>
-              <p className="hidden text-sm font-semibold sm:block">{usuario?.nombre}</p>
-            </div>
-          </header>
-
-          <main className="flex-1 p-6 md:p-8">
+    <>
             <button
               type="button"
               onClick={() => navigate(`/tramites/bandeja-director/grado/${estado}`)}
@@ -239,9 +223,6 @@ const DetalleSolicitudGrado = () => {
 
               </div>
             )}
-          </main>
-        </div>
-      </div>
 
       {modalRechazo && solicitud && (
         <ModalRechazo
@@ -251,7 +232,7 @@ const DetalleSolicitudGrado = () => {
           onCancelar={() => setModalRechazo(false)}
         />
       )}
-    </div>
+    </>
   );
 };
 

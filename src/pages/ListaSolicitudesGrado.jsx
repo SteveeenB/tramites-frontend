@@ -83,7 +83,7 @@ const DocsBadge = ({ cargados, requeridos }) => {
 const ListaSolicitudesGrado = () => {
   const { estado } = useParams();
   const navigate = useNavigate();
-  const { usuario, bandeja, cargando, error, aprobar, rechazar, accionEnCurso, errorAccion } = useBandejaGrado();
+  const { bandeja, cargando, error, aprobar, rechazar, accionEnCurso, errorAccion } = useBandejaGrado();
   const [solicitudARechazar, setSolicitudARechazar] = useState(null);
 
   const cfg = CONFIG[estado];
@@ -240,7 +240,6 @@ const ListaSolicitudesGrado = () => {
   return (
     <>
       <BandejaListadoLayout
-        usuario={usuario}
         cfg={cfg}
         estado={estado}
         breadcrumb="TRÁMITES / DIRECTOR / SOLICITUDES / SOLICITUD DE GRADO"

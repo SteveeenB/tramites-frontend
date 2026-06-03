@@ -15,7 +15,6 @@ const TIPO_VACIO = {
   descripcion: '',
   precioDigital: 0,
   costoLogisticaFisica: 0,
-  dependenciaId: null,
   direccionOficina: '',
   tiempoEntregaDias: 1,
   activo: true,
@@ -27,7 +26,6 @@ const TIPO_VACIO = {
  */
 const SeccionTiposCertificado = () => {
   const [tipos, setTipos] = useState([]);
-  const [dependencias, setDependencias] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [edicion, setEdicion] = useState(null);
@@ -36,12 +34,8 @@ const SeccionTiposCertificado = () => {
   const cargar = useCallback(async () => {
     setCargando(true);
     try {
-      const [t, d] = await Promise.all([
-        apiClient('/admin/tipos-certificado'),
-        apiClient('/dependencias/catalogo'),
-      ]);
+      const t = await apiClient('/admin/tipos-certificado');
       setTipos(t || []);
-      setDependencias((d || []).filter((dep) => dep.activa !== false));
     } catch (e) {
       setError(e.message);
     } finally {
@@ -91,7 +85,7 @@ const SeccionTiposCertificado = () => {
       <PosgradosHeader
         breadcrumb="Catálogos / Tipos de Certificado"
         titulo="Tipos de Certificado"
-        descripcion="Define qué certificados pueden solicitar los estudiantes, su precio base, costo logístico físico y la dependencia encargada de su gestión."
+        descripcion="Define qué certificados pueden solicitar los estudiantes, su precio base y costo logístico físico."
         accion={
           <button type="button" onClick={() => setEdicion({ ...TIPO_VACIO })}
             className="rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700">
@@ -116,7 +110,6 @@ const SeccionTiposCertificado = () => {
                   <th className="px-4 py-3 text-left">Label</th>
                   <th className="px-4 py-3 text-right">Precio digital</th>
                   <th className="px-4 py-3 text-right">+ Logística física</th>
-                  <th className="px-4 py-3 text-left">Dependencia</th>
                   <th className="px-4 py-3 text-center">Activo</th>
                   <th className="px-4 py-3 text-center">Acciones</th>
                 </tr>
@@ -128,7 +121,6 @@ const SeccionTiposCertificado = () => {
                     <td className="px-4 py-3 text-slate-800">{t.label}</td>
                     <td className="px-4 py-3 text-right text-slate-800">{formatPesos(t.precioDigital)}</td>
                     <td className="px-4 py-3 text-right text-slate-600">+{formatPesos(t.costoLogisticaFisica)}</td>
-                    <td className="px-4 py-3 text-xs text-slate-600">{t.dependenciaNombre || '—'}</td>
                     <td className="px-4 py-3 text-center">
                       <button type="button" onClick={() => toggleActivo(t)}
                         className={`rounded-full px-3 py-0.5 text-xs font-semibold ${t.activo
@@ -204,17 +196,6 @@ const SeccionTiposCertificado = () => {
                   onChange={(e) => setEdicion({ ...edicion, costoLogisticaFisica: Number(e.target.value) })}
                   onKeyDown={stepMil('costoLogisticaFisica')}
                   className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Dependencia encargada</label>
-                <select value={edicion.dependenciaId ?? ''}
-                  onChange={(e) => setEdicion({ ...edicion, dependenciaId: e.target.value ? Number(e.target.value) : null })}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
-                  <option value="">— Sin asignar —</option>
-                  {dependencias.map((d) => (
-                    <option key={d.id} value={d.id}>{d.nombre}</option>
-                  ))}
-                </select>
               </div>
               <div>
                 <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Tiempo entrega (días)</label>

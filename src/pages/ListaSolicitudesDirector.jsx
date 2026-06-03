@@ -52,7 +52,7 @@ const CONFIG = {
 const ListaSolicitudesDirector = () => {
   const { estado } = useParams();
   const navigate = useNavigate();
-  const { usuario, bandeja, cargando, error, aprobar, rechazar, accionEnCurso, errorAccion } = useBandejaDirector();
+  const { bandeja, cargando, error, aprobar, rechazar, accionEnCurso, errorAccion } = useBandejaDirector();
   const [solicitudARechazar, setSolicitudARechazar] = useState(null);
 
   const cfg = CONFIG[estado];
@@ -187,7 +187,6 @@ const ListaSolicitudesDirector = () => {
   return (
     <>
       <BandejaListadoLayout
-        usuario={usuario}
         cfg={cfg}
         estado={estado}
         breadcrumb="TRÁMITES / DIRECTOR / SOLICITUDES / TERMINACIÓN DE MATERIAS"
