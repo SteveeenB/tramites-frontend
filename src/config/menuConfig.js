@@ -1,7 +1,6 @@
 export const MENU_BY_ROLE = {
   DEPENDENCIA: [
     { id: 'paz-y-salvo',  label: 'Paz y Salvos',  route: '/tramites' },
-    { id: 'certificados', label: 'Certificados',  route: '/tramites' },
   ],
   ESTUDIANTE: [
     { id: 'proceso-de-grado', label: 'Proceso de Grado', route: '/proceso-de-grado' },
@@ -9,40 +8,23 @@ export const MENU_BY_ROLE = {
   ],
   DIRECTOR: [
     { id: 'bandeja',           label: 'Bandeja de Solicitudes', route: '/tramites/bandeja-solicitudes' },
-    { id: 'historial',         label: 'Historial de Decisiones', route: '/tramites'                   },
     { id: 'paz-y-salvo',       label: 'Mis Paz y Salvos',        route: '/tramites'                   },
     { id: 'estado-estudiantes', label: 'Estado Estudiantes',     route: '/tramites'                   },
   ],
   // POSGRADOS = perfil OPERATIVO. Solo atiende solicitudes y consulta métricas.
   // No configura el catálogo del módulo (eso lo hace ADMIN).
   POSGRADOS: [
-    { id: 'bandeja-posgrados', label: 'Bandeja de Solicitudes', route: '/tramites' },
-    { id: 'reportes',          label: 'Reportes',               route: '/tramites' },
+    { id: 'bandeja-posgrados', label: 'Trámites de Grado', route: '/tramites' },
+    { id: 'certificados',      label: 'Certificados Físicos', route: '/tramites' },
+    { id: 'reportes',          label: 'Reportes',             route: '/tramites' },
   ],
   // ADMIN = perfil CONFIGURADOR (es_super_admin en el modelo objetivo).
   // Gestiona catálogos, dependencias, plantillas, convocatorias y configuración global.
   ADMIN: [
-    // ── Operación ─────────────────────────────────────────────────
-    { id: 'reportes', label: 'Reportes', route: '/tramites', group: 'Operación' },
-
-    // ── Catálogos ─────────────────────────────────────────────────
-    { id: 'tipos-certificado',     label: 'Tipos de Certificado', route: '/tramites', group: 'Catálogos' },
-    { id: 'tipos-tramite',         label: 'Tipos de Trámite',     route: '/tramites', group: 'Catálogos' },
-    { id: 'dependencias',          label: 'Dependencias y Paz y Salvos', route: '/tramites', group: 'Catálogos' },
-    { id: 'documentos-requeridos', label: 'Documentos Requeridos', route: '/tramites', group: 'Catálogos' },
-
-    // ── Personas ─────────────────────────────────────────────────
-    { id: 'usuarios',  label: 'Usuarios',             route: '/tramites', group: 'Personas' },
-    { id: 'programas', label: 'Programas Académicos', route: '/tramites', group: 'Personas' },
-
-    // ── Comunicación ─────────────────────────────────────────────
-    { id: 'convocatorias',           label: 'Convocatorias',              route: '/tramites', group: 'Comunicación' },
-    { id: 'plantillas-correo',       label: 'Plantillas de Correo',       route: '/tramites', group: 'Comunicación' },
-    { id: 'plantillas-certificado',  label: 'Plantillas de Certificado',  route: '/tramites', group: 'Comunicación' },
-
-    // ── Sistema ──────────────────────────────────────────────────
-    { id: 'auditoria',            label: 'Auditoría',            route: '/tramites', group: 'Sistema' },
-    { id: 'configuracion-global', label: 'Configuración Global', route: '/tramites', group: 'Sistema' },
+    { id: 'tipos-certificado',    label: 'Tipos de Certificado', route: '/tramites' },
+    { id: 'dependencias',         label: 'Dependencias y Paz y Salvos', route: '/tramites' },
+    { id: 'convocatorias',        label: 'Convocatorias',        route: '/tramites' },
+    { id: 'plantillas-certificado', label: 'Plantillas de Certificado', route: '/tramites' },
   ],
 };
 
