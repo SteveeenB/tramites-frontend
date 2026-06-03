@@ -11,17 +11,31 @@
 
 **Qué cambia:** la realidad institucional es que los certificados académicos se emiten y sellan **únicamente en la oficina de Posgrados**, no en Biblioteca, Tesorería ni Admisiones. La arquitectura actual asume que cada tipo de certificado se asocia a una dependencia responsable; eso es ruido que hay que quitar.
 
-**Tres cambios concretos:**
+**Cuatro cambios concretos:**
 
 1. **Quitar la pestaña "Certificados" del rol DEPENDENCIA.** Su sidebar queda solo con "Paz y Salvos".
-2. **Quitar el campo "Dependencia encargada" del formulario de tipos de certificado.** Se vuelve un atributo eliminado: ya no se pregunta ni se persiste.
+2. **Quitar el campo "Dependencia encargada" del formulario y modelo de tipos de certificado.** Se elimina del backend y del frontend.
 3. **Mover la bandeja de gestión de certificados físicos a POSGRADOS.** El coordinador de Posgrados es quien imprime, sella y entrega.
+4. **Mantener el catálogo de tipos y plantillas en ADMIN (por ahora).** POSGRADOS no configura tipos ni plantillas; solo gestiona la bandeja física. Se deja abierta la posibilidad de habilitar la vista a POSGRADOS en el futuro.
 
 **Qué NO cambia:**
 - Flujo del estudiante (solicitar, pagar, descargar PDF, modalidad digital/física).
 - Estados de la máquina (`PENDIENTE_PAGO → PAGADO → GENERADO → LISTO_RETIRO → ENTREGADO`).
 - Generación del PDF, hash, envío por correo.
 - Cobro `precio_digital + costo_logistica_fisica` para físicos.
+
+**Prioridades nuevas:**
+- **Notificaciones end-to-end para certificados** (solicitud física → aviso a POSGRADOS; "Listo para retiro" → aviso al estudiante, etc). Las notificaciones deben cubrir **todo el proceso**, igual que en los demás trámites.
+- **Pagos al final**: no bloquear el MVP por integración de pagos.
+
+### 1.1 Incidencias del pull (jun 2026) que afectan el plan
+
+1. **`plantillaHtml` agregado en `TipoCertificado.java`.** No se elimina. Mantener campo y getter/setter.
+2. **`CertificadoService` usa `dependenciaNombre` al renderizar plantillas HTML.** Debe reemplazarse por un valor fijo: "Oficina de Posgrados".
+3. **`SeccionPlantillasCertificado.jsx` y menú `plantillas-certificado` bajo ADMIN.** Se queda en ADMIN (no se mueve a POSGRADOS en este plan).
+4. **Endpoints `/admin/tipos-certificado/{id}/plantilla` con `hasRole('ADMIN')`.** Se mantienen en ADMIN.
+5. **`TramitesView.jsx` registra `plantillas-certificado` en `ADMIN_SECCIONES`.** Debe quedarse ahí, no en POSGRADOS.
+6. **Variable `{{dependencia}}` en plantillas HTML.** **Se elimina.** En su lugar, el texto del frontend (y del backend) debe usar fijo "Oficina de Posgrados".
 
 **Por qué no se rompe la modularidad de la HU11:** la decisión 3.7 del plan original (*"Dependencias reutilizan la tabla usuario"*) era una decisión arquitectónica para evitar duplicar tablas, no una decisión de negocio sobre quién emite certificados. Quitarla no rompe nada — simplifica el modelo.
 
@@ -88,6 +102,7 @@ tipo_certificado (
   dependencia_id INTEGER REFERENCES dependencias(id),  -- ← se elimina
   dependencia_cedula VARCHAR,                          -- ← zombie del esquema anterior, se elimina
   direccion_oficina VARCHAR,                           -- ← se evalúa: ver §4.1.b
+  plantilla_html TEXT,                                 -- ← NUEVO en el pull: se mantiene
   tiempo_entrega_dias INTEGER,
   activo BOOLEAN
 )
@@ -101,6 +116,8 @@ ALTER TABLE tipo_certificado DROP COLUMN IF EXISTS dependencia_id;
 
 -- Eliminar el zombie del esquema anterior
 ALTER TABLE tipo_certificado DROP COLUMN IF EXISTS dependencia_cedula;
+
+-- Nota: NO eliminar plantilla_html. Se mantiene para la generación de PDFs.
 ```
 
 **Decisión §4.1.b — qué hacer con `direccion_oficina`:**
@@ -181,7 +198,7 @@ Documentar en `tramites-backend/.docs/sql/migracion_certificados_solo_posgrados.
 - Getter/setter `getDependencia()`, `setDependencia()`.
 - Helpers `getDependenciaId()`, `getDependenciaNombre()`.
 
-**Mantener:** `direccionOficina`, `tiempoEntregaDias` (siguen útiles para mostrar al estudiante dónde retirar y en cuánto tiempo).
+**Mantener:** `plantillaHtml`, `direccionOficina`, `tiempoEntregaDias` (siguen útiles para plantillas y para mostrar al estudiante dónde retirar y en cuánto tiempo).
 
 ### 5.2 Controller `AdminTipoCertificadoController.java`
 
@@ -192,10 +209,9 @@ Documentar en `tramites-backend/.docs/sql/migracion_certificados_solo_posgrados.
 - En `aplicar()`: el bloque `if (body.containsKey("dependenciaId")) { ... }` (líneas 131-134).
 - En `toMap()`: los campos `dependenciaId` y `dependenciaNombre` (líneas 148-149).
 
-**Cambiar autorización:** los endpoints actuales tienen `@PreAuthorize("hasAnyRole('ADMIN', 'POSGRADOS')")` (para GET) y `hasRole('ADMIN')` (para POST/PUT/PATCH). Esto debe quedar:
-- `@PreAuthorize("hasRole('POSGRADOS')")` para todos los endpoints.
+**Autorización (se queda en ADMIN):** los endpoints de tipos y los nuevos endpoints de plantillas HTML (`GET/PUT /{id}/plantilla`) deben permanecer con `@PreAuthorize("hasRole('ADMIN')")`. POSGRADOS no configura tipos ni plantillas en este plan.
 
-> **Justificación:** la decisión es que el catálogo de certificados es ahora responsabilidad funcional de Posgrados, no del admin general. Si más adelante se requiere que ADMIN también pueda configurarlo (deuda de §3.11 del plan de la HU11), se vuelve a poner `hasAnyRole`. Para este cambio, simplificamos a un solo rol.
+> **Justificación:** la configuración del catálogo es una función administrativa. POSGRADOS solo gestiona la entrega física.
 
 ### 5.3 Controller `CertificadoController.java`
 
@@ -239,6 +255,7 @@ Quitar la lógica que valida que la dependencia sea dueña del certificado; POSG
 - Método `obtenerPorDependencia(Long dependenciaId, String estadoFiltro)`: renombrar a `obtenerBandejaPosgrados(String estadoFiltro)` y quitar el parámetro/filtro por dependencia. Devuelve TODAS las solicitudes físicas (todas las modalidades = FISICA) en el estado dado.
 - Métodos `marcarListoRetiro(id, dependenciaId)` y `marcarEntregado(id, dependenciaId)`: quitar el parámetro `dependenciaId` y la validación de ownership por dependencia. Cualquier POSGRADOS puede transicionar.
 - Método `descargarPdf(id, cedula, dependenciaId)`: quitar el parámetro `dependenciaId`. La autorización ahora es: el dueño (estudiante) o cualquier POSGRADOS.
+- **Plantillas HTML:** al armar el `Map<String, Object> vars`, forzar `dependencia = "Sección de Posgrados"` (no usar `getDependenciaNombre()` porque ya no existe).
 
 ### 5.5 Repository `SolicitudCertificadoRepository.java`
 
@@ -253,6 +270,16 @@ Quitar la lógica que valida que la dependencia sea dueña del certificado; POSG
 [`tramites-backend/src/main/java/com/ufps/tramites/security/PrincipalResolver.java`](../../../../tramites-backend/src/main/java/com/ufps/tramites/security/PrincipalResolver.java)
 
 **Sin cambios estructurales.** Aún necesitamos `dependenciaId` en el principal para el flujo de paz y salvos (la dependencia sí gestiona esos). El cambio aquí es solo dejar de usarlo en certificados.
+
+### 5.7 Notificaciones de certificados (prioritario)
+
+**Objetivo:** usar el sistema de notificaciones actual para certificados físicos.
+
+**Eventos mínimos:**
+- **Solicitud física creada → notificación a POSGRADOS.** Mensaje tipo: "Andrea solicitó certificado físico: CONSTANCIA_MATRICULA".
+- **Marcar "Listo para retiro" → notificación al estudiante.** Mensaje tipo: "Tu certificado está listo para retiro en Posgrados".
+
+**Dónde:** dentro de `CertificadoService` al crear solicitud física y al ejecutar `marcarListoRetiro`.
 
 ---
 
@@ -275,27 +302,27 @@ DEPENDENCIA: [
 POSGRADOS: [
   { id: 'bandeja-posgrados',    label: 'Bandeja de Solicitudes', route: '/tramites' },
   { id: 'bandeja-certificados', label: 'Bandeja de Certificados', route: '/tramites' },
-  { id: 'tipos-certificado',    label: 'Tipos de Certificado',    route: '/tramites' },
   { id: 'reportes',             label: 'Reportes',                 route: '/tramites' },
 ],
 ```
 
-**ADMIN — quitar el item `tipos-certificado` de la sección Catálogos:**
+**ADMIN — mantener tipos y agregar plantillas en Catálogos:**
 ```js
 ADMIN: [
   // ── Catálogos ─────────────────────────────────────────────────
-  // QUITAR: { id: 'tipos-certificado', label: 'Tipos de Certificado', ... },
+  { id: 'tipos-certificado',     label: 'Tipos de Certificado',    route: '/tramites', group: 'Catálogos' },
+  { id: 'plantillas-certificado', label: 'Plantillas de Certificado', route: '/tramites', group: 'Catálogos' },
   { id: 'tipos-tramite',         label: 'Tipos de Trámite',     route: '/tramites', group: 'Catálogos' },
   { id: 'dependencias',          label: 'Dependencias y Paz y Salvos', route: '/tramites', group: 'Catálogos' },
   ...
 ],
 ```
 
-> Si más adelante el ADMIN técnico necesita seguir viendo el catálogo, basta con devolver la entrada y ajustar el `@PreAuthorize` del backend a `hasAnyRole`. La decisión actual es trasladar funcionalmente a POSGRADOS.
+> Si en el futuro POSGRADOS necesita el catálogo, se puede duplicar el item y abrir permisos con `hasAnyRole`.
 
-### 6.2 Formulario admin — `SeccionTiposCertificado.jsx`
+### 6.2 Formulario ADMIN — `SeccionTiposCertificado.jsx`
 
-[`tramites-frontend/src/pages/posgrados/SeccionTiposCertificado.jsx`](../../../pages/posgrados/SeccionTiposCertificado.jsx)
+[`tramites-frontend/src/pages/posgrados/SeccionTiposCertificado.jsx`](../../../pages/posgrados/SeccionTiposCertificado.jsx) *(si está ubicado allí, no es obligatorio moverlo; solo asegurar que lo renderiza ADMIN)*
 
 **Quitar del state inicial:**
 ```js
@@ -358,6 +385,14 @@ const cargar = useCallback(async () => {
 descripcion="Define qué certificados pueden solicitar los estudiantes, su precio base y el costo logístico físico. Todos los certificados se emiten y entregan desde la Coordinación de Posgrados."
 ```
 
+### 6.2.b Plantillas HTML — `SeccionPlantillasCertificado.jsx` (ADMIN)
+
+**Mantener en ADMIN.** El pull agregó esta sección y el item `plantillas-certificado` en el menú ADMIN.
+
+**Nota sobre `{{dependencia}}`:**
+- Dejar la variable disponible en el editor.
+- En el preview usar `DATOS_PREVIEW.dependencia = 'Sección de Posgrados'` (ya coincide con la nueva regla de negocio).
+
 ### 6.3 Bandeja — renombrar/mover
 
 **Opción simple (recomendada):** renombrar el archivo y ajustar imports.
@@ -372,7 +407,7 @@ descripcion="Define qué certificados pueden solicitar los estudiantes, su preci
 
 **Cambios:**
 - Ruta que hoy renderiza `BandejaCertificadosDependencia` para DEPENDENCIA → cambiar a renderizar `BandejaCertificadosPosgrados` para POSGRADOS.
-- `rolesPermitidos` en la ruta admin de tipos de certificado: cambiar `['ADMIN', 'POSGRADOS']` → `['POSGRADOS']`. (Mismo criterio que §5.2.)
+- `rolesPermitidos` en rutas de `tipos-certificado` y `plantillas-certificado`: deben ser **solo** `['ADMIN']`.
 
 ### 6.5 Vista de selección de sección — `TramitesView.jsx`
 
@@ -380,8 +415,8 @@ descripcion="Define qué certificados pueden solicitar los estudiantes, su preci
 
 Hoy renderiza distintas secciones según el `id` del menú activo. Ajustes:
 - DEPENDENCIA: ya no tiene rama para `certificados` (queda solo `paz-y-salvo`).
-- POSGRADOS: agregar ramas para `bandeja-certificados` (renderiza `BandejaCertificadosPosgrados`) y `tipos-certificado` (renderiza `SeccionTiposCertificado`).
-- ADMIN: quitar la rama para `tipos-certificado`.
+- POSGRADOS: agregar rama para `bandeja-certificados` (renderiza `BandejaCertificadosPosgrados`).
+- ADMIN: mantener ramas para `tipos-certificado` y agregar `plantillas-certificado` (renderiza `SeccionPlantillasCertificado`).
 
 ### 6.6 Cualquier referencia residual
 
@@ -389,6 +424,8 @@ Buscar y limpiar:
 ```bash
 grep -r "BandejaCertificadosDependencia" tramites-frontend/src
 grep -r "dependenciaId" tramites-frontend/src/pages/posgrados/SeccionTiposCertificado.jsx
+grep -r "dependenciaNombre" tramites-frontend/src
+grep -r "plantillas-certificado" tramites-frontend/src
 grep -r "dependencia/{cedulaDependencia}" tramites-frontend/src
 ```
 
@@ -407,22 +444,28 @@ grep -r "dependencia/{cedulaDependencia}" tramites-frontend/src
 
 1. Aplicar la migración SQL manual (§4.4) en Supabase de staging (no producción aún).
 2. Modificar `TipoCertificado.java` (§5.1).
-3. Modificar `AdminTipoCertificadoController.java` (§5.2).
-4. Modificar `CertificadoController.java` (§5.3) y `CertificadoService.java` (§5.4).
+3. Modificar `AdminTipoCertificadoController.java` (§5.2) y asegurar endpoints de plantillas en ADMIN.
+4. Modificar `CertificadoController.java` (§5.3) y `CertificadoService.java` (§5.4), incluyendo el valor fijo de `dependencia` en plantillas HTML.
 5. Modificar `SolicitudCertificadoRepository.java` (§5.5).
-6. Actualizar `data.sql` (§4.3).
-7. Compilar verde. Probar arranque local apuntando a Supabase staging.
-8. Commit.
+6. Implementar notificaciones de certificados físicos (§5.7).
+7. Actualizar `data.sql` (§4.3).
+8. Compilar verde. Probar arranque local apuntando a Supabase staging.
+9. Commit.
 
 ### Fase 2 — Frontend
 
 1. Modificar `menuConfig.js` (§6.1).
-2. Modificar `SeccionTiposCertificado.jsx` (§6.2).
-3. Renombrar/mover bandeja (§6.3).
-4. Actualizar `App.js` (§6.4) y `TramitesView.jsx` (§6.5).
-5. Buscar referencias residuales (§6.6) y limpiar.
-6. `npm start`, verificar visualmente.
-7. Commit.
+2. Modificar `SeccionTiposCertificado.jsx` (ADMIN) (§6.2).
+3. Revisar `SeccionPlantillasCertificado.jsx` (ADMIN) y su preview (§6.2.b).
+4. Renombrar/mover bandeja (§6.3).
+5. Actualizar `App.js` (§6.4) y `TramitesView.jsx` (§6.5).
+6. Buscar referencias residuales (§6.6) y limpiar.
+7. `npm start`, verificar visualmente.
+8. Commit.
+
+### Fase 2.5 — Pagos (opcional, post-MVP)
+
+- Integrar pagos si hay tiempo disponible, sin bloquear el release del MVP.
 
 ### Fase 3 — Verificación E2E
 
@@ -433,22 +476,24 @@ Probar con los logins demo:
 | DEP001 (Biblioteca) | Solo "Paz y Salvos" en sidebar | Ya no aparece "Certificados" |
 | DEP002 (Tesorería) | Solo "Paz y Salvos" | Ya no aparece "Certificados" |
 | DEP003 (Admisiones) | Solo "Paz y Salvos" | Ya no aparece "Certificados" |
-| POS001 (Coordinador Posgrados) | "Bandeja Solicitudes", "Bandeja Certificados", "Tipos de Certificado", "Reportes" | — |
-| ADMIN1 (Admin) | Catálogos sin "Tipos de Certificado" | "Tipos de Certificado" no aparece |
+| POS001 (Coordinador Posgrados) | "Bandeja Solicitudes", "Bandeja Certificados", "Reportes" | No ve "Tipos de Certificado" ni "Plantillas de Certificado" |
+| ADMIN1 (Admin) | Catálogos con "Tipos de Certificado" y "Plantillas de Certificado" | No ve bandeja física de certificados |
 | Estudiante | "Certificados" (solicitud + historial) sin cambios | — |
 
 **Flujo end-to-end a validar:**
 1. Estudiante (Kevin) solicita certificado físico de CONSTANCIA_MATRICULA.
-2. Estudiante paga.
-3. PDF se genera y llega al correo.
-4. Login POS001 → entra a "Bandeja Certificados" → ve la solicitud en estado GENERADO.
-5. POS001 descarga el PDF, lo imprime mentalmente, marca "Listo para retiro".
-6. POS001 marca "Entregado".
-7. Estudiante ve el estado actualizado.
+2. POSGRADOS recibe notificación de la solicitud.
+3. Estudiante paga.
+4. PDF se genera y llega al correo.
+5. Login POS001 → entra a "Bandeja Certificados" → ve la solicitud en estado GENERADO.
+6. POS001 descarga el PDF, lo imprime mentalmente, marca "Listo para retiro".
+7. Estudiante recibe notificación de "Listo para retiro".
+8. POS001 marca "Entregado".
+9. Estudiante ve el estado actualizado.
 
 **Verificar que NO funciona:**
 - Login DEP001 intenta acceder a `/api/certificados/posgrados/bandeja` → 403.
-- Login ADMIN1 intenta `POST /api/admin/tipos-certificado` → 403 (porque ahora es POSGRADOS only).
+- Login POS001 intenta `POST /api/admin/tipos-certificado` o `PUT /api/admin/tipos-certificado/{id}/plantilla` → 403.
 
 ### Fase 4 — PR a `main`
 
@@ -473,7 +518,7 @@ Probar con los logins demo:
 |---|---|
 | Merge `main → certificados-David` con conflictos importantes | Plan B en §3: nueva rama desde `main`. |
 | Solicitudes históricas con `modalidad=FISICA` que dependían de la dependencia para gestión | Después del cambio quedan en la bandeja de POSGRADOS. Sin pérdida de datos, solo cambio de quién las gestiona. |
-| ADMIN técnico que perdió acceso al catálogo lo necesita para algo | Volver a `hasAnyRole('POSGRADOS','ADMIN')` en el controller + restaurar el item en menú admin. Decisión reversible. |
+| POSGRADOS necesita ver el catálogo (futuro) | Agregar item en menú POSGRADOS y cambiar a `hasAnyRole('POSGRADOS','ADMIN')`. Decisión reversible. |
 | `direccion_oficina` hardcodeada por error en seed | Documentar en `data.sql` que es la dirección de Posgrados. |
 | Aplicar `DROP COLUMN` con datos vivos en producción rompe | El DROP es seguro porque `dependencia_id` solo se usaba en `tipo_certificado`; no hay otra tabla con FK hacia esa columna. Verificar con `\d tipo_certificado` antes de correr el DROP. |
 
@@ -481,7 +526,7 @@ Probar con los logins demo:
 
 | Decisión | Opciones | Recomendación inicial |
 |---|---|---|
-| ¿ADMIN técnico mantiene visibilidad de tipos_certificado? | (a) solo POSGRADOS; (b) POSGRADOS + ADMIN read-only; (c) ambos rw | (a) más simple. Reversible. |
+| ¿POSGRADOS obtiene visibilidad de tipos/plantillas? | (a) solo ADMIN; (b) POSGRADOS + ADMIN read-only; (c) ambos rw | (a) por ahora. Reversible. |
 | ¿Mantener `direccion_oficina` o moverla a config global? | Mantener / mover | Mantener. Cero costo, máxima flexibilidad. |
 | ¿La bandeja de certificados físicos se une visualmente a la bandeja de solicitudes de grado? | Sí (1 sola "Bandeja") / no (2 secciones distintas) | No. Son dominios distintos, manténlas separadas. Cada una con su tab/sección en el sidebar de POSGRADOS. |
 | ¿Eliminamos `BandejaCertificadosDependencia.jsx` o lo dejamos como referencia comentada? | Eliminar / comentar | Eliminar. Está en git history si se necesita. |
@@ -493,7 +538,7 @@ Probar con los logins demo:
 | Documento | Acción |
 |---|---|
 | [`../TABLAS BD OFICIAL/plan_migracion_railway.md`](../TABLAS%20BD%20OFICIAL/plan_migracion_railway.md) §3.3 | Quitar la FK `dependencia_id` de `tipo_certificado` después de mergear este cambio a `main` y luego a `migracion-railway`. **Ya añadida una nota anticipatoria en §9b de ese plan.** |
-| [`../Roles/plan_roles_v3.md`](../Roles/plan_roles_v3.md) | Actualizar la matriz de permisos por rol: DEPENDENCIA pierde acceso a certificados; POSGRADOS gana bandeja física + catálogo de tipos. |
+| [`../Roles/plan_roles_v3.md`](../Roles/plan_roles_v3.md) | Actualizar la matriz de permisos por rol: DEPENDENCIA pierde acceso a certificados; POSGRADOS gana bandeja física; ADMIN mantiene tipos y plantillas. |
 | [`tramites-backend/src/main/java/com/ufps/tramites/rules/plan_certificados.md`](../../../../tramites-backend/src/main/java/com/ufps/tramites/rules/plan_certificados.md) §3.7 y §6.2 | Marcar como deprecado: la decisión "dependencias reutilizan tabla usuario" sigue siendo válida para paz y salvos, pero ya no aplica a certificados. La bandeja de §6.2 se trasladó a POSGRADOS. Añadir nota al inicio. |
 
 ---
@@ -509,7 +554,7 @@ Probar con los logins demo:
 
 ---
 
-**Versión:** 1.0
-**Última actualización:** 2026-06-01
+**Versión:** 1.1
+**Última actualización:** 2026-06-02
 **Estado:** propuesta para ejecutar sobre Supabase actual.
 **Autor:** módulo Trámites de Posgrado UFPS.
