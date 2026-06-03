@@ -44,7 +44,9 @@ function App() {
                 <TramitesView />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="bandeja-solicitudes" element={<BandejaSolicitudes />} />
+          </Route>
           <Route
             path="/proceso-de-grado"
             element={
@@ -66,14 +68,6 @@ function App() {
             element={
               <ProtectedRoute rolesPermitidos={['ESTUDIANTE']}>
                 <SolicitudGradoPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tramites/bandeja-solicitudes"
-            element={
-              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
-                <BandejaSolicitudes />
               </ProtectedRoute>
             }
           />
