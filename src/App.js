@@ -7,6 +7,7 @@ import ProcesodeGrado from './pages/ProcesodeGrado';
 import Certificados from './pages/Certificados';
 import BandejaDirector from './pages/BandejaDirector';
 import ListaSolicitudesDirector from './pages/ListaSolicitudesDirector';
+import DetalleSolicitudDirector from './pages/DetalleSolicitudDirector';
 import BandejaGrado from './pages/BandejaGrado';
 import ListaSolicitudesGrado from './pages/ListaSolicitudesGrado';
 import DetalleSolicitudGrado from './pages/DetalleSolicitudGrado';
@@ -89,6 +90,14 @@ function App() {
             element={
               <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
                 <ListaSolicitudesDirector />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tramites/bandeja-director/:estado/:id"
+            element={
+              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                <DetalleSolicitudDirector />
               </ProtectedRoute>
             }
           />
