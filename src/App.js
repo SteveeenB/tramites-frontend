@@ -32,10 +32,10 @@ function App() {
           <Route path="/pago/resultado" element={<ResultadoPago />} />
           <Route path="/login" element={<Login />} />
           <Route
-            path="/verificar" 
+            path="/verificar"
             element={
               <VerificarCertificado />
-            } 
+            }
           />
           <Route
             path="/tramites"
