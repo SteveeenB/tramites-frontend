@@ -3,6 +3,7 @@ import { CheckIcon } from './icons';
 import { formatFecha } from '../../constants/procesodeGrado';
 import { solicitudesApi } from '../../api/solicitudesApi';
 import { getEstadoPazYSalvos } from '../../api/pazYSalvoApi';
+import ModalPagoPSE from './ModalPagoPSE';
 
 /* ─── Constantes ─────────────────────────────────────────────────────── */
 const FECHAS_GRADO = [
@@ -19,113 +20,8 @@ const COSTO_CEREMONIA_EXTRA = 40000;
 const BANCOS = ['Bancolombia', 'Banco de Bogotá', 'Banco de Occidente', 'Davivienda', 'BBVA Colombia', 'Nequi'];
 
 /* ─── Sección 1: Pago de grado ───────────────────────────────────────── */
-const ModalPagoGrado = ({ solicitud, onClose, onExito }) => {
-  const [tipoPersona, setTipoPersona] = useState('');
-  const [banco, setBanco] = useState('');
-  const [aceptaTerminos, setAceptaTerminos] = useState(false);
-  const [procesando, setProcesando] = useState(false);
-
-  const puedeConfirmar = tipoPersona && banco && aceptaTerminos && !procesando;
-  const valorFmt = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(solicitud?.costo ?? 250000);
-
-  const handleConfirmar = async () => {
-    setProcesando(true);
-    try {
-      const token = localStorage.getItem('auth_token');
-      const resp = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080/api'}/pagos/crear`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({
-          solicitudId: solicitud.id,
-          tipoPago: 'GRADO',
-          cedula: solicitud.cedula,
-        }),
-      });
-      const data = await resp.json();
-      console.log('Respuesta pagos/crear:', data);
-      window.location.href = data.checkoutUrl;
-    } catch (e) {
-      setProcesando(false);
-      alert('Error al conectar con el servicio de pagos');
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onClick={(e) => { if (e.target === e.currentTarget && !procesando) onClose(); }}>
-      <div className="relative mx-4 w-full max-w-lg rounded-3xl bg-white shadow-2xl">
-        <div className="rounded-t-3xl bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-5 text-white">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <div>
-                <h2 className="text-lg font-bold">Pago Derechos de Grado — PSE</h2>
-                <p className="text-xs text-blue-200">Serás redirigido al portal de tu banco</p>
-              </div>
-            </div>
-            {!procesando && <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 hover:bg-white/20">✕</button>}
-          </div>
-        </div>
-        <div className="px-6 py-5">
-          {(
-            <>
-              <div className="mb-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Concepto</p>
-                  <p className="text-sm font-medium text-slate-800">Derechos de Grado</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Total</p>
-                  <p className="text-xl font-bold text-slate-900">{valorFmt}</p>
-                </div>
-              </div>
-              <div className="mb-4">
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Tipo de persona</label>
-                <div className="grid grid-cols-2 gap-3">
-                  {['Natural', 'Jurídica'].map((tipo) => (
-                    <button key={tipo} type="button" onClick={() => setTipoPersona(tipo)}
-                      className={`rounded-xl border-2 px-4 py-3 text-sm font-semibold transition ${tipoPersona === tipo ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'}`}>
-                      Persona {tipo}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="mb-4">
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Selecciona tu banco</label>
-                <select value={banco} onChange={(e) => setBanco(e.target.value)}
-                  className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-800 focus:border-blue-500 focus:outline-none">
-                  <option value="">— Selecciona una entidad —</option>
-                  {BANCOS.map((b) => <option key={b} value={b}>{b}</option>)}
-                </select>
-              </div>
-              <label className="mb-5 flex cursor-pointer items-start gap-3">
-                <input type="checkbox" checked={aceptaTerminos} onChange={(e) => setAceptaTerminos(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-slate-300 accent-blue-600" />
-                <span className="text-xs leading-5 text-slate-500">Acepto los <strong className="text-blue-600">términos y condiciones</strong> del servicio de pagos PSE.</span>
-              </label>
-              <button type="button" disabled={!puedeConfirmar} onClick={handleConfirmar}
-                className={`flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-bold transition ${puedeConfirmar ? 'bg-blue-600 text-white hover:bg-blue-700' : 'cursor-not-allowed bg-slate-200 text-slate-400'}`}>
-                {procesando ? (<><svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Procesando…</>) : 'Pagar con PSE'}
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const SeccionPago = ({ solicitudGrado, onPagoConfirmado }) => {
   const [mostrarModal, setMostrarModal] = useState(false);
-
-  const handlePagoExitoso = async () => {
-    try { await solicitudesApi.pagarGrado(solicitudGrado.id); } catch { /* demo */ }
-    onPagoConfirmado();
-    setMostrarModal(false);
-  };
 
   return (
     <>
@@ -158,7 +54,14 @@ const SeccionPago = ({ solicitudGrado, onPagoConfirmado }) => {
           Pagar con PSE
         </button>
       </div>
-      {mostrarModal && <ModalPagoGrado solicitud={solicitudGrado} onClose={() => setMostrarModal(false)} onExito={handlePagoExitoso} />}
+      {mostrarModal && (
+        <ModalPagoPSE
+          solicitud={solicitudGrado}
+          tipoPago="GRADO"
+          cedula={solicitudGrado?.cedula}
+          onClose={() => setMostrarModal(false)}
+        />
+      )}
     </>
   );
 };
