@@ -16,6 +16,13 @@ export const useProcesodeGrado = () => {
   const [errorSolicitud, setErrorSolicitud] = useState('');
   const [descargandoActa, setDescargandoActa] = useState(false);
 
+  const obtenerUltimaPorTipo = (solicitudes, tipo) => {
+    // Toma la solicitud mas reciente por id para evitar mostrar registros antiguos.
+    return solicitudes
+      .filter((s) => s.tipo === tipo)
+      .reduce((acc, cur) => (!acc || (cur.id ?? 0) > (acc.id ?? 0) ? cur : acc), null);
+  };
+
   const cargarDatos = useCallback(async () => {
     if (!usuario?.cedula) return;
     setCargando(true);
@@ -28,15 +35,15 @@ export const useProcesodeGrado = () => {
 
       setDatos(dataProc);
 
-      const terminacion = dataSol.find((s) => s.tipo === 'TERMINACION_MATERIAS');
-      if (terminacion) setSolicitud(terminacion);
+      const terminacion = obtenerUltimaPorTipo(dataSol, 'TERMINACION_MATERIAS');
+      setSolicitud(terminacion);
 
       // La solicitud de grado la leemos directamente desde proceso-grado
       // (el backend ya la incluye) para evitar una búsqueda extra en el array
       if (dataProc.solicitudGrado) {
         setSolicitudGrado(dataProc.solicitudGrado);
       } else {
-        const grado = dataSol.find((s) => s.tipo === 'GRADO') || null;
+        const grado = obtenerUltimaPorTipo(dataSol, 'GRADO');
         setSolicitudGrado(grado);
       }
     } catch (e) {

@@ -15,7 +15,11 @@ export default function ResultadoPago() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (!referencia) { setCargando(false); setError('No se encontró referencia de pago.'); return; }
+        if (!referencia) {
+            setCargando(false);
+            setEstado({ estado: statusUrl === 'APPROVED' ? 'APROBADO' : 'PENDIENTE', referencia: null });
+            return;
+        }
 
         const verificar = async () => {
             try {
