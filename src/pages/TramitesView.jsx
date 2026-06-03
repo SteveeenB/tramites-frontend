@@ -1,27 +1,20 @@
 import React from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useTramitesData } from '../hooks/useTramitesData';
 import TramitesSidebar from '../components/tramites/TramitesSidebar';
 import TramitesHeader from '../components/tramites/TramitesHeader';
 import ContenidoEstudiante from '../components/tramites/ContenidoEstudiante';
 import ContenidoDirector from '../components/tramites/ContenidoDirector';
 import BandejaDependencia from './BandejaDependencia';
-import BandejaCertificadosDependencia from './BandejaCertificadosDependencia';
 import PazYSalvoDirector from './PazYSalvoDirector';
 import EstadoEstudiantes from './EstadoEstudiantes';
 import BandejaPosgrados from './BandejaPosgrados';
+import BandejaCertificadosPosgrados from './BandejaCertificadosPosgrados';
 import {
   SeccionConvocatoria,
   SeccionTiposCertificado,
-  SeccionUsuarios,
-  SeccionProgramas,
   SeccionDependencias,
-  SeccionPlantillasCorreo,
   SeccionPlantillasCertificado,
-  SeccionDocumentosRequeridos,
-  SeccionTiposTramite,
-  SeccionReportes,
-  SeccionAuditoria,
-  SeccionConfiguracionGlobal,
 } from './posgrados';
 
 const CONTENIDO_POR_ROL = {
@@ -31,33 +24,26 @@ const CONTENIDO_POR_ROL = {
 // Pestañas exclusivas del ADMIN (configurador) — coinciden con los IDs
 // definidos en MENU_BY_ROLE.ADMIN en menuConfig.js.
 const ADMIN_SECCIONES = {
-  'reportes':              SeccionReportes,
   'tipos-certificado':     SeccionTiposCertificado,
-  'tipos-tramite':         SeccionTiposTramite,
   'dependencias':          SeccionDependencias,
-  'documentos-requeridos': SeccionDocumentosRequeridos,
-  'usuarios':              SeccionUsuarios,
-  'programas':             SeccionProgramas,
   'convocatorias':         SeccionConvocatoria,
-  'plantillas-correo':       SeccionPlantillasCorreo,
   'plantillas-certificado':  SeccionPlantillasCertificado,
-  'auditoria':             SeccionAuditoria,
-  'configuracion-global':  SeccionConfiguracionGlobal,
 };
 
-// Pestañas del POSGRADOS (operativo) — bandeja y reportes únicamente.
+// Pestañas del POSGRADOS (operativo) — bandeja y certificados.
 const POSGRADOS_SECCIONES = {
   'bandeja-posgrados': BandejaPosgrados,
-  'reportes':          SeccionReportes,
+  'certificados':      BandejaCertificadosPosgrados,
 };
 
 const TramitesView = () => {
   const { usuario, cambiarRol, datosModulo, selectedMenuId, manejarSeleccion, rol, menuItems } =
     useTramitesData();
+  const location = useLocation();
+  const esRutaRaiz = location.pathname === '/tramites' || location.pathname === '/tramites/';
 
   const renderContenido = () => {
     // DEPENDENCIA
-    if (rol === 'DEPENDENCIA' && selectedMenuId === 'certificados') return <BandejaCertificadosDependencia />;
     if (rol === 'DEPENDENCIA') return <BandejaDependencia />;
 
     // DIRECTOR
@@ -95,7 +81,7 @@ const TramitesView = () => {
         <div className="flex min-w-0 flex-1 flex-col">
           <TramitesHeader usuario={usuario} rol={rol} />
           <main className="flex-1 p-6 md:p-8">
-            {renderContenido()}
+            {esRutaRaiz ? renderContenido() : <Outlet />}
           </main>
         </div>
       </div>

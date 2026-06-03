@@ -24,7 +24,7 @@ const formatFecha = (s) => {
   return d.toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: 'numeric' });
 };
 
-export default function BandejaCertificadosDependencia() {
+export default function BandejaCertificadosPosgrados() {
   const { usuario } = useAuth();
   const [tab, setTab] = useState('GENERADO');
   const [solicitudes, setSolicitudes] = useState([]);
@@ -38,18 +38,17 @@ export default function BandejaCertificadosDependencia() {
   // en cliente. Esto es lo que permite que los contadores de cada pestaña
   // ((0), (2), ...) reflejen el total real, no solo lo que cabe en el tab actual.
   const cargar = useCallback(async () => {
-    if (!usuario?.dependenciaId) return;
     setLoading(true);
     setError(null);
     try {
-      const data = await apiClient(`/certificados/dependencia/${usuario.dependenciaId}`);
+      const data = await apiClient(`/certificados/posgrados`);
       setSolicitudes(data || []);
     } catch (e) {
       setError(e.message);
     } finally {
       setLoading(false);
     }
-  }, [usuario?.dependenciaId]);
+  }, []);
 
   useEffect(() => { cargar(); }, [cargar]);
 
