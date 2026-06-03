@@ -21,9 +21,10 @@ export const MENU_BY_ROLE = {
   // ADMIN = perfil CONFIGURADOR (es_super_admin en el modelo objetivo).
   // Gestiona catálogos, dependencias, plantillas, convocatorias y configuración global.
   ADMIN: [
-    { id: 'tipos-certificado',    label: 'Tipos de Certificado', route: '/tramites' },
+    { id: 'tipos-tramite',        label: 'Tipos de Trámite',          route: '/tramites' },
+    { id: 'tipos-certificado',    label: 'Tipos de Certificado',       route: '/tramites' },
     { id: 'dependencias',         label: 'Dependencias y Paz y Salvos', route: '/tramites' },
-    { id: 'convocatorias',        label: 'Convocatorias',        route: '/tramites' },
+    { id: 'convocatorias',        label: 'Convocatorias',              route: '/tramites' },
     { id: 'plantillas-certificado', label: 'Plantillas de Certificado', route: '/tramites' },
   ],
 };

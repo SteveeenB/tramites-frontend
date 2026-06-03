@@ -13,6 +13,7 @@ import BandejaCertificadosPosgrados from './BandejaCertificadosPosgrados';
 import {
   SeccionConvocatoria,
   SeccionTiposCertificado,
+  SeccionTiposTramite,
   SeccionDependencias,
   SeccionPlantillasCertificado,
 } from './posgrados';
@@ -24,9 +25,10 @@ const CONTENIDO_POR_ROL = {
 // Pestañas exclusivas del ADMIN (configurador) — coinciden con los IDs
 // definidos en MENU_BY_ROLE.ADMIN en menuConfig.js.
 const ADMIN_SECCIONES = {
-  'tipos-certificado':     SeccionTiposCertificado,
-  'dependencias':          SeccionDependencias,
-  'convocatorias':         SeccionConvocatoria,
+  'tipos-tramite':           SeccionTiposTramite,
+  'tipos-certificado':       SeccionTiposCertificado,
+  'dependencias':            SeccionDependencias,
+  'convocatorias':           SeccionConvocatoria,
   'plantillas-certificado':  SeccionPlantillasCertificado,
 };
 
