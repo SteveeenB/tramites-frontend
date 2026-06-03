@@ -40,7 +40,8 @@ export default function ResultadoPago() {
     const esAprobado = estado?.estado === 'APROBADO';
     const esRechazado = estado?.estado === 'RECHAZADO';
 
-    const handleVolver = () => navigate('/proceso-de-grado');
+    const rutaVolver = referencia?.includes('-CER-') ? '/certificados' : '/proceso-de-grado';
+    const handleVolver = () => navigate(rutaVolver);
 
     return (
         <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
