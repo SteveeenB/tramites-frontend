@@ -46,6 +46,12 @@ function App() {
             }
           >
             <Route path="bandeja-solicitudes" element={<BandejaSolicitudes />} />
+            <Route path="bandeja-director" element={<BandejaDirector />} />
+            <Route path="bandeja-director/:estado" element={<ListaSolicitudesDirector />} />
+            <Route path="bandeja-director/:estado/:id" element={<DetalleSolicitudDirector />} />
+            <Route path="bandeja-director/grado" element={<BandejaGrado />} />
+            <Route path="bandeja-director/grado/:estado/:id" element={<DetalleSolicitudGrado />} />
+            <Route path="bandeja-director/grado/:estado" element={<ListaSolicitudesGrado />} />
           </Route>
           <Route
             path="/proceso-de-grado"
@@ -68,54 +74,6 @@ function App() {
             element={
               <ProtectedRoute rolesPermitidos={['ESTUDIANTE']}>
                 <SolicitudGradoPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tramites/bandeja-director"
-            element={
-              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
-                <BandejaDirector />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tramites/bandeja-director/:estado"
-            element={
-              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
-                <ListaSolicitudesDirector />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tramites/bandeja-director/:estado/:id"
-            element={
-              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
-                <DetalleSolicitudDirector />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tramites/bandeja-director/grado"
-            element={
-              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
-                <BandejaGrado />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tramites/bandeja-director/grado/:estado/:id"
-            element={
-              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
-                <DetalleSolicitudGrado />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tramites/bandeja-director/grado/:estado"
-            element={
-              <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
-                <ListaSolicitudesGrado />
               </ProtectedRoute>
             }
           />
