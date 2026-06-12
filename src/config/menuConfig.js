@@ -11,11 +11,12 @@ export const MENU_BY_ROLE = {
     { id: 'paz-y-salvo',       label: 'Mis Paz y Salvos',        route: '/tramites'                   },
     { id: 'estado-estudiantes', label: 'Estado Estudiantes',     route: '/tramites'                   },
   ],
-  // POSGRADOS = perfil OPERATIVO. Solo atiende solicitudes y consulta métricas.
-  // No configura el catálogo del módulo (eso lo hace ADMIN).
+  // POSGRADOS = perfil OPERATIVO. Atiende solicitudes, paz y salvos y configura tarifas.
   POSGRADOS: [
-    { id: 'bandeja-posgrados', label: 'Trámites de Grado', route: '/tramites' },
+    { id: 'bandeja-posgrados', label: 'Trámites de Grado',    route: '/tramites' },
+    { id: 'paz-y-salvos',      label: 'Paz y Salvos',         route: '/tramites' },
     { id: 'certificados',      label: 'Certificados Físicos', route: '/tramites' },
+    { id: 'tipos-tramite',     label: 'Tarifas de Trámites',  route: '/tramites' },
     { id: 'reportes',          label: 'Reportes',             route: '/tramites' },
   ],
   // ADMIN = perfil CONFIGURADOR (es_super_admin en el modelo objetivo).

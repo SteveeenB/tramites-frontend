@@ -32,10 +32,12 @@ const ADMIN_SECCIONES = {
   'plantillas-certificado':  SeccionPlantillasCertificado,
 };
 
-// Pestañas del POSGRADOS (operativo) — bandeja y certificados.
+// Pestañas del POSGRADOS (operativo) — bandeja, paz y salvos, certificados, tarifas.
 const POSGRADOS_SECCIONES = {
   'bandeja-posgrados': BandejaPosgrados,
+  'paz-y-salvos':      BandejaDependencia,
   'certificados':      BandejaCertificadosPosgrados,
+  'tipos-tramite':     SeccionTiposTramite,
 };
 
 const TramitesView = () => {
