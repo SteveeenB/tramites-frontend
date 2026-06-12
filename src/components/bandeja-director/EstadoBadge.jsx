@@ -1,11 +1,12 @@
 import React from 'react';
 
 const ESTADOS = {
-  PENDIENTE_PAGO:  { label: 'Pago pendiente', className: 'bg-amber-100 text-amber-700' },
-  EN_REVISION:     { label: 'En revisión',    className: 'bg-blue-100 text-blue-700'   },
-  PAGO_PENDIENTE:  { label: 'Pago pendiente', className: 'bg-amber-100 text-amber-700' },
-  APROBADA:        { label: 'Aprobada',       className: 'bg-green-100 text-green-700' },
-  RECHAZADA:       { label: 'Rechazada',      className: 'bg-red-100 text-red-700'     },
+  PENDIENTE_PAGO:    { label: 'Pago pendiente',        className: 'bg-amber-100 text-amber-700'  },
+  EN_REVISION:       { label: 'En revisión',           className: 'bg-blue-100 text-blue-700'    },
+  PAGO_PENDIENTE:    { label: 'Pago pendiente',        className: 'bg-amber-100 text-amber-700'  },
+  APROBADA_DIRECTOR: { label: 'Aprobada por director', className: 'bg-orange-100 text-orange-700' },
+  APROBADA:          { label: 'Aprobada',              className: 'bg-green-100 text-green-700'  },
+  RECHAZADA:         { label: 'Rechazada',             className: 'bg-red-100 text-red-700'      },
 };
 
 const EstadoBadge = ({ estado }) => {
