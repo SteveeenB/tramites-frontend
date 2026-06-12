@@ -163,12 +163,12 @@ const styles = {
   },
   form: { display: 'flex', flexDirection: 'column', gap: 12 },
   input: {
-    padding: '10px 12px', borderRadius: 6, border: '1px solid #cad4fd',
+    padding: '10px 12px', borderRadius: 6, border: '1px solid #fecaca',
     fontSize: 14, outline: 'none',
   },
   button: {
     padding: '11px 0', borderRadius: 6, border: 'none',
-    background: '#e9382b', color: '#fff', fontSize: 15,
+    background: '#dc2626', color: '#fff', fontSize: 15,
     cursor: 'pointer', fontWeight: 600,
   },
   error: { color: '#e53e3e', fontSize: 13, margin: '0' },

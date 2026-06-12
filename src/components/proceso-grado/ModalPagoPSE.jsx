@@ -58,7 +58,7 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
       <div className="relative mx-4 w-full max-w-md rounded-3xl bg-white shadow-2xl">
 
         {/* Header */}
-        <div className="rounded-t-3xl bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-5 text-white">
+        <div className="rounded-t-3xl bg-gradient-to-r from-red-600 to-red-800 px-6 py-5 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
@@ -69,7 +69,7 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
               </div>
               <div>
                 <h2 className="text-lg font-bold">Pago con Wompi PSE</h2>
-                <p className="text-xs text-blue-200">Serás redirigido a la plataforma de pago</p>
+                <p className="text-xs text-red-200">Serás redirigido a la plataforma de pago</p>
               </div>
             </div>
             {!cargando && (
@@ -101,11 +101,11 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
           </div>
 
           {/* Info Wompi */}
-          <div className="rounded-2xl bg-blue-50 border border-blue-100 px-4 py-3 flex items-start gap-3">
-            <svg className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="rounded-2xl bg-red-50 border border-red-100 px-4 py-3 flex items-start gap-3">
+            <svg className="h-5 w-5 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p className="text-xs text-blue-700 leading-5">
+            <p className="text-xs text-red-700 leading-5">
               Al hacer clic en <strong>Pagar ahora</strong> serás redirigido a la plataforma segura de
               Wompi para completar el pago. Puedes usar tarjeta de crédito/débito, PSE o Nequi.
             </p>
@@ -131,7 +131,7 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
               type="button"
               onClick={handlePagar}
               disabled={cargando}
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-60"
+              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-white hover:bg-red-700 disabled:opacity-60"
             >
               {cargando ? (
                 <>

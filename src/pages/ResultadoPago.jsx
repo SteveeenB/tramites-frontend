@@ -45,7 +45,7 @@ export default function ResultadoPago() {
         return (
             <div className="min-h-screen bg-slate-100 flex items-center justify-center">
                 <div className="text-center">
-                    <svg className="h-10 w-10 animate-spin text-blue-600 mx-auto mb-4" viewBox="0 0 24 24" fill="none">
+                    <svg className="h-10 w-10 animate-spin text-red-600 mx-auto mb-4" viewBox="0 0 24 24" fill="none">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
@@ -144,7 +144,7 @@ export default function ResultadoPago() {
 
                         <button
                             onClick={handleVolver}
-                            className="w-full rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition"
+                            className="w-full rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white hover:bg-red-700 transition"
                         >
                             Volver al proceso de grado
                         </button>

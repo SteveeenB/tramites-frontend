@@ -509,7 +509,7 @@ const Certificados = () => {
                                 )}
                                 {descargable && (
                                   <button type="button" onClick={() => handleDescargarPdf(item.id)} disabled={descargandoId === item.id}
-                                    className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-blue-700 disabled:opacity-60">
+                                    className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-red-700 disabled:opacity-60">
                                     <DownloadIcon />
                                     {descargandoId === item.id ? 'Descargando…' : 'Descargar PDF'}
                                   </button>
