@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useProcesodeGrado } from '../hooks/useProcesodeGrado';
 import ProcesoPGSidebar from '../components/proceso-grado/ProcesoPGSidebar';
 import EtapasResumen from '../components/proceso-grado/EtapasResumen';
@@ -29,14 +29,32 @@ const ProcesodeGrado = () => {
     day: 'numeric', month: 'long', year: 'numeric',
   });
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   // Layout base compartido (sidebar + header siempre visibles)
   const Layout = ({ children }) => (
     <div className="min-h-screen bg-slate-100 text-slate-800">
       <div className="flex min-h-screen flex-col lg:flex-row">
-        <ProcesoPGSidebar usuario={usuario} />
+        <ProcesoPGSidebar
+          usuario={usuario}
+          sidebarOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="flex items-center justify-between gap-4 bg-red-600 px-6 py-4 text-white shadow-sm md:px-8">
-            <h1 className="text-lg font-bold uppercase tracking-[0.18em] md:text-xl">ESTUDIANTES</h1>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setSidebarOpen(true)}
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20 hover:bg-white/30 lg:hidden"
+                aria-label="Abrir menú"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <h1 className="text-lg font-bold uppercase tracking-[0.18em] md:text-xl">ESTUDIANTES</h1>
+            </div>
             <div className="flex items-center gap-3">
               <BellNotificaciones rol={usuario?.rol} />
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold">
