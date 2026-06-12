@@ -29,7 +29,7 @@ const TarjetaSolicitud = ({ solicitud, colores, onAprobar, onRechazar, enCurso }
             <dt className="w-16 shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-400">
               Radicado
             </dt>
-            <dd className="font-mono text-xs font-semibold text-blue-700">{radicado}</dd>
+            <dd className="font-mono text-xs font-semibold text-red-700">{radicado}</dd>
           </div>
         )}
 

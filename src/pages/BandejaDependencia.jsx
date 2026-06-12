@@ -64,7 +64,7 @@ const ModalRespuesta = ({ pazYSalvo, onClose, onConfirm }) => {
             value={observaciones}
             onChange={e => setObservaciones(e.target.value)}
             rows={3}
-            className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
             placeholder={decision === 'RECHAZADO' ? 'Indique el motivo...' : 'Opcional'}
           />
         </div>
@@ -134,7 +134,7 @@ export default function BandejaDependencia() {
           <button
             key={f}
             onClick={() => setFiltro(f)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filtro === f ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filtro === f ? 'bg-red-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`}
           >
             {f === 'TODOS' ? 'Todos' : f.charAt(0) + f.slice(1).toLowerCase()}
             <span className="ml-1.5 text-xs">({f === 'TODOS' ? solicitudes.length : solicitudes.filter(s => s.estado === f).length})</span>
@@ -166,7 +166,7 @@ export default function BandejaDependencia() {
               {ps.estado === 'PENDIENTE' && (
                 <button
                   onClick={() => setModal(ps)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-all whitespace-nowrap"
+                  className="px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 transition-all whitespace-nowrap"
                 >
                   Responder
                 </button>
