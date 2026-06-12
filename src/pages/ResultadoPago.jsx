@@ -39,8 +39,9 @@ export default function ResultadoPago() {
 
     const esAprobado = estado?.estado === 'APROBADO';
     const esRechazado = estado?.estado === 'RECHAZADO';
+    const esCertificado = estado?.tipoPago === 'CERTIFICADO';
 
-    const handleVolver = () => navigate('/proceso-de-grado');
+    const handleVolver = () => navigate(esCertificado ? '/certificados' : '/proceso-de-grado');
 
     return (
         <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
@@ -130,7 +131,7 @@ export default function ResultadoPago() {
                             onClick={handleVolver}
                             className="w-full rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white hover:bg-red-700 transition"
                         >
-                            Volver al proceso de grado
+                            {esCertificado ? 'Volver a Certificados' : 'Volver al proceso de grado'}
                         </button>
                     </div>
                 </div>
