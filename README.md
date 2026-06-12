@@ -74,6 +74,7 @@ tramites-frontend/src/
 │   ├── notificacionesApi.js          getNotificaciones, conteo, marcarLeida, crearEventSource
 │   ├── pazYSalvoApi.js
 │   ├── solicitudesApi.js
+│   ├── tiposSolicitudApi.js           getAll, actualizar — `/api/admin/tipos-solicitud`
 │   └── tramitesApi.js
 ├── components/
 │   ├── ProtectedRoute.js             Verifica JWT y rol antes de renderizar
@@ -140,6 +141,7 @@ tramites-frontend/src/
     ├── BandejaGrado.jsx
     ├── BandejaPosgrados.jsx
     ├── BandejaSolicitudes.jsx
+    ├── DetalleSolicitudDirector.jsx      Detalle individual de solicitud de terminación para el Director
     ├── DetalleSolicitudGrado.jsx
     ├── EstadoEstudiantes.jsx
     ├── ListaSolicitudesDirector.jsx
@@ -251,6 +253,13 @@ Soporta tres métodos de autenticación:
 | `getActiva()` | `GET /convocatorias/activa` | Convocatoria activa actual |
 | `actualizar(fechaInicio, fechaFin)` | `PUT /convocatorias` | Actualiza período (ADMIN/POSGRADOS) |
 
+### 4.6 `tiposSolicitudApi.js`
+
+| Función | Endpoint | Descripción |
+|---|---|---|
+| `getAll()` | `GET /admin/tipos-solicitud` | Lista todos los tipos de solicitud |
+| `actualizar(id, campos)` | `PATCH /admin/tipos-solicitud/{id}` | Actualiza nombre y/o costo (ADMIN) |
+
 ---
 
 ## 5. Páginas de la Aplicación
@@ -281,6 +290,7 @@ Soporta tres métodos de autenticación:
 | `ListaSolicitudesDirector.jsx` | `/tramites/bandeja-director/:estado` | Listado con aprobar/rechazar |
 | `BandejaGrado.jsx` | `/tramites/bandeja-director/grado` | Solicitudes de grado |
 | `ListaSolicitudesGrado.jsx` | `/tramites/bandeja-director/grado/:estado` | Listado por estado |
+| `DetalleSolicitudDirector.jsx` | `/tramites/bandeja-director/:estado/:id` | Detalle de solicitud de terminación con opciones aprobar/rechazar |
 | `DetalleSolicitudGrado.jsx` | `/tramites/bandeja-director/grado/:estado/:id` | Detalle con documentos |
 | `PazYSalvoDirector.jsx` | `/tramites/paz-y-salvo-director` | Paz y salvos asignados al Director |
 | `EstadoEstudiantes.jsx` | `/tramites/estado-estudiantes` | Panel de seguimiento con etapas y barra de créditos |
@@ -395,7 +405,7 @@ npm run build
 
 ```bash
 git stash
-git pull origin main
+git pull origin mysql
 git stash pop
 ```
 
@@ -481,3 +491,4 @@ git stash pop
 | 1 | Escanear QR del certificado → `/verificar?codigo=UFPS-CERT-43-5440` | — |
 | 2 | Sistema verifica automáticamente | `GET /api/solicitudes/verificar?codigo=UFPS-CERT-43-5440` |
 | 3 | Muestra datos del certificado o error de validación | — |
+
