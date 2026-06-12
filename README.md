@@ -30,7 +30,7 @@ El frontend permite a estudiantes, directores, coordinadores de posgrados, admin
 
 | Componente | Tecnología | Detalle |
 |---|---|---|
-| Framework UI | React.js 19 | SPA, hooks, Context API |
+| Framework UI | React.js 19 | SPA, hooks, Context API — **URL producción:** https://tramites-frontend-r08z.onrender.com |
 | Estilos | Tailwind CSS 3 | Clases utilitarias, diseño responsivo |
 | Enrutamiento | React Router DOM 7 | Rutas protegidas por rol con JWT |
 | Autenticación | JWT Bearer + Google OAuth | Token en `localStorage`, Google Identity Services |
