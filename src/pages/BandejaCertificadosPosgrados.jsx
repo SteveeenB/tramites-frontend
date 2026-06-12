@@ -125,7 +125,7 @@ export default function BandejaCertificadosPosgrados() {
             key={t.id}
             onClick={() => setTab(t.id)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-              tab === t.id ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+              tab === t.id ? 'bg-red-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
             }`}
           >
             {t.label}
@@ -140,7 +140,7 @@ export default function BandejaCertificadosPosgrados() {
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
           placeholder="Buscar por cédula o nombre del estudiante…"
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-100"
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100"
         />
       </div>
 
@@ -203,7 +203,7 @@ export default function BandejaCertificadosPosgrados() {
                               type="button"
                               onClick={() => handleMarcarListo(s.id)}
                               disabled={accionando === s.id}
-                              className="rounded-lg bg-teal-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-teal-700 disabled:opacity-60"
+                              className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-60"
                             >
                               {accionando === s.id ? '...' : 'Marcar listo para retiro'}
                             </button>

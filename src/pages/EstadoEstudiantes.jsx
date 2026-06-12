@@ -30,7 +30,7 @@ const BarraProgreso = ({ creditos, total }) => {
   return (
     <div className="flex items-center gap-2 mt-1">
       <div className="flex-1 bg-gray-100 rounded-full h-1.5">
-        <div className="h-1.5 rounded-full bg-blue-500 transition-all" style={{ width: `${pct}%` }} />
+        <div className="h-1.5 rounded-full bg-red-500 transition-all" style={{ width: `${pct}%` }} />
       </div>
       <span className="text-xs text-gray-500 whitespace-nowrap">{creditos}/{total} cr.</span>
     </div>
@@ -86,10 +86,10 @@ export default function EstadoEstudiantes() {
             key={et.key}
             onClick={() => setFiltroEtapa(filtroEtapa === et.key ? 'TODOS' : et.key)}
             className={`p-4 rounded-2xl border-2 text-left transition-all ${
-              filtroEtapa === et.key ? 'border-blue-500 bg-blue-50' : 'border-gray-100 bg-white hover:border-gray-200'
+              filtroEtapa === et.key ? 'border-red-500 bg-red-50' : 'border-gray-100 bg-white hover:border-gray-200'
             }`}
           >
-            <div className={`text-3xl font-black mb-1 ${filtroEtapa === et.key ? 'text-blue-700' : 'text-gray-800'}`}>
+            <div className={`text-3xl font-black mb-1 ${filtroEtapa === et.key ? 'text-red-700' : 'text-gray-800'}`}>
               {conteos[et.key]}
             </div>
             <div className="flex items-center gap-1.5">
@@ -106,7 +106,7 @@ export default function EstadoEstudiantes() {
           value={busqueda}
           onChange={e => setBusqueda(e.target.value)}
           placeholder="Buscar por nombre, cédula o código..."
-          className="flex-1 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="flex-1 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
         />
         {filtroEtapa !== 'TODOS' && (
           <button

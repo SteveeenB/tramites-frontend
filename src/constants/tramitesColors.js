@@ -5,30 +5,17 @@ export const ROLE_LABELS = {
   DEPENDENCIA: 'DEPENDENCIA',
 };
 
+// Color institucional unificado: rojo (#dc2626 / red-600) para todos los roles
+const RED_THEME = {
+  header: 'bg-red-600',
+  active:  'bg-red-50 text-red-700 ring-1 ring-red-200',
+  badge:   'bg-red-100 text-red-700',
+};
+
 export const ROLE_COLORS = {
-  ESTUDIANTE: {
-    header: 'bg-red-600',
-    active:  'bg-red-50 text-red-700 ring-1 ring-red-200',
-    badge:   'bg-red-100 text-red-700',
-  },
-  DIRECTOR: {
-    header: 'bg-blue-700',
-    active:  'bg-blue-50 text-blue-700 ring-1 ring-blue-200',
-    badge:   'bg-blue-100 text-blue-700',
-  },
-  ADMIN: {
-    header: 'bg-slate-800',
-    active:  'bg-slate-100 text-slate-900 ring-1 ring-slate-300',
-    badge:   'bg-slate-200 text-slate-800',
-  },
-  DEPENDENCIA: {
-    header: 'bg-teal-700',
-    active:  'bg-teal-50 text-teal-700 ring-1 ring-teal-200',
-    badge:   'bg-teal-100 text-teal-700',
-  },
-  POSGRADOS: {
-    header: 'bg-indigo-700',
-    active:  'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200',
-    badge:   'bg-indigo-100 text-indigo-700',
-  },
+  ESTUDIANTE: RED_THEME,
+  DIRECTOR: RED_THEME,
+  ADMIN: RED_THEME,
+  DEPENDENCIA: RED_THEME,
+  POSGRADOS: RED_THEME,
 };

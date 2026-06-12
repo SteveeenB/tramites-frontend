@@ -8,7 +8,7 @@ const SidebarLink = ({ children, active = false, onClick }) => (
     onClick={onClick}
     className={`w-full rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
       active
-        ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200'
+        ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
         : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
     }`}
   >
@@ -33,7 +33,7 @@ const DirectorSidebar = ({ usuario }) => {
       <div className="flex-1 px-5 py-6">
         {/* Info usuario */}
         <div className="mb-6 flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-700">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-red-100 text-lg font-bold text-red-700">
             {(usuario?.nombre || 'D').slice(0, 2).toUpperCase()}
           </div>
           <div className="min-w-0">
@@ -55,7 +55,7 @@ const DirectorSidebar = ({ usuario }) => {
            <div className="rounded-2xl bg-slate-50 p-3">
              <button type="button"
                className={`w-full rounded-xl px-4 py-3 text-left text-sm font-semibold ${
-                 enBandejaSolicitudes ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200' : 'text-slate-700'
+                 enBandejaSolicitudes ? 'bg-red-50 text-red-700 ring-1 ring-red-200' : 'text-slate-700'
                }`}
                onClick={() => navigate('/tramites/bandeja-solicitudes')}
              >

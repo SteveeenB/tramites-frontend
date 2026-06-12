@@ -55,7 +55,7 @@ const SeccionUsuarios = () => {
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
         <input type="text" value={busqueda} onChange={(e) => setBusqueda(e.target.value)}
           placeholder="Buscar por nombre o cédula…"
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm focus:border-blue-400 focus:outline-none sm:max-w-md" />
+          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm focus:border-red-400 focus:outline-none sm:max-w-md" />
         <div className="flex flex-wrap gap-2">
           {ROLES.map((r) => (
             <button key={r} type="button" onClick={() => setFiltroRol(r)}
