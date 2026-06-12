@@ -151,7 +151,7 @@ const TarjetaSolicitud = ({ solicitud, cedulaPosgrados, tipo, onActualizar }) =>
                 {/* Expandir detalle */}
                 {tipo === 'grado' && (
                     <button onClick={() => setExpandida(!expandida)}
-                        className="mb-3 text-xs font-semibold text-blue-600 hover:underline">
+                        className="mb-3 text-xs font-semibold text-red-600 hover:underline">
                         {expandida ? '▲ Ocultar detalle' : '▼ Ver detalle del proyecto'}
                     </button>
                 )}
@@ -268,9 +268,9 @@ export default function BandejaPosgrados() {
                     <p className="text-3xl font-black text-slate-900">{conteos.grado}</p>
                     <p className="text-xs font-medium text-slate-500 mt-0.5">Proceso de grado</p>
                 </div>
-                <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 shadow-sm">
-                    <p className="text-3xl font-black text-blue-700">{conteos.porAprobar}</p>
-                    <p className="text-xs font-medium text-blue-600 mt-0.5">Cert. pendientes de generar</p>
+                <div className="rounded-2xl border border-red-100 bg-red-50 p-4 shadow-sm">
+                    <p className="text-3xl font-black text-red-700">{conteos.porAprobar}</p>
+                    <p className="text-xs font-medium text-red-600 mt-0.5">Cert. pendientes de generar</p>
                 </div>
             </div>
 
@@ -310,14 +310,14 @@ export default function BandejaPosgrados() {
 
             {/* Descripción contextual */}
             {tab === 'terminacion' && (
-                <div className="mb-4 rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+                <div className="mb-4 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-800">
                     <strong>Terminación de Materias:</strong> Las solicitudes con estado <em>Aprobada</em> fueron vistas buenas
                     por el director de programa. Genera el certificado oficial con código de verificación QR para el estudiante.
                     El rechazo siempre está disponible con comentario obligatorio.
                 </div>
             )}
             {tab === 'grado' && (
-                <div className="mb-4 rounded-2xl border border-purple-100 bg-purple-50 px-4 py-3 text-sm text-purple-800">
+                <div className="mb-4 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-800">
                     <strong>Proceso de Grado:</strong> Visualiza el estado de todas las solicitudes de grado. Puedes rechazar
                     cualquier solicitud con un comentario que se notificará al estudiante.
                 </div>
