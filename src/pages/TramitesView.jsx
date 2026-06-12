@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useTramitesData } from '../hooks/useTramitesData';
 import TramitesSidebar from '../components/tramites/TramitesSidebar';
@@ -43,6 +43,7 @@ const TramitesView = () => {
     useTramitesData();
   const location = useLocation();
   const esRutaRaiz = location.pathname === '/tramites' || location.pathname === '/tramites/';
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const renderContenido = () => {
     // DEPENDENCIA
@@ -77,11 +78,13 @@ const TramitesView = () => {
           rol={rol}
           menuItems={menuItems}
           selectedMenuId={selectedMenuId}
-          onSeleccion={manejarSeleccion}
+          onSeleccion={(item) => { manejarSeleccion(item); setSidebarOpen(false); }}
           cambiarRol={cambiarRol}
+          sidebarOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
         />
         <div className="flex min-w-0 flex-1 flex-col">
-          <TramitesHeader usuario={usuario} rol={rol} />
+          <TramitesHeader usuario={usuario} rol={rol} onMenuToggle={() => setSidebarOpen(true)} />
           <main className="flex-1 p-6 md:p-8">
             {esRutaRaiz ? renderContenido() : <Outlet />}
           </main>
