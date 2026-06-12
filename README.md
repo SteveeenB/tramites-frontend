@@ -21,7 +21,7 @@ SPA desarrollada con React.js para la gestión de trámites académicos de posgr
 8. [Flujos de Usuario](#8-flujos-de-usuario)
 
 ---
-
+.
 ## 1. Visión General
 
 El frontend permite a estudiantes, directores, coordinadores de posgrados, administradores y dependencias interactuar con los trámites académicos de forma completamente digital, con autenticación JWT, pagos reales vía Wompi y notificaciones en tiempo real.
