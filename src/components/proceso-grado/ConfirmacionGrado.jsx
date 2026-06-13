@@ -20,14 +20,113 @@ const COSTO_CEREMONIA_EXTRA = 40000;
 const BANCOS = ['Bancolombia', 'Banco de Bogotá', 'Banco de Occidente', 'Davivienda', 'BBVA Colombia', 'Nequi'];
 
 /* ─── Sección 1: Pago de grado ───────────────────────────────────────── */
+const ModalPagoGrado = ({ solicitud, onClose, onExito }) => {
+  const [tipoPersona, setTipoPersona] = useState('');
+  const [banco, setBanco] = useState('');
+  const [aceptaTerminos, setAceptaTerminos] = useState(false);
+  const [procesando, setProcesando] = useState(false);
+
+  const puedeConfirmar = tipoPersona && banco && aceptaTerminos && !procesando;
+  const valorFmt = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(solicitud?.costo ?? 250000);
+
+  const handleConfirmar = async () => {
+    setProcesando(true);
+    try {
+      const token = localStorage.getItem('auth_token');
+      const resp = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080/api'}/pagos/crear`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          solicitudId: solicitud.id,
+          tipoPago: 'GRADO',
+          cedula: solicitud.cedula,
+        }),
+      });
+      const data = await resp.json();
+      console.log('Respuesta pagos/crear:', data);
+      window.location.href = data.checkoutUrl;
+    } catch (e) {
+      setProcesando(false);
+      alert('Error al conectar con el servicio de pagos');
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      onClick={(e) => { if (e.target === e.currentTarget && !procesando) onClose(); }}>
+      <div className="relative mx-4 w-full max-w-lg rounded-3xl bg-white shadow-2xl">
+        <div className="rounded-t-3xl bg-gradient-to-r from-red-600 to-red-800 px-6 py-5 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-lg font-bold">Pago Derechos de Grado — PSE</h2>
+                <p className="text-xs text-red-200">Serás redirigido al portal de tu banco</p>
+              </div>
+            </div>
+            {!procesando && <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 hover:bg-white/20">✕</button>}
+          </div>
+        </div>
+        <div className="px-6 py-5">
+          {(
+            <>
+              <div className="mb-5 rounded-2xl border border-slate-200 bg-slate-50 p-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Concepto</p>
+                  <p className="text-sm font-medium text-slate-800">Derechos de Grado</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Total</p>
+                  <p className="text-xl font-bold text-slate-900">{valorFmt}</p>
+                </div>
+              </div>
+              <div className="mb-4">
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Tipo de persona</label>
+                <div className="grid grid-cols-2 gap-3">
+                  {['Natural', 'Jurídica'].map((tipo) => (
+                    <button key={tipo} type="button" onClick={() => setTipoPersona(tipo)}
+                      className={`rounded-xl border-2 px-4 py-3 text-sm font-semibold transition ${tipoPersona === tipo ? 'border-red-600 bg-red-50 text-red-700' : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'}`}>
+                      Persona {tipo}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-4">
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Selecciona tu banco</label>
+                <select value={banco} onChange={(e) => setBanco(e.target.value)}
+                  className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-800 focus:border-red-500 focus:outline-none">
+                  <option value="">— Selecciona una entidad —</option>
+                  {BANCOS.map((b) => <option key={b} value={b}>{b}</option>)}
+                </select>
+              </div>
+              <label className="mb-5 flex cursor-pointer items-start gap-3">
+                <input type="checkbox" checked={aceptaTerminos} onChange={(e) => setAceptaTerminos(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-slate-300 accent-red-600" />
+                <span className="text-xs leading-5 text-slate-500">Acepto los <strong className="text-red-600">términos y condiciones</strong> del servicio de pagos PSE.</span>
+              </label>
+              <button type="button" disabled={!puedeConfirmar} onClick={handleConfirmar}
+                className={`flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-bold transition ${puedeConfirmar ? 'bg-red-600 text-white hover:bg-red-700' : 'cursor-not-allowed bg-slate-200 text-slate-400'}`}>
+                {procesando ? (<><svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Procesando…</>) : 'Pagar con PSE'}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const SeccionPago = ({ solicitudGrado, onPagoConfirmado }) => {
   const [mostrarModal, setMostrarModal] = useState(false);
 
   return (
     <>
-      <div className="rounded-3xl border border-blue-200 bg-blue-50 p-6 shadow-sm">
+      <div className="rounded-3xl border border-red-200 bg-red-50 p-6 shadow-sm">
         <div className="mb-4 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-red-600">
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
             </svg>
@@ -47,7 +146,7 @@ const SeccionPago = ({ solicitudGrado, onPagoConfirmado }) => {
           </span>
         </div>
         <button type="button" onClick={() => setMostrarModal(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-blue-200 transition hover:bg-blue-700">
+          className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-red-200 transition hover:bg-red-700">
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
@@ -190,13 +289,13 @@ const ModalPagoCeremonia = ({ fecha, solicitudId, cedula, onClose, onExito }) =>
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget && !procesando) onClose(); }}>
       <div className="mx-4 w-full max-w-lg rounded-3xl bg-white shadow-2xl">
-        <div className="rounded-t-3xl bg-gradient-to-r from-violet-600 to-purple-800 px-6 py-5 text-white">
+        <div className="rounded-t-3xl bg-gradient-to-r from-red-600 to-red-800 px-6 py-5 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-xl">🎓</div>
               <div>
                 <h2 className="text-lg font-bold">Pago — Derechos de Ceremonia</h2>
-                <p className="text-xs text-purple-200">{fecha?.label}</p>
+                <p className="text-xs text-red-200">{fecha?.label}</p>
               </div>
             </div>
             {!procesando && <button onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 hover:bg-white/20">✕</button>}
@@ -205,8 +304,8 @@ const ModalPagoCeremonia = ({ fecha, solicitudId, cedula, onClose, onExito }) =>
         <div className="px-6 py-5">
           {(
             <>
-              <div className="mb-5 rounded-2xl border border-purple-100 bg-purple-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-purple-400 mb-1">Fecha seleccionada</p>
+              <div className="mb-5 rounded-2xl border border-red-100 bg-red-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-red-400 mb-1">Fecha seleccionada</p>
                 <p className="text-sm font-bold text-slate-900">{fecha?.label}</p>
                 <p className="text-xs text-slate-500">{fecha?.hora} · {fecha?.lugar}</p>
               </div>
@@ -225,7 +324,7 @@ const ModalPagoCeremonia = ({ fecha, solicitudId, cedula, onClose, onExito }) =>
                 <div className="grid grid-cols-2 gap-3">
                   {['Natural', 'Jurídica'].map((t) => (
                     <button key={t} type="button" onClick={() => setTipoPersona(t)}
-                      className={`rounded-xl border-2 px-4 py-3 text-sm font-semibold transition ${tipoPersona === t ? 'border-purple-600 bg-purple-50 text-purple-700' : 'border-slate-200 bg-white text-slate-600'}`}>
+                      className={`rounded-xl border-2 px-4 py-3 text-sm font-semibold transition ${tipoPersona === t ? 'border-red-600 bg-red-50 text-red-700' : 'border-slate-200 bg-white text-slate-600'}`}>
                       Persona {t}
                     </button>
                   ))}
@@ -234,17 +333,17 @@ const ModalPagoCeremonia = ({ fecha, solicitudId, cedula, onClose, onExito }) =>
               <div className="mb-4">
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Selecciona tu banco</label>
                 <select value={banco} onChange={(e) => setBanco(e.target.value)}
-                  className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-800 focus:border-purple-500 focus:outline-none">
+                  className="w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-800 focus:border-red-500 focus:outline-none">
                   <option value="">— Selecciona una entidad —</option>
                   {BANCOS.map((b) => <option key={b} value={b}>{b}</option>)}
                 </select>
               </div>
               <label className="mb-5 flex cursor-pointer items-start gap-3">
-                <input type="checkbox" checked={acepta} onChange={(e) => setAcepta(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-slate-300 accent-purple-600" />
-                <span className="text-xs leading-5 text-slate-500">Acepto los <strong className="text-purple-600">términos y condiciones</strong> del servicio PSE.</span>
+                <input type="checkbox" checked={acepta} onChange={(e) => setAcepta(e.target.checked)} className="mt-0.5 h-4 w-4 rounded border-slate-300 accent-red-600" />
+                <span className="text-xs leading-5 text-slate-500">Acepto los <strong className="text-red-600">términos y condiciones</strong> del servicio PSE.</span>
               </label>
               <button type="button" disabled={!puedeConfirmar} onClick={handlePagar}
-                className={`flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-bold transition ${puedeConfirmar ? 'bg-purple-600 text-white hover:bg-purple-700' : 'cursor-not-allowed bg-slate-200 text-slate-400'}`}>
+                className={`flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-bold transition ${puedeConfirmar ? 'bg-red-600 text-white hover:bg-red-700' : 'cursor-not-allowed bg-slate-200 text-slate-400'}`}>
                 {procesando ? (<><svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Procesando…</>) : 'Pagar con PSE'}
               </button>
             </>
@@ -292,9 +391,9 @@ const SeccionFechaGrado = ({ solicitudGrado, onFechaConfirmada }) => {
 
   return (
     <>
-      <div className="rounded-3xl border border-purple-200 bg-purple-50 p-6 shadow-sm">
+      <div className="rounded-3xl border border-red-200 bg-red-50 p-6 shadow-sm">
         <div className="mb-4 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 text-purple-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-red-600">
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
@@ -316,18 +415,18 @@ const SeccionFechaGrado = ({ solicitudGrado, onFechaConfirmada }) => {
             const sel = fechaSeleccionada?.id === f.id;
             return (
               <button key={f.id} type="button" onClick={() => setFechaSeleccionada(f)}
-                className={`flex items-center gap-4 rounded-2xl border-2 p-4 text-left transition ${sel ? (esCer ? 'border-purple-600 bg-purple-100' : 'border-slate-500 bg-slate-100') : 'border-slate-200 bg-white hover:border-slate-300'}`}>
-                <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${sel ? (esCer ? 'border-purple-600 bg-purple-600' : 'border-slate-600 bg-slate-600') : 'border-slate-300'}`}>
+                className={`flex items-center gap-4 rounded-2xl border-2 p-4 text-left transition ${sel ? (esCer ? 'border-red-600 bg-red-100' : 'border-slate-500 bg-slate-100') : 'border-slate-200 bg-white hover:border-slate-300'}`}>
+                <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${sel ? (esCer ? 'border-red-600 bg-red-600' : 'border-slate-600 bg-slate-600') : 'border-slate-300'}`}>
                   {sel && <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" clipRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" /></svg>}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-slate-900">{f.label}</p>
                 </div>
                 <div className="shrink-0 flex flex-col items-end gap-1">
-                  <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${esCer ? 'bg-purple-100 text-purple-700' : 'bg-slate-100 text-slate-600'}`}>
+                  <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${esCer ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-600'}`}>
                     {esCer ? '🎓' : '📄'} {esCer ? 'Ceremonia' : 'Secretaría'}
                   </span>
-                  <span className={`text-xs font-semibold ${esCer ? 'text-purple-600' : 'text-green-600'}`}>
+                  <span className={`text-xs font-semibold ${esCer ? 'text-red-600' : 'text-green-600'}`}>
                     {esCer ? `+ ${valorCeremonia}` : 'Sin costo extra'}
                   </span>
                 </div>
@@ -339,7 +438,7 @@ const SeccionFechaGrado = ({ solicitudGrado, onFechaConfirmada }) => {
         {error && <p className="mb-3 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</p>}
 
         <button type="button" disabled={!fechaSeleccionada || guardando} onClick={handleClickConfirmar}
-          className={`inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition ${fechaSeleccionada && !guardando ? (esCeremonia ? 'bg-purple-600 text-white hover:bg-purple-700' : 'bg-slate-800 text-white hover:bg-slate-900') : 'cursor-not-allowed bg-slate-200 text-slate-400'}`}>
+          className={`inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition ${fechaSeleccionada && !guardando ? (esCeremonia ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-slate-800 text-white hover:bg-slate-900') : 'cursor-not-allowed bg-slate-200 text-slate-400'}`}>
           {guardando ? 'Guardando…' : !fechaSeleccionada ? 'Selecciona una fecha' : esCeremonia ? '🎓 Continuar al pago de ceremonia' : '📄 Confirmar fecha por secretaría'}
         </button>
       </div>

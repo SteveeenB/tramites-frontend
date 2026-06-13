@@ -34,7 +34,7 @@ export default function VerificarCertificado() {
     return (
         <div className="min-h-screen bg-slate-100 flex flex-col">
             {/* Header institucional */}
-            <header className="bg-blue-700 text-white px-6 py-4 shadow-md">
+            <header className="bg-red-600 text-white px-6 py-4 shadow-md">
                 <div className="max-w-2xl mx-auto flex items-center gap-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -43,7 +43,7 @@ export default function VerificarCertificado() {
                         </svg>
                     </div>
                     <div>
-                        <p className="text-xs font-semibold uppercase tracking-widest text-blue-200">UFPS — Sección de Posgrados</p>
+                        <p className="text-xs font-semibold uppercase tracking-widest text-red-200">UFPS — Sección de Posgrados</p>
                         <h1 className="text-lg font-bold">Verificación de Certificados</h1>
                     </div>
                 </div>
@@ -67,12 +67,12 @@ export default function VerificarCertificado() {
                                 onChange={(e) => setCodigo(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && verificar(codigo)}
                                 placeholder="Ej: UFPS-TM-55-0010"
-                                className="flex-1 rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-mono text-slate-800 focus:border-blue-500 focus:outline-none"
+                                className="flex-1 rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-mono text-slate-800 focus:border-red-500 focus:outline-none"
                             />
                             <button
                                 onClick={() => verificar(codigo)}
                                 disabled={cargando || !codigo.trim()}
-                                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {cargando ? (
                                     <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
@@ -133,7 +133,7 @@ export default function VerificarCertificado() {
                                     </div>
                                     <div className="rounded-xl bg-slate-50 p-4">
                                         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">Código de verificación</p>
-                                        <p className="text-sm font-mono font-semibold text-blue-700">{resultado.codigo}</p>
+                                        <p className="text-sm font-mono font-semibold text-red-700">{resultado.codigo}</p>
                                     </div>
                                 </div>
 

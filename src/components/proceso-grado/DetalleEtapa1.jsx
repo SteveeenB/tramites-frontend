@@ -47,7 +47,7 @@ const DetalleEtapa1 = ({
             {solicitud.radicado && (
               <div className="col-span-2">
                 <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">N.° de radicado</p>
-                <p className="font-mono text-sm font-semibold text-blue-700">{solicitud.radicado}</p>
+                <p className="font-mono text-sm font-semibold text-red-700">{solicitud.radicado}</p>
               </div>
             )}
             <div>

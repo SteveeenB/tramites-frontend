@@ -15,6 +15,7 @@ import BandejaSolicitudes from './pages/BandejaSolicitudes';
 import SolicitudGradoPage from './pages/SolicitudGradoPage';
 import NoAutorizado from './pages/NoAutorizado';
 import BandejaDependencia from './pages/BandejaDependencia';
+import ListaSolicitudesPosgrados from './pages/ListaSolicitudesPosgrados';
 import PazYSalvoDirector from './pages/PazYSalvoDirector';
 import EstadoEstudiantes from './pages/EstadoEstudiantes';
 import { ALLOWED_ROLES } from './config/menuConfig';
@@ -52,6 +53,7 @@ function App() {
             <Route path="bandeja-director/grado" element={<BandejaGrado />} />
             <Route path="bandeja-director/grado/:estado/:id" element={<DetalleSolicitudGrado />} />
             <Route path="bandeja-director/grado/:estado" element={<ListaSolicitudesGrado />} />
+            <Route path="bandeja-posgrados/:tipo/:estado" element={<ListaSolicitudesPosgrados />} />
           </Route>
           <Route
             path="/proceso-de-grado"
