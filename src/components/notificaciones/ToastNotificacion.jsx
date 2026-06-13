@@ -38,7 +38,7 @@ const ToastNotificacion = ({ notificacion, onDismiss }) => {
         {enlace && (
           <button
             onClick={handleClick}
-            className="mt-1 text-xs font-medium text-blue-600 hover:underline"
+            className="mt-1 text-xs font-medium text-red-600 hover:underline"
           >
             Ver detalle →
           </button>

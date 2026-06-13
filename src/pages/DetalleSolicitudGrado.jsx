@@ -55,7 +55,7 @@ const DocCard = ({ doc }) => {
           <button
             type="button"
             onClick={() => window.open(fileUrl, '_blank', 'noopener')}
-            className="rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 transition hover:bg-blue-100"
+            className="rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-100"
           >
             Ver
           </button>
@@ -136,7 +136,7 @@ const DetalleSolicitudGrado = () => {
                       <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                         Solicitud de Grado
                       </p>
-                      <p className="font-mono text-xs font-semibold text-blue-700">
+                      <p className="font-mono text-xs font-semibold text-red-700">
                         {solicitud.radicado ?? `#${solicitud.id}`}
                       </p>
                       <h2 className="mt-1 text-xl font-bold text-slate-900">

@@ -86,7 +86,7 @@ const BandejaDirector = () => {
       <div className="mb-2 flex flex-wrap items-baseline gap-3">
         <h2 className="text-3xl font-bold text-slate-900">Bandeja de Terminación de materias</h2>
         {!cargando && !error && (
-          <span className="rounded-full bg-blue-100 px-3 py-0.5 text-sm font-bold text-blue-700">
+          <span className="rounded-full bg-red-100 px-3 py-0.5 text-sm font-bold text-red-700">
             {total} total
           </span>
         )}

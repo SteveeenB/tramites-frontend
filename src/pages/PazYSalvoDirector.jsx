@@ -37,7 +37,7 @@ const ModalRespuesta = ({ item, onClose, onConfirm }) => {
       <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
         <h2 className="text-xl font-bold text-gray-800 mb-1">Confirmar Paz y Salvo</h2>
         <p className="text-sm text-gray-500 mb-2">Estudiante: <span className="font-semibold">{item.nombreEstudiante}</span></p>
-        <p className="text-xs text-blue-600 font-medium mb-6 bg-blue-50 rounded-lg px-3 py-2">
+        <p className="text-xs text-red-600 font-medium mb-6 bg-red-50 rounded-lg px-3 py-2">
           Este es su paz y salvo como Director de Programa
         </p>
         <div className="mb-4 flex gap-3">
@@ -58,7 +58,7 @@ const ModalRespuesta = ({ item, onClose, onConfirm }) => {
           value={obs}
           onChange={e => setObs(e.target.value)}
           rows={3}
-          className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm mb-6 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm mb-6 focus:outline-none focus:ring-2 focus:ring-red-400"
           placeholder="Observaciones (opcional)"
         />
         <div className="flex gap-3">
@@ -124,7 +124,7 @@ export default function PazYSalvoDirector() {
           <button
             key={f}
             onClick={() => setFiltro(f)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filtro === f ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filtro === f ? 'bg-red-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`}
           >
             {f === 'TODOS' ? 'Todos' : f.charAt(0) + f.slice(1).toLowerCase()}
             <span className="ml-1.5 text-xs">({f === 'TODOS' ? solicitudes.length : solicitudes.filter(s => s.estado === f).length})</span>
@@ -155,7 +155,7 @@ export default function PazYSalvoDirector() {
               {ps.estado === 'PENDIENTE' && (
                 <button
                   onClick={() => setModal(ps)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-all whitespace-nowrap"
+                  className="px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 transition-all whitespace-nowrap"
                 >
                   Responder
                 </button>

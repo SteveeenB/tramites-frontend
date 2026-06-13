@@ -96,6 +96,7 @@ const Certificados = () => {
   const navigate = useNavigate();
   const { usuario } = useAuth();
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [tipos, setTipos] = useState([]);
   const [certSeleccionado, setCertSeleccionado] = useState('');
   const [modalidad, setModalidad] = useState('DIGITAL');
@@ -274,7 +275,19 @@ const Certificados = () => {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
       <div className="flex min-h-screen flex-col lg:flex-row">
-        <aside className="flex w-full flex-col border-b border-slate-200 bg-white lg:w-80 lg:border-b-0 lg:border-r">
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 z-20 bg-black/40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+        <aside className={`
+          fixed inset-y-0 left-0 z-30 flex w-72 flex-col border-r border-slate-200 bg-white shadow-xl
+          transition-transform duration-300 overflow-y-auto
+          lg:static lg:z-auto lg:w-80 lg:translate-x-0 lg:shadow-none
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}>
           <div className="flex-1 px-5 py-6">
             <div className="mb-6 flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
               <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-red-100 text-lg font-bold text-red-700">
@@ -316,7 +329,19 @@ const Certificados = () => {
 
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="flex items-center justify-between gap-4 bg-red-600 px-6 py-4 text-white shadow-sm md:px-8">
-            <h1 className="text-lg font-bold uppercase tracking-[0.18em] md:text-xl">ESTUDIANTES</h1>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setSidebarOpen(true)}
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20 hover:bg-white/30 lg:hidden"
+                aria-label="Abrir menú"
+              >
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <h1 className="text-lg font-bold uppercase tracking-[0.18em] md:text-xl">ESTUDIANTES</h1>
+            </div>
             <div className="flex items-center gap-3">
               <BellNotificaciones rol={usuario?.rol} />
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold">
@@ -511,7 +536,7 @@ const Certificados = () => {
                                 )}
                                 {descargable && (
                                   <button type="button" onClick={() => handleDescargarPdf(item.id)} disabled={descargandoId === item.id}
-                                    className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-blue-700 disabled:opacity-60">
+                                    className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-red-700 disabled:opacity-60">
                                     <DownloadIcon />
                                     {descargandoId === item.id ? 'Descargando…' : 'Descargar PDF'}
                                   </button>
