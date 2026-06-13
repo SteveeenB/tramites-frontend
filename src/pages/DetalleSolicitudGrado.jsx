@@ -4,7 +4,6 @@ import { useBandejaGrado } from '../hooks/useBandejaGrado';
 import EstadoBadge from '../components/bandeja-director/EstadoBadge';
 import ModalRechazo from '../components/bandeja-director/ModalRechazo';
 import { solicitudesApi } from '../api/solicitudesApi';
-import { BASE_URL } from '../api/apiClient';
 
 const TIPO_PROYECTO = {
   INVESTIGACION:    'Trabajo de Investigación',
@@ -27,11 +26,11 @@ const formatBytes = (bytes) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-const DocCard = ({ doc, solicitudId }) => {
+const DocCard = ({ doc }) => {
   const esImagen = doc.contentType?.startsWith('image/');
   const esPdf    = doc.contentType === 'application/pdf';
   const label    = TIPO_DOC[doc.tipo] || doc.tipo;
-  const fileUrl  = `${BASE_URL}/solicitudes/${solicitudId}/documentos/${doc.id}/file`;
+  const fileUrl  = doc.url;
 
   const iconBg  = esImagen ? 'bg-blue-500' : esPdf ? 'bg-red-500' : 'bg-slate-500';
   const iconTxt = esImagen ? 'IMG' : esPdf ? 'PDF' : 'DOC';
@@ -52,7 +51,7 @@ const DocCard = ({ doc, solicitudId }) => {
       </div>
 
       <div className="flex shrink-0 gap-2">
-        {(esImagen || esPdf) && (
+        {(esImagen || esPdf) && fileUrl && (
           <button
             type="button"
             onClick={() => window.open(fileUrl, '_blank', 'noopener')}
@@ -61,13 +60,16 @@ const DocCard = ({ doc, solicitudId }) => {
             Ver
           </button>
         )}
-        <a
-          href={fileUrl}
-          download={doc.nombreOriginal}
-          className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
-        >
-          Descargar
-        </a>
+        {fileUrl && (
+          <a
+            href={fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
+          >
+            Descargar
+          </a>
+        )}
       </div>
     </div>
   );
@@ -190,7 +192,7 @@ const DetalleSolicitudGrado = () => {
                     <p className="text-sm text-slate-400">No hay documentos adjuntos.</p>
                   ) : (
                     <div className="flex flex-col gap-3">
-                      {documentos.map(doc => <DocCard key={doc.id} doc={doc} solicitudId={id} />)}
+                      {documentos.map(doc => <DocCard key={doc.id} doc={doc} />)}
                     </div>
                   )}
                 </div>
