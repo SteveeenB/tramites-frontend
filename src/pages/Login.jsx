@@ -4,7 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
-const DEMO_MODE = process.env.REACT_APP_DEMO_MODE !== 'false';
+import { DEMO_MODE } from '../config/appConfig';
 
 export default function Login() {
   const { login, usuario } = useContext(AuthContext);

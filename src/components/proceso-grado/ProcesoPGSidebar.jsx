@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { DEMO_OPTIONS } from '../../config/menuConfig';
 
-const DEMO_MODE = process.env.REACT_APP_DEMO_MODE !== 'false';
+import { DEMO_MODE } from '../../config/appConfig';
 
 const SidebarLink = ({ children, active = false, onClick }) => (
   <button
