@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { DEMO_OPTIONS, DEMO_OPTIONS_PAZ_Y_SALVO, DEMO_USERS } from '../../config/menuConfig';
 import { ROLE_LABELS, ROLE_COLORS } from '../../constants/tramitesColors';
 
-const DEMO_MODE = process.env.REACT_APP_DEMO_MODE !== 'false';
+import { DEMO_MODE } from '../../config/appConfig';
 
 /**
  * Renderiza los items del menú lateral. Si los items tienen `group`,
