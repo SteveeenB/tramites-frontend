@@ -222,7 +222,7 @@ const TablaDetalle = ({ solicitudes, seccion, onResponder, onVolver }) => {
                                                 <div className="flex items-center justify-end gap-2">
                                                     {ps.estado === 'PENDIENTE' && (
                                                         <button onClick={() => setModal(ps)}
-                                                            className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-red-700">
+                                                            className="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-red-600">
                                                             Responder
                                                         </button>
                                                     )}
@@ -251,7 +251,7 @@ const TablaDetalle = ({ solicitudes, seccion, onResponder, onVolver }) => {
                                     {ps.observaciones && <p className="text-xs text-slate-600 mb-2">{ps.observaciones}</p>}
                                     {ps.estado === 'PENDIENTE' && (
                                         <button onClick={() => setModal(ps)}
-                                            className="w-full rounded-lg bg-red-600 px-3 py-2 text-xs font-semibold text-white hover:bg-red-700">
+                                            className="w-full rounded-lg bg-red-500 px-3 py-2 text-xs font-semibold text-white hover:bg-red-600">
                                             Responder
                                         </button>
                                     )}
