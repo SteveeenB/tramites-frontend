@@ -10,8 +10,9 @@ import PazYSalvoDirector from './PazYSalvoDirector';
 import EstadoEstudiantes from './EstadoEstudiantes';
 import BandejaPosgrados from './BandejaPosgrados';
 import BandejaCertificadosPosgrados from './BandejaCertificadosPosgrados';
+// FIX TP-193 (Johan Bueno, 07/10/2026): la pestaña Convocatorias se retira
+// del admin; SeccionConvocatoria se elimina del repo.
 import {
-  SeccionConvocatoria,
   SeccionTiposCertificado,
   SeccionTiposTramite,
   SeccionDependencias,
@@ -28,7 +29,6 @@ const ADMIN_SECCIONES = {
   'tipos-tramite':           SeccionTiposTramite,
   'tipos-certificado':       SeccionTiposCertificado,
   'dependencias':            SeccionDependencias,
-  'convocatorias':           SeccionConvocatoria,
   'plantillas-certificado':  SeccionPlantillasCertificado,
 };
 

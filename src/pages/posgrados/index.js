@@ -6,7 +6,8 @@
  * hardcoded para que el equipo y stakeholders vean el alcance del módulo
  * antes de implementar los endpoints.
  */
-export { default as SeccionConvocatoria }         from './SeccionConvocatoria';
+// FIX TP-193 (Johan Bueno, 07/10/2026): se retira la pantalla de
+// convocatoria del alcance; SeccionConvocatoria.jsx se elimina del repo.
 export { default as SeccionTiposCertificado }     from './SeccionTiposCertificado';
 export { default as SeccionUsuarios }             from './SeccionUsuarios';
 export { default as SeccionProgramas }            from './SeccionProgramas';
