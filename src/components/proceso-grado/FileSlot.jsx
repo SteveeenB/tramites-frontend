@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 const ICON_IMAGE = (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -24,8 +24,25 @@ const ICON_UPLOAD = (
 
 const ICONS = { image: ICON_IMAGE, doc: ICON_DOC, upload: ICON_UPLOAD };
 
-const FileSlot = ({ label, formats, required = false, accept, file, onChange, icon = 'upload' }) => {
+// Debe coincidir con spring.servlet.multipart.max-file-size del backend.
+const MAX_MB = 15;
+
+const getExtension = (filename) =>
+  filename.includes('.') ? filename.split('.').pop().toLowerCase() : '';
+
+const validar = (file, extensiones, formats) => {
+  if (!extensiones.includes(getExtension(file.name))) {
+    return `"${file.name}": formato no permitido. Use ${formats}.`;
+  }
+  if (file.size > MAX_MB * 1024 * 1024) {
+    return `"${file.name}": supera el límite de ${MAX_MB} MB.`;
+  }
+  return null;
+};
+
+const FileSlot = ({ label, formats, extensiones, required = false, accept, file, onChange, icon = 'upload' }) => {
   const inputRef = useRef(null);
+  const [error, setError] = useState('');
 
   const handleClick = () => inputRef.current?.click();
 
@@ -33,6 +50,18 @@ const FileSlot = ({ label, formats, required = false, accept, file, onChange, ic
     e.stopPropagation();
     onChange(null);
     if (inputRef.current) inputRef.current.value = '';
+  };
+
+  const handleChange = (e) => {
+    const seleccionado = e.target.files?.[0] ?? null;
+    const err = seleccionado && validar(seleccionado, extensiones, formats);
+    if (err) {
+      setError(err);
+      e.target.value = '';
+      return;
+    }
+    setError('');
+    onChange(seleccionado);
   };
 
   return (
@@ -43,7 +72,7 @@ const FileSlot = ({ label, formats, required = false, accept, file, onChange, ic
           ? <span className="text-red-600 text-sm font-bold">*</span>
           : <span className="text-xs font-medium text-slate-400">(Opcional)</span>}
       </div>
-      <p className="text-xs text-slate-500">{formats}</p>
+      <p className="text-xs text-slate-500">{formats} — máx. {MAX_MB} MB</p>
 
       <div
         onClick={handleClick}
@@ -82,8 +111,12 @@ const FileSlot = ({ label, formats, required = false, accept, file, onChange, ic
         type="file"
         accept={accept}
         className="hidden"
-        onChange={(e) => onChange(e.target.files?.[0] ?? null)}
+        onChange={handleChange}
       />
+
+      {error && (
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-700">{error}</p>
+      )}
     </div>
   );
 };
