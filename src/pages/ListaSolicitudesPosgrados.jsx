@@ -129,11 +129,15 @@ const ListaSolicitudesPosgrados = () => {
         ? (datos.terminacion || [])
         : (datos.grado || []);
 
+    // FIX TP-198 (Johan Bueno, 07/10/2026): la lista "rechazadas" debe
+    // incluir también RECHAZADA_POSGRADOS, no sólo las que rechazó el
+    // Director. Antes las solicitudes rechazadas por la misma Posgrados
+    // no aparecían en su propia bandeja (CP-029).
     const solicitudes = estado === 'pendientes'
         ? listaBase.filter(s => ESTADOS_PENDIENTE.includes(s.estado))
         : estado === 'aprobadas'
             ? listaBase.filter(s => s.estado === 'APROBADA')
-            : listaBase.filter(s => s.estado === 'RECHAZADA');
+            : listaBase.filter(s => s.estado === 'RECHAZADA' || s.estado === 'RECHAZADA_POSGRADOS');
 
     const handleGenerar = async (s) => {
         setGenerandoId(s.id);
@@ -166,7 +170,9 @@ const ListaSolicitudesPosgrados = () => {
         );
 
     const puedeRechazar = (s) =>
-        s.estado !== 'RECHAZADA' && s.estado !== 'APROBADA';
+        s.estado !== 'RECHAZADA'
+        && s.estado !== 'RECHAZADA_POSGRADOS'
+        && s.estado !== 'APROBADA';
 
     const tipoLabel = tipo === 'terminacion' ? 'TERMINACIÓN DE MATERIAS' : 'PROCESO DE GRADO';
 
