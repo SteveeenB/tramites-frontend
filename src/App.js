@@ -38,6 +38,12 @@ function App() {
               <VerificarCertificado />
             }
           />
+          {/* FIX TP-192 (Bryan Niño, 07/10/2026): cada subruta de /tramites
+              se envuelve en ProtectedRoute con sus rolesPermitidos. Antes
+              el único guard era el del layout padre (ALLOWED_ROLES +
+              DEPENDENCIA), por lo que un estudiante autenticado podía
+              navegar directo a /tramites/bandeja-director sin ser
+              redirigido a /no-autorizado (CP-003). */}
           <Route
             path="/tramites"
             element={
@@ -46,14 +52,70 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route path="bandeja-solicitudes" element={<BandejaSolicitudes />} />
-            <Route path="bandeja-director" element={<BandejaDirector />} />
-            <Route path="bandeja-director/:estado" element={<ListaSolicitudesDirector />} />
-            <Route path="bandeja-director/:estado/:id" element={<DetalleSolicitudDirector />} />
-            <Route path="bandeja-director/grado" element={<BandejaGrado />} />
-            <Route path="bandeja-director/grado/:estado/:id" element={<DetalleSolicitudGrado />} />
-            <Route path="bandeja-director/grado/:estado" element={<ListaSolicitudesGrado />} />
-            <Route path="bandeja-posgrados/:tipo/:estado" element={<ListaSolicitudesPosgrados />} />
+            <Route
+              path="bandeja-solicitudes"
+              element={
+                <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                  <BandejaSolicitudes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="bandeja-director"
+              element={
+                <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                  <BandejaDirector />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="bandeja-director/:estado"
+              element={
+                <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                  <ListaSolicitudesDirector />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="bandeja-director/:estado/:id"
+              element={
+                <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                  <DetalleSolicitudDirector />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="bandeja-director/grado"
+              element={
+                <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                  <BandejaGrado />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="bandeja-director/grado/:estado/:id"
+              element={
+                <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                  <DetalleSolicitudGrado />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="bandeja-director/grado/:estado"
+              element={
+                <ProtectedRoute rolesPermitidos={['DIRECTOR']}>
+                  <ListaSolicitudesGrado />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="bandeja-posgrados/:tipo/:estado"
+              element={
+                <ProtectedRoute rolesPermitidos={['POSGRADOS']}>
+                  <ListaSolicitudesPosgrados />
+                </ProtectedRoute>
+              }
+            />
           </Route>
           <Route
             path="/proceso-de-grado"

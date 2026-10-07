@@ -20,12 +20,12 @@ export const MENU_BY_ROLE = {
     { id: 'reportes',          label: 'Reportes',             route: '/tramites' },
   ],
   // ADMIN = perfil CONFIGURADOR (es_super_admin en el modelo objetivo).
-  // Gestiona catálogos, dependencias, plantillas, convocatorias y configuración global.
+  // Gestiona catálogos, dependencias y plantillas.
+  // FIX TP-193 (Johan Bueno, 07/10/2026): se retira la pestaña Convocatorias.
   ADMIN: [
     { id: 'tipos-tramite',        label: 'Tipos de Trámite',          route: '/tramites' },
     { id: 'tipos-certificado',    label: 'Tipos de Certificado',       route: '/tramites' },
     { id: 'dependencias',         label: 'Dependencias y Paz y Salvos', route: '/tramites' },
-    { id: 'convocatorias',        label: 'Convocatorias',              route: '/tramites' },
     { id: 'plantillas-certificado', label: 'Plantillas de Certificado', route: '/tramites' },
   ],
 };
