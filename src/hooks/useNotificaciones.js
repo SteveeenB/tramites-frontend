@@ -58,7 +58,12 @@ export const useNotificaciones = () => {
   useEffect(() => {
     if (!identificador) return;
 
-    const es = crearEventSource(identificador);
+    // FIX TP-186 (Santiago Cepeda, 07/10/2026): crearEventSource ya no recibe
+    // el identificador: toma el JWT de localStorage y lo manda como query
+    // param, porque el endpoint SSE exige autenticación y resuelve la
+    // cédula del token. Si no hay token, no suscribimos.
+    const es = crearEventSource();
+    if (!es) return;
     esRef.current = es;
 
     es.addEventListener('notificacion-nueva', (e) => {
