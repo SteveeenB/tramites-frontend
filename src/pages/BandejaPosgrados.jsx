@@ -6,10 +6,17 @@ import { ClockIcon, CheckCircleIcon, XCircleIcon } from '../components/bandeja-d
 
 const ESTADOS_PENDIENTE = ['EN_REVISION', 'PENDIENTE_PAGO', 'APROBADA_DIRECTOR'];
 
+// FIX TP-198 (Johan Bueno, 07/10/2026): la bandeja de Posgrados también
+// agrupa como "rechazadas" las que ella misma rechazó (RECHAZADA_POSGRADOS),
+// no sólo las que rechazó el Director (RECHAZADA). Antes el estado terminal
+// RECHAZADA_POSGRADOS no caía en ninguna sección y las solicitudes
+// desaparecían de la vista (CP-029).
+const ESTADOS_RECHAZADA = ['RECHAZADA', 'RECHAZADA_POSGRADOS'];
+
 const agrupar = (lista) => ({
     pendientes: lista.filter(s => ESTADOS_PENDIENTE.includes(s.estado)),
     aprobadas:  lista.filter(s => s.estado === 'APROBADA'),
-    rechazadas: lista.filter(s => s.estado === 'RECHAZADA'),
+    rechazadas: lista.filter(s => ESTADOS_RECHAZADA.includes(s.estado)),
 });
 
 const SECCIONES = [
