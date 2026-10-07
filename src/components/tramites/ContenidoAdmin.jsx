@@ -34,7 +34,7 @@ const ContenidoAdmin = ({ datosModulo }) => {
         <TarjetaAccion
           icono={<SettingsIcon />}
           titulo="Configuración"
-          descripcion="Configura los parámetros del sistema, convocatorias, créditos requeridos por programa y más."
+          descripcion="Configura los parámetros del sistema, créditos requeridos por programa y más."
           etiqueta="Configurar"
           onClick={() => navigate('/tramites')}
           deshabilitada={!puedeGestionar}
