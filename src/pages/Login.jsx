@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { DEMO_MODE } from '../config/appConfig';
 
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
-const DEMO_MODE = process.env.REACT_APP_DEMO_MODE !== 'false';
 
 export default function Login() {
   const { login, usuario } = useContext(AuthContext);
@@ -146,13 +146,16 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     background: '#f0f4f8',
+    padding: '16px',
   },
   card: {
     background: '#fff',
     borderRadius: 12,
     padding: '40px 36px',
-    width: 360,
+    width: '100%',
+    maxWidth: 400,
     boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+    boxSizing: 'border-box',
   },
   logo: { display: 'block', margin: '0 auto 20px', width: 100, height: 'auto' },
   title: { margin: '0 0 4px', fontSize: 22, color: '#1a202c', textAlign: 'center' },

@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { DEMO_OPTIONS, DEMO_OPTIONS_PAZ_Y_SALVO, DEMO_USERS } from '../../config/menuConfig';
 import { ROLE_LABELS, ROLE_COLORS } from '../../constants/tramitesColors';
 
-const DEMO_MODE = process.env.REACT_APP_DEMO_MODE !== 'false';
+import { DEMO_MODE } from '../../config/appConfig';
 
 /**
  * Renderiza los items del menú lateral. Si los items tienen `group`,
@@ -65,7 +65,7 @@ const renderMenuItems = (menuItems, selectedMenuId, onSeleccion, colores) => {
   ));
 };
 
-const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion, cambiarRol }) => {
+const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion, cambiarRol, sidebarOpen, onClose }) => {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const colores = ROLE_COLORS[rol] || ROLE_COLORS.ESTUDIANTE;
@@ -73,7 +73,20 @@ const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion,
   const handleLogout = () => { logout(); navigate('/login'); };
 
   return (
-    <aside className="flex w-full flex-col border-b border-slate-200 bg-white lg:w-80 lg:border-b-0 lg:border-r">
+    <>
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black/40 lg:hidden"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
+    <aside className={`
+      fixed inset-y-0 left-0 z-30 flex w-72 flex-col border-r border-slate-200 bg-white shadow-xl
+      transition-transform duration-300 overflow-y-auto
+      lg:static lg:z-auto lg:w-80 lg:translate-x-0 lg:shadow-none
+      ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+    `}>
       <div className="flex-1 px-5 py-6">
         {/* Info usuario */}
         <div className="mb-6 flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
@@ -165,6 +178,7 @@ const TramitesSidebar = ({ usuario, rol, menuItems, selectedMenuId, onSeleccion,
         </div>
       )}
     </aside>
+    </>
   );
 };
 

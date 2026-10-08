@@ -14,9 +14,12 @@ export const useTramitesData = () => {
   const rol = usuario?.rol || 'ESTUDIANTE';
   const menuItems = getMenuByRole(rol);
 
-  // Selecciona el primer ítem al cambiar de rol
+  // Selecciona el primer ítem al cambiar de rol.
+  // menuItems se recalcula en cada render (getMenuByRole no está memoizado);
+  // incluirlo en las deps re-ejecutaría el efecto en cada render, no solo al cambiar de rol.
   useEffect(() => {
     setSelectedMenuId(menuItems[0]?.id || '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rol]);
 
   // Carga datos del módulo desde el backend

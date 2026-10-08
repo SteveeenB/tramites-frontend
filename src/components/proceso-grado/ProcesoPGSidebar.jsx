@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { DEMO_OPTIONS } from '../../config/menuConfig';
 
-const DEMO_MODE = process.env.REACT_APP_DEMO_MODE !== 'false';
+import { DEMO_MODE } from '../../config/appConfig';
 
 const SidebarLink = ({ children, active = false, onClick }) => (
   <button
@@ -19,7 +19,7 @@ const SidebarLink = ({ children, active = false, onClick }) => (
   </button>
 );
 
-const ProcesoPGSidebar = ({ usuario }) => {
+const ProcesoPGSidebar = ({ usuario, sidebarOpen, onClose }) => {
   const navigate = useNavigate();
   const { usuario: usuarioAuth, cambiarRol, logout } = useAuth();
 
@@ -27,15 +27,25 @@ const ProcesoPGSidebar = ({ usuario }) => {
 
   const handleCambiarRol = (demoKey) => {
     cambiarRol(demoKey);
-    // Si es un rol distinto a ESTUDIANTE, redirigir a /tramites
     const esEstudiante = demoKey === 'ESTUDIANTE' || demoKey === 'ESTUDIANTE_CON_CREDITOS';
-    if (!esEstudiante) {
-      navigate('/tramites');
-    }
+    if (!esEstudiante) navigate('/tramites');
   };
 
   return (
-    <aside className="flex w-full flex-col border-b border-slate-200 bg-white lg:w-80 lg:border-b-0 lg:border-r">
+    <>
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black/40 lg:hidden"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
+    <aside className={`
+      fixed inset-y-0 left-0 z-30 flex w-72 flex-col border-r border-slate-200 bg-white shadow-xl
+      transition-transform duration-300 overflow-y-auto
+      lg:static lg:z-auto lg:w-80 lg:translate-x-0 lg:shadow-none
+      ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+    `}>
       <div className="flex-1 px-5 py-6">
         {/* Info usuario */}
         <div className="mb-6 flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
@@ -115,6 +125,7 @@ const ProcesoPGSidebar = ({ usuario }) => {
         </div>
       )}
     </aside>
+    </>
   );
 };
 

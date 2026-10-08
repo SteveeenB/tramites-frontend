@@ -3,7 +3,7 @@ import { ReceiptIcon } from './icons';
 import { ESTADO_CONFIG, formatFecha, formatCOP } from '../../constants/procesodeGrado';
 import ModalPagoPSE from './ModalPagoPSE';
 
-const TarjetaLiquidacion = ({ solicitud }) => {
+const TarjetaLiquidacion = ({ solicitud, tipoPago = 'TERMINACION' }) => {
   const [mostrarModal, setMostrarModal] = useState(false);
 
   const cfg = ESTADO_CONFIG[solicitud.estado] || {
@@ -16,11 +16,24 @@ const TarjetaLiquidacion = ({ solicitud }) => {
       ? 'Pendiente de pago de derechos de grado'
       : cfg.label;
 
+  const esRechazada = solicitud.estado === 'RECHAZADA';
+  const esPendiente = solicitud.estado === 'PENDIENTE_PAGO' || solicitud.estado === 'EN_REVISION';
+  const containerCls = esRechazada
+    ? 'border-red-200 bg-red-50'
+    : esPendiente
+    ? 'border-amber-200 bg-amber-50'
+    : 'border-green-200 bg-green-50';
+  const iconCls = esRechazada
+    ? 'bg-red-100 text-red-600'
+    : esPendiente
+    ? 'bg-amber-100 text-amber-600'
+    : 'bg-green-100 text-green-600';
+
   return (
     <>
-      <div className="rounded-3xl border border-green-200 bg-green-50 p-6 shadow-sm">
+      <div className={`rounded-3xl border p-6 shadow-sm ${containerCls}`}>
         <div className="mb-4 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-green-600">
+          <div className={`flex h-10 w-10 items-center justify-center rounded-full ${iconCls}`}>
             <ReceiptIcon />
           </div>
           <div>
@@ -73,6 +86,7 @@ const TarjetaLiquidacion = ({ solicitud }) => {
       {mostrarModal && (
         <ModalPagoPSE
           solicitud={solicitud}
+          tipoPago={tipoPago}
           onClose={() => setMostrarModal(false)}
         />
       )}

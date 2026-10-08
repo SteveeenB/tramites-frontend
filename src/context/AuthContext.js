@@ -1,11 +1,11 @@
 import React, { createContext, useState, useCallback, useEffect } from 'react';
 import { DEMO_USERS } from '../config/menuConfig';
+import { DEMO_MODE } from '../config/appConfig';
 
 export const AuthContext = createContext();
 
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
 const TOKEN_KEY = 'auth_token';
-const DEMO_MODE = process.env.REACT_APP_DEMO_MODE !== 'false';
 
 // Decodifica el payload del JWT sin verificar firma (solo para leer claims en cliente)
 const decodeJwtPayload = (token) => {

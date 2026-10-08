@@ -13,9 +13,11 @@ export const formatFecha = (value) => {
   return date.toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' });
 };
 
-export const formatCOP = (valor) =>
-  new Intl.NumberFormat('es-CO', {
+export const formatCOP = (valor) => {
+  if (valor == null || isNaN(Number(valor))) return '—';
+  return new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
     maximumFractionDigits: 0,
   }).format(valor);
+};

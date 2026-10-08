@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useTramitesData } from '../hooks/useTramitesData';
 import TramitesSidebar from '../components/tramites/TramitesSidebar';
@@ -10,9 +10,11 @@ import PazYSalvoDirector from './PazYSalvoDirector';
 import EstadoEstudiantes from './EstadoEstudiantes';
 import BandejaPosgrados from './BandejaPosgrados';
 import BandejaCertificadosPosgrados from './BandejaCertificadosPosgrados';
+// FIX TP-193 (Johan Bueno, 07/10/2026): la pestaña Convocatorias se retira
+// del admin; SeccionConvocatoria se elimina del repo.
 import {
-  SeccionConvocatoria,
   SeccionTiposCertificado,
+  SeccionTiposTramite,
   SeccionDependencias,
   SeccionPlantillasCertificado,
 } from './posgrados';
@@ -24,16 +26,18 @@ const CONTENIDO_POR_ROL = {
 // Pestañas exclusivas del ADMIN (configurador) — coinciden con los IDs
 // definidos en MENU_BY_ROLE.ADMIN en menuConfig.js.
 const ADMIN_SECCIONES = {
-  'tipos-certificado':     SeccionTiposCertificado,
-  'dependencias':          SeccionDependencias,
-  'convocatorias':         SeccionConvocatoria,
+  'tipos-tramite':           SeccionTiposTramite,
+  'tipos-certificado':       SeccionTiposCertificado,
+  'dependencias':            SeccionDependencias,
   'plantillas-certificado':  SeccionPlantillasCertificado,
 };
 
-// Pestañas del POSGRADOS (operativo) — bandeja y certificados.
+// Pestañas del POSGRADOS (operativo) — bandeja, paz y salvos, certificados, tarifas.
 const POSGRADOS_SECCIONES = {
   'bandeja-posgrados': BandejaPosgrados,
+  'paz-y-salvos':      BandejaDependencia,
   'certificados':      BandejaCertificadosPosgrados,
+  'tipos-tramite':     SeccionTiposTramite,
 };
 
 const TramitesView = () => {
@@ -41,6 +45,7 @@ const TramitesView = () => {
     useTramitesData();
   const location = useLocation();
   const esRutaRaiz = location.pathname === '/tramites' || location.pathname === '/tramites/';
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const renderContenido = () => {
     // DEPENDENCIA
@@ -75,11 +80,13 @@ const TramitesView = () => {
           rol={rol}
           menuItems={menuItems}
           selectedMenuId={selectedMenuId}
-          onSeleccion={manejarSeleccion}
+          onSeleccion={(item) => { manejarSeleccion(item); setSidebarOpen(false); }}
           cambiarRol={cambiarRol}
+          sidebarOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
         />
         <div className="flex min-w-0 flex-1 flex-col">
-          <TramitesHeader usuario={usuario} rol={rol} />
+          <TramitesHeader usuario={usuario} rol={rol} onMenuToggle={() => setSidebarOpen(true)} />
           <main className="flex-1 p-6 md:p-8">
             {esRutaRaiz ? renderContenido() : <Outlet />}
           </main>
