@@ -21,7 +21,7 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
     setCargando(true);
     setError(null);
     try {
-      const token = localStorage.getItem('token');
+       const token = localStorage.getItem('auth_token');
       const resp = await fetch(`${apiBase}/pagos/crear`, {
         method: 'POST',
         headers: {

@@ -130,10 +130,19 @@ const DetalleEtapa1 = ({
       </div>
 
       {/* Botón o tarjeta de liquidación */}
-      {solicitud ? (
+      {solicitud && solicitud.estado !== 'RECHAZADA' ? (
         <TarjetaLiquidacion solicitud={solicitud} />
       ) : (
         <>
+          {solicitud?.estado === 'RECHAZADA' && (
+            <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-4">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-red-500">Solicitud rechazada</p>
+              <p className="text-sm font-medium text-red-800">
+                {solicitud.observaciones || 'Tu solicitud fue rechazada por el director.'}
+              </p>
+              <p className="mt-2 text-xs text-red-600">Puedes enviar una nueva solicitud.</p>
+            </div>
+          )}
           <button
             type="button"
             disabled={!etapa1Completada || enviando}
@@ -145,7 +154,7 @@ const DetalleEtapa1 = ({
             }`}
           >
             <SendIcon />
-            {enviando ? 'Enviando solicitud…' : 'Solicitar Terminación de Materias'}
+            {enviando ? 'Enviando solicitud…' : solicitud?.estado === 'RECHAZADA' ? 'Solicitar nuevamente' : 'Solicitar Terminación de Materias'}
           </button>
 
           {!etapa1Completada && (
