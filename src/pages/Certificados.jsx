@@ -258,6 +258,40 @@ const Certificados = () => {
     </div>
   );
 
+  // Botones de acción de una solicitud. Se usan en la tabla (escritorio) y en las
+  // tarjetas (móvil).
+  const renderAcciones = (item) => {
+    const descargable = ESTADOS_DESCARGABLES.has(item.estado);
+    const esPendiente = item.estado === 'PENDIENTE_PAGO';
+    const esVencida   = item.estado === 'VENCIDA';
+    return (
+      <div className="flex flex-col items-stretch gap-1.5">
+        {esPendiente && (
+          <>
+            <button type="button" onClick={() => handleDescargarRecibo(item)}
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+              <ReceiptIcon /> Recibo
+            </button>
+            <button type="button" onClick={() => handlePagar(item.id)} disabled={pagando === item.id}
+              className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed">
+              {pagando === item.id ? 'Procesando…' : 'Pagar'}
+            </button>
+          </>
+        )}
+        {descargable && (
+          <button type="button" onClick={() => handleDescargarPdf(item.id)} disabled={descargandoId === item.id}
+            className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-red-700 disabled:opacity-60">
+            <DownloadIcon />
+            {descargandoId === item.id ? 'Descargando…' : 'Descargar PDF'}
+          </button>
+        )}
+        {esVencida && (
+          <span className="text-xs text-slate-400 text-center">—</span>
+        )}
+      </div>
+    );
+  };
+
   // ── Render ────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
@@ -419,7 +453,7 @@ const Certificados = () => {
                     {historial.length} solicitud{historial.length !== 1 ? 'es' : ''}
                   </span>
                 </div>
-                <div className="overflow-x-auto">
+                <div className="hidden overflow-x-auto md:block">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-slate-50 text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
@@ -439,9 +473,6 @@ const Certificados = () => {
                           label: item.estado,
                           className: 'bg-slate-100 text-slate-600',
                         };
-                        const descargable = ESTADOS_DESCARGABLES.has(item.estado);
-                        const esPendiente  = item.estado === 'PENDIENTE_PAGO';
-                        const esVencida    = item.estado === 'VENCIDA';
                         return (
                           <tr key={item.id} className="transition hover:bg-slate-50 align-top">
                             <td className="px-4 py-4 font-semibold text-slate-500">{idx + 1}</td>
@@ -463,30 +494,7 @@ const Certificados = () => {
                               )}
                             </td>
                             <td className="px-4 py-4">
-                              <div className="flex flex-col items-stretch gap-1.5">
-                                {esPendiente && (
-                                  <>
-                                    <button type="button" onClick={() => handleDescargarRecibo(item)}
-                                      className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">
-                                      <ReceiptIcon /> Recibo
-                                    </button>
-                                    <button type="button" onClick={() => handlePagar(item.id)} disabled={pagando === item.id}
-                                      className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-emerald-700 disabled:opacity-60 disabled:cursor-not-allowed">
-                                      {pagando === item.id ? 'Procesando…' : 'Pagar'}
-                                    </button>
-                                  </>
-                                )}
-                                {descargable && (
-                                  <button type="button" onClick={() => handleDescargarPdf(item.id)} disabled={descargandoId === item.id}
-                                    className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-red-700 disabled:opacity-60">
-                                    <DownloadIcon />
-                                    {descargandoId === item.id ? 'Descargando…' : 'Descargar PDF'}
-                                  </button>
-                                )}
-                                {esVencida && (
-                                  <span className="text-xs text-slate-400 text-center">—</span>
-                                )}
-                              </div>
+                              {renderAcciones(item)}
                             </td>
                           </tr>
                         );
@@ -494,8 +502,51 @@ const Certificados = () => {
                     </tbody>
                   </table>
                 </div>
+
+                {/* Móvil: una tarjeta por solicitud (la tabla de 8 columnas se cortaba) */}
+                <ul className="divide-y divide-slate-100 md:hidden">
+                  {historial.map((item) => {
+                    const badge = ESTADOS_BADGE[item.estado] || {
+                      label: item.estado,
+                      className: 'bg-slate-100 text-slate-600',
+                    };
+                    return (
+                      <li key={item.id} className="space-y-3 px-4 py-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <p className="text-sm font-semibold text-slate-800">{getLabelTipo(item.tipoCertificado)}</p>
+                          <span className={`inline-flex shrink-0 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap ${badge.className}`}>
+                            {badge.label}
+                          </span>
+                        </div>
+                        <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                          <div>
+                            <dt className="font-bold uppercase tracking-wide text-slate-400">Valor</dt>
+                            <dd className="mt-0.5 text-sm font-semibold text-slate-800">{formatPesos(computeCosto(item, tipos))}</dd>
+                          </div>
+                          <div>
+                            <dt className="font-bold uppercase tracking-wide text-slate-400">Modalidad</dt>
+                            <dd className="mt-0.5 text-slate-600">{getModalidadLabel(item.modalidadEnvio)}</dd>
+                          </div>
+                          <div>
+                            <dt className="font-bold uppercase tracking-wide text-slate-400">Solicitud</dt>
+                            <dd className="mt-0.5 text-slate-600">{formatFecha(item.fechaSolicitud)}</dd>
+                          </div>
+                          <div>
+                            <dt className="font-bold uppercase tracking-wide text-slate-400">Vence el pago</dt>
+                            <dd className="mt-0.5 text-slate-600">{formatFecha(item.fechaVencimientoPago)}</dd>
+                          </div>
+                        </dl>
+                        {item.estado === 'LISTO_RETIRO' && item.tipo?.direccionOficina && (
+                          <p className="text-xs text-slate-500">{item.tipo.direccionOficina}</p>
+                        )}
+                        {renderAcciones(item)}
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
             ) : (
+
               <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-white py-12 text-center shadow-sm">
                 <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
                   <CertIcon />
