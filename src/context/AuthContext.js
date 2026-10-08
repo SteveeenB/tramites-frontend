@@ -11,7 +11,11 @@ const TOKEN_KEY = 'auth_token';
 const decodeJwtPayload = (token) => {
   try {
     const payload = token.split('.')[1];
-    return JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+    // atob devuelve bytes Latin-1; hay que decodificarlos como UTF-8 o las
+    // tildes del payload (p. ej. "Maestría") salen como "MaestrÃa".
+    const binario = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+    const bytes = Uint8Array.from(binario, (c) => c.charCodeAt(0));
+    return JSON.parse(new TextDecoder('utf-8').decode(bytes));
   } catch {
     return null;
   }
