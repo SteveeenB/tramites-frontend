@@ -139,6 +139,7 @@ const ProcesodeGrado = () => {
         etapa1Completada={etapa1Completada}
         etapa2Disponible={etapa2Disponible}
         solicitud={solicitud}
+        solicitudGrado={solicitudGrado}
       />
 
       {etapa1Aprobada ? (

@@ -1,21 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { CheckIcon } from './icons';
-import { formatFecha } from '../../constants/procesodeGrado';
+import { formatFecha, formatearFechaGrado } from '../../constants/procesodeGrado';
 import { solicitudesApi } from '../../api/solicitudesApi';
+import { fechasGradoApi } from '../../api/fechasGradoApi';
 import { getEstadoPazYSalvos } from '../../api/pazYSalvoApi';
 import ModalPagoPSE from './ModalPagoPSE';
 
 /* ─── Constantes ─────────────────────────────────────────────────────── */
-const FECHAS_GRADO = [
-  { id: 'f1', fecha: '2026-08-14', label: 'Viernes, 14 de agosto de 2026', hora: '9:00 AM', lugar: 'Auditorio Principal UFPS', modalidad: 'CEREMONIA' },
-  { id: 's1', fecha: '2026-08-05', label: 'Miércoles, 5 de agosto de 2026', hora: '8:00 AM', lugar: 'Secretaría de Posgrados', modalidad: 'SECRETARIA' },
-  { id: 'f2', fecha: '2026-08-28', label: 'Viernes, 28 de agosto de 2026', hora: '10:00 AM', lugar: 'Auditorio Principal UFPS', modalidad: 'CEREMONIA' },
-  { id: 's2', fecha: '2026-09-02', label: 'Miércoles, 2 de septiembre de 2026', hora: '8:00 AM', lugar: 'Secretaría de Posgrados', modalidad: 'SECRETARIA' },
-  { id: 'f3', fecha: '2026-09-11', label: 'Viernes, 11 de septiembre de 2026', hora: '9:00 AM', lugar: 'Coliseo UFPS', modalidad: 'CEREMONIA' },
-  { id: 's3', fecha: '2026-09-16', label: 'Miércoles, 16 de septiembre de 2026', hora: '8:00 AM', lugar: 'Secretaría de Posgrados', modalidad: 'SECRETARIA' },
-  { id: 'f4', fecha: '2026-09-25', label: 'Jueves, 25 de septiembre de 2026', hora: '10:00 AM', lugar: 'Coliseo UFPS', modalidad: 'CEREMONIA' },
-];
-
 const COSTO_CEREMONIA_EXTRA = 40000;
 const BANCOS = ['Bancolombia', 'Banco de Bogotá', 'Banco de Occidente', 'Davivienda', 'BBVA Colombia', 'Nequi'];
 
@@ -261,6 +252,15 @@ const SeccionFechaGrado = ({ solicitudGrado, onFechaConfirmada }) => {
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState(null);
+  // Fechas publicadas por la oficina de Posgrados (antes estaban fijas en el código).
+  const [fechas, setFechas] = useState(null);
+  const [errorFechas, setErrorFechas] = useState(null);
+
+  useEffect(() => {
+    fechasGradoApi.disponibles()
+      .then((lista) => setFechas((lista || []).map((f) => ({ ...f, label: formatearFechaGrado(f.fecha) }))))
+      .catch((e) => { setErrorFechas(e.message || 'No se pudieron cargar las fechas de grado.'); setFechas([]); });
+  }, []);
 
   const esCeremonia = fechaSeleccionada?.modalidad === 'CEREMONIA';
   const valorCeremonia = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(COSTO_CEREMONIA_EXTRA);
@@ -309,8 +309,20 @@ const SeccionFechaGrado = ({ solicitudGrado, onFechaConfirmada }) => {
           Las fechas con <strong>📄 Secretaría</strong> no tienen costo extra.
         </p>
 
+        {fechas === null && (
+          <p className="mb-4 text-sm text-slate-500">Cargando fechas disponibles…</p>
+        )}
+        {errorFechas && (
+          <p className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{errorFechas}</p>
+        )}
+        {fechas !== null && !errorFechas && fechas.length === 0 && (
+          <p className="mb-4 rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+            La oficina de Posgrados aún no ha publicado fechas de grado disponibles. Vuelve a intentarlo más tarde.
+          </p>
+        )}
+
         <div className="flex flex-col gap-3 mb-4">
-          {FECHAS_GRADO.map((f) => {
+          {(fechas || []).map((f) => {
             const esCer = f.modalidad === 'CEREMONIA';
             const sel = fechaSeleccionada?.id === f.id;
             return (
@@ -321,6 +333,7 @@ const SeccionFechaGrado = ({ solicitudGrado, onFechaConfirmada }) => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-slate-900">{f.label}</p>
+                  <p className="text-xs text-slate-500">{f.hora} · {f.lugar}</p>
                 </div>
                 <div className="shrink-0 flex flex-col items-end gap-1">
                   <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${esCer ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-600'}`}>
@@ -389,8 +402,9 @@ const ConfirmacionGrado = ({ solicitudGrado }) => {
   const [pazYSalvosOk, setPazYSalvosOk] = useState(false);
   const [fechaGradoInfo, setFechaGradoInfo] = useState(() => {
     if (!solicitudGrado?.fechaGrado) return null;
-    return FECHAS_GRADO.find((f) => f.fecha === solicitudGrado.fechaGrado) || {
-      id: 'custom', fecha: solicitudGrado.fechaGrado, label: solicitudGrado.fechaGrado, hora: '', lugar: '',
+    return {
+      id: 'guardada', fecha: solicitudGrado.fechaGrado, label: formatearFechaGrado(solicitudGrado.fechaGrado),
+      modalidad: solicitudGrado.modalidadGrado || null, hora: '', lugar: '',
     };
   });
 

@@ -21,3 +21,17 @@ export const formatCOP = (valor) => {
     maximumFractionDigits: 0,
   }).format(valor);
 };
+
+/**
+ * "2026-11-13" -> "Viernes, 13 de noviembre de 2026". Se interpreta en UTC para
+ * que la zona horaria del navegador no corra la fecha un día.
+ */
+export const formatearFechaGrado = (iso) => {
+  if (!iso) return '';
+  const d = new Date(`${iso}T00:00:00Z`);
+  if (Number.isNaN(d.getTime())) return iso;
+  const txt = d.toLocaleDateString('es-CO', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
+  });
+  return txt.charAt(0).toUpperCase() + txt.slice(1);
+};
