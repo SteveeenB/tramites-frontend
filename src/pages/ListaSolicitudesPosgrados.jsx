@@ -143,22 +143,31 @@ const ListaSolicitudesPosgrados = () => {
         setGenerandoId(s.id);
         setErrorAccion(null);
         try {
-            let blob;
+            // aprobar-posgrados responde un JSON de confirmación (no el PDF):
+            // primero se aprueba y luego se descarga el certificado por su endpoint.
+            // Antes se leía `{ blob }` de la respuesta JSON, quedaba undefined,
+            // createObjectURL fallaba y la lista nunca se refrescaba aunque el
+            // backend ya hubiera aprobado (el siguiente clic daba 422).
             if (s.estado === 'APROBADA_DIRECTOR') {
-                ({ blob } = await solicitudesApi.aprobarPosgrados(s.id));
-            } else {
-                ({ blob } = await solicitudesApi.descargarCertificadoPdf(s.id));
+                await solicitudesApi.aprobarPosgrados(s.id);
             }
+            const { blob } = await solicitudesApi.descargarCertificadoPdf(s.id);
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = `acta-terminacion-${s.id}.pdf`;
             a.click();
             URL.revokeObjectURL(url);
-            await cargar();
-        } catch {
-            setErrorAccion('No se pudo generar el acta.');
+        } catch (err) {
+            setErrorAccion(
+                err?.message
+                    ? `No se pudo generar el acta: ${err.message}`
+                    : 'No se pudo generar el acta.'
+            );
         } finally {
+            // Se recarga siempre: si la aprobación se hizo pero la descarga falló,
+            // la lista debe mostrar el estado real.
+            await cargar();
             setGenerandoId(null);
         }
     };
