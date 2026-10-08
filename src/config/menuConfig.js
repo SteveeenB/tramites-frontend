@@ -17,6 +17,7 @@ export const MENU_BY_ROLE = {
     { id: 'paz-y-salvos',      label: 'Paz y Salvos',         route: '/tramites' },
     { id: 'certificados',      label: 'Certificados Físicos', route: '/tramites' },
     { id: 'tipos-tramite',     label: 'Tarifas de Trámites',  route: '/tramites' },
+    { id: 'fechas-grado',      label: 'Fechas de Grado',      route: '/tramites' },
     { id: 'reportes',          label: 'Reportes',             route: '/tramites' },
   ],
   // ADMIN = perfil CONFIGURADOR (es_super_admin en el modelo objetivo).

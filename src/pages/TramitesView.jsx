@@ -17,6 +17,7 @@ import {
   SeccionTiposTramite,
   SeccionDependencias,
   SeccionPlantillasCertificado,
+  SeccionFechasGrado,
 } from './posgrados';
 
 const CONTENIDO_POR_ROL = {
@@ -38,6 +39,7 @@ const POSGRADOS_SECCIONES = {
   'paz-y-salvos':      BandejaDependencia,
   'certificados':      BandejaCertificadosPosgrados,
   'tipos-tramite':     SeccionTiposTramite,
+  'fechas-grado':      SeccionFechasGrado,
 };
 
 const TramitesView = () => {

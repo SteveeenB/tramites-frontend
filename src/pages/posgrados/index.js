@@ -16,6 +16,7 @@ export { default as SeccionPlantillasCorreo }         from './SeccionPlantillasC
 export { default as SeccionPlantillasCertificado }   from './SeccionPlantillasCertificado';
 export { default as SeccionDocumentosRequeridos } from './SeccionDocumentosRequeridos';
 export { default as SeccionTiposTramite }         from './SeccionTiposTramite';
+export { default as SeccionFechasGrado }          from './SeccionFechasGrado';
 export { default as SeccionReportes }             from './SeccionReportes';
 export { default as SeccionAuditoria }            from './SeccionAuditoria';
 export { default as SeccionConfiguracionGlobal }  from './SeccionConfiguracionGlobal';
