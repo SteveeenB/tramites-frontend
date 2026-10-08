@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useProcesodeGrado } from '../hooks/useProcesodeGrado';
-import ProcesoPGSidebar from '../components/proceso-grado/ProcesoPGSidebar';
+import AppSidebar from '../components/sidebar/AppSidebar';
 import EtapasResumen from '../components/proceso-grado/EtapasResumen';
 import DetalleEtapa1 from '../components/proceso-grado/DetalleEtapa1';
 import Etapa2 from '../components/proceso-grado/Etapa2';
@@ -35,8 +35,9 @@ const ProcesodeGrado = () => {
   const Layout = ({ children }) => (
     <div className="min-h-screen bg-slate-100 text-slate-800">
       <div className="flex min-h-screen flex-col lg:flex-row">
-        <ProcesoPGSidebar
+        <AppSidebar
           usuario={usuario}
+          selectedMenuId="proceso-de-grado"
           sidebarOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
         />

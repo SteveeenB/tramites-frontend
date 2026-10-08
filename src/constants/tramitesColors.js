@@ -5,6 +5,15 @@ export const ROLE_LABELS = {
   DEPENDENCIA: 'DEPENDENCIA',
 };
 
+// Etiqueta del rol en singular para la tarjeta de usuario de la sidebar
+export const ROLE_USER_LABELS = {
+  ESTUDIANTE: 'Estudiante',
+  DIRECTOR: 'Director de programa',
+  ADMIN: 'Administrador',
+  DEPENDENCIA: 'Dependencia',
+  POSGRADOS: 'Posgrados',
+};
+
 // Color institucional unificado: rojo (#dc2626 / red-600) para todos los roles
 const RED_THEME = {
   header: 'bg-red-600',

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { apiClient, downloadApiClient } from '../api/apiClient';
 import BellNotificaciones from '../components/notificaciones/BellNotificaciones';
+import AppSidebar from '../components/sidebar/AppSidebar';
 
 // ── Badges por estado de la solicitud ─────────────────────────────────
 const ESTADOS_BADGE = {
@@ -31,20 +32,6 @@ const formatFecha = (s) => {
 };
 
 // ── Sub-componentes UI ────────────────────────────────────────────────
-const SidebarLink = ({ children, active = false, onClick }) => (
-  <button
-    type="button"
-    onClick={onClick}
-    className={`w-full rounded-xl px-4 py-3 text-left text-sm font-medium transition ${
-      active
-        ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
-        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-    }`}
-  >
-    {children}
-  </button>
-);
-
 const WarningIcon = () => (
   <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-amber-500" fill="currentColor">
     <path d="M1 21h22L12 2 1 21zm11-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
@@ -275,57 +262,12 @@ const Certificados = () => {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
       <div className="flex min-h-screen flex-col lg:flex-row">
-        {sidebarOpen && (
-          <div
-            className="fixed inset-0 z-20 bg-black/40 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-            aria-hidden="true"
-          />
-        )}
-        <aside className={`
-          fixed inset-y-0 left-0 z-30 flex w-72 flex-col border-r border-slate-200 bg-white shadow-xl
-          transition-transform duration-300 overflow-y-auto
-          lg:static lg:z-auto lg:w-80 lg:translate-x-0 lg:shadow-none
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        `}>
-          <div className="flex-1 px-5 py-6">
-            <div className="mb-6 flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
-              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-red-100 text-lg font-bold text-red-700">
-                {(usuario?.nombre || 'E').slice(0, 2).toUpperCase()}
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Estudiante</p>
-                <p className="font-semibold text-slate-900">{usuario?.nombre || 'Estudiante'}</p>
-                {usuario?.programaNombre && (
-                  <p className="mt-0.5 text-xs text-slate-500">{usuario.programaNombre}</p>
-                )}
-              </div>
-            </div>
-            <nav className="space-y-2">
-              <SidebarLink onClick={() => {}}>Información Estudiantil</SidebarLink>
-              <SidebarLink onClick={() => {}}>Información Académica</SidebarLink>
-              <div className="rounded-2xl bg-slate-50 p-3">
-                <SidebarLink onClick={() => navigate('/tramites')}>Trámites</SidebarLink>
-                <div className="mt-2 space-y-2 pl-3">
-                  <SidebarLink onClick={() => navigate('/proceso-de-grado')}>Proceso de Grado</SidebarLink>
-                  <button type="button"
-                    className="w-full rounded-xl bg-red-50 px-4 py-3 text-left text-sm font-semibold text-red-700 ring-1 ring-red-200">
-                    Certificados
-                  </button>
-                </div>
-              </div>
-            </nav>
-          </div>
-          <div className="border-t border-slate-200 p-5">
-            <button type="button" onClick={() => navigate('/tramites')}
-              className="mt-2 flex w-full items-center gap-2 rounded-xl px-4 py-2.5 text-left text-sm font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-800">
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-              </svg>
-              Volver a Trámites
-            </button>
-          </div>
-        </aside>
+        <AppSidebar
+          usuario={usuario}
+          selectedMenuId="certificados"
+          sidebarOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
 
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="flex items-center justify-between gap-4 bg-red-600 px-6 py-4 text-white shadow-sm md:px-8">
