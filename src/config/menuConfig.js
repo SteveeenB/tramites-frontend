@@ -30,6 +30,18 @@ export const MENU_BY_ROLE = {
   ],
 };
 
+// Enlaces que van sueltos encima de la sección "Trámites" de la sidebar.
+// Hoy no tienen ruta propia; viven aquí para que todas las páginas muestren
+// la misma sidebar.
+export const TOP_LINKS_BY_ROLE = {
+  ESTUDIANTE: [
+    { id: 'info-estudiantil', label: 'Información Estudiantil' },
+    { id: 'info-academica',   label: 'Información Académica'   },
+  ],
+};
+
+export const getTopLinksByRole = (role) => TOP_LINKS_BY_ROLE[role] || [];
+
 // Usuarios demo (cédulas registradas en Supabase)
 export const DEMO_USERS = {
   ESTUDIANTE:              { cedula: '1098765432', nombre: 'Juan Perez',          programaAcademico: 'Maestría en Gerencia de Empresas'          },
@@ -68,3 +80,19 @@ export const DEMO_OPTIONS_PAZ_Y_SALVO = [
 ];
 
 export const getMenuByRole = (role) => MENU_BY_ROLE[role] || MENU_BY_ROLE[DEFAULT_ROLE];
+
+// ¿La opción del selector demo corresponde al usuario autenticado?
+// Estudiantes y dependencias se distinguen por cédula; el resto por rol.
+export const isDemoOptionActive = (key, usuario) => {
+  if (!usuario) return false;
+  if (key.startsWith('ESTUDIANTE')) {
+    if (usuario.rol !== 'ESTUDIANTE') return false;
+    if (key !== 'ESTUDIANTE') return DEMO_USERS[key]?.cedula === usuario.cedula;
+    // "ESTUDIANTE" (Juan) también cubre a un estudiante real que no sea otro demo.
+    return !Object.entries(DEMO_USERS).some(
+      ([k, u]) => k.startsWith('ESTUDIANTE_') && u.cedula === usuario.cedula
+    );
+  }
+  if (key.startsWith('DEPENDENCIA_')) return DEMO_USERS[key]?.cedula === usuario.cedula;
+  return key === usuario.rol;
+};
