@@ -31,8 +31,12 @@ const ProcesodeGrado = () => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Layout base compartido (sidebar + header siempre visibles)
-  const Layout = ({ children }) => (
+  // Layout base compartido (sidebar + header siempre visibles).
+  // Es una función que devuelve JSX, NO un componente: si fuera `const Layout =
+  // () => ...` dentro del componente, cada render crearía un tipo nuevo y React
+  // desmontaría todo el árbol (sidebar, campana, contenido), abriendo un
+  // EventSource SSE nuevo y recargando notificaciones en cada render.
+  const layout = (children) => (
     <div className="min-h-screen bg-slate-100 text-slate-800">
       <div className="flex min-h-screen flex-col lg:flex-row">
         <AppSidebar
@@ -71,25 +75,25 @@ const ProcesodeGrado = () => {
   );
 
   if (cargando) {
-    return (
-      <Layout>
+    return layout(
+      <>
         <div className="flex h-64 items-center justify-center">
           <p className="text-slate-500">Cargando proceso de grado…</p>
         </div>
-      </Layout>
+      </>
     );
   }
 
   if (errorPagina || !datos) {
-    return (
-      <Layout>
+    return layout(
+      <>
         <div className="flex h-64 flex-col items-center justify-center gap-3">
           <p className="font-medium text-red-600">{errorPagina || 'Sin datos disponibles'}</p>
           <p className="text-sm text-slate-500">
             Verifica que el backend esté corriendo o cambia de usuario en el panel demo.
           </p>
         </div>
-      </Layout>
+      </>
     );
   }
 
@@ -120,8 +124,8 @@ const ProcesodeGrado = () => {
     />
   );
 
-  return (
-    <Layout>
+  return layout(
+    <>
       <div className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
         TRÁMITES / ACADÉMICO
       </div>
@@ -168,7 +172,7 @@ const ProcesodeGrado = () => {
           </aside>
         </div>
       )}
-    </Layout>
+    </>
   );
 };
 
