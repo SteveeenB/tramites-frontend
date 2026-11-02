@@ -168,6 +168,7 @@ const SolicitudGradoPage = () => {
                       <FileSlot
                         label="Fotografía Actualizada"
                         formats="PNG, JPG"
+                        extensiones={['png', 'jpg', 'jpeg']}
                         required
                         accept="image/png,image/jpeg,.png,.jpg,.jpeg"
                         icon="image"
@@ -177,6 +178,7 @@ const SolicitudGradoPage = () => {
                       <FileSlot
                         label="Acta de Sustentación"
                         formats="PDF, DOCX"
+                        extensiones={['pdf', 'docx']}
                         required
                         accept="application/pdf,.pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx"
                         icon="doc"
@@ -186,6 +188,7 @@ const SolicitudGradoPage = () => {
                       <FileSlot
                         label="Certificado de Inglés"
                         formats="PDF, DOCX, PNG, JPG"
+                        extensiones={['pdf', 'docx', 'png', 'jpg', 'jpeg']}
                         required={false}
                         accept="application/pdf,.pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,image/png,image/jpeg,.png,.jpg,.jpeg"
                         icon="upload"
