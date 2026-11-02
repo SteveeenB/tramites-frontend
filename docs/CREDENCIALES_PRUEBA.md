@@ -1,6 +1,11 @@
 
   ---
-  Credenciales de prueba (todas con contraseña 123456)
+  Credenciales de prueba (entorno local / H2)
+
+  Estudiantes y directores usan la contraseña 123456.
+  Las cuentas administrativas (ADMIN, DEPENDENCIA, POSGRADOS) no publican su
+  contraseña: pídesela al equipo y cámbiala en cada entorno. Estas cuentas
+  semilla no deben existir con su contraseña por defecto en producción.
 
   ESTUDIANTE — login: { "codigo": "...", "contrasena": "123456" }
 
