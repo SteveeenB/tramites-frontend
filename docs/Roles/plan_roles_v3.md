@@ -25,7 +25,7 @@
 
 | Componente | Estado | Commit | Validación |
 |---|---|---|---|
-| Tabla `admins` separada de `usuario` (DDL + 5 seeds: ADMIN1, POS001, DEP001/2/3) | ✅ Producción | backend `4387691` | 6 logins funcionando con `123456` |
+| Tabla `admins` separada de `usuario` (DDL + 5 seeds: ADMIN1, POS001, DEP001/2/3) | ✅ Producción | backend `4387691` | 6 logins funcionando |
 | JWT con `principalType` (USUARIO/ADMIN) + `dependenciaId` + `esSuperAdmin` | ✅ Producción | backend `4387691` | Verificado en DevTools post-login |
 | Doble búsqueda en `/auth/login` (admins → usuario) | ✅ Producción | backend `4387691` | POS001 y 20261003 ambos entran |
 | `PrincipalResolver` polimórfico con fallback Usuario↔Admin | ✅ Producción | backend `4387691` + fix `685dea4` | Coordinador Posgrados (20261003) entra a su bandeja |
@@ -50,7 +50,7 @@ Ejecutados en orden:
 
 ### 1.3 Credenciales de prueba en producción
 
-Todas con contraseña `123456`. Hash BCrypt único: `$2a$10$TCpV633Sg7xBIMP/VpL80uQw9YHjSPvk5iFmk6aFs.yxQwVq5eSBq`.
+Estudiantes y directores usan la contraseña de prueba `123456`. La contraseña de las cuentas administrativas (ADMIN, POSGRADOS, DEPENDENCIA) no se publica: pídesela al equipo (ver `docs/CREDENCIALES_PRUEBA.md`).
 
 | Código | Quién | Vive en | Rol |
 |---|---|---|---|
