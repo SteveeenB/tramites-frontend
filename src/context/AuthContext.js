@@ -1,6 +1,5 @@
 import React, { createContext, useState, useCallback, useEffect } from 'react';
-import { DEMO_USERS } from '../config/menuConfig';
-import { DEMO_MODE } from '../config/appConfig';
+import { demo } from '../config/appConfig';
 
 export const AuthContext = createContext();
 
@@ -81,8 +80,8 @@ export const AuthProvider = ({ children }) => {
 
   // Demo: cambia al usuario con la cédula del demoKey, emitiendo un JWT real desde el backend
   const cambiarRol = useCallback(async (demoKey) => {
-    if (!DEMO_MODE) return;
-    const datos = DEMO_USERS[demoKey];
+    if (!demo) return;
+    const datos = demo.DEMO_USERS[demoKey];
     if (!datos) return;
     try {
       const res = await fetch(`${BASE_URL}/auth/login-demo?cedula=${datos.cedula}`, { method: 'POST' });
