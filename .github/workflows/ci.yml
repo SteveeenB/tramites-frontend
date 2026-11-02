@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build (Node 22)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # CI=true hace que Create React App trate los warnings como errores.
+      - name: Compilar
+        run: npm run build
+        env:
+          CI: 'true'
