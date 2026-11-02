@@ -27,7 +27,7 @@ Separar los perfiles administrativos (`POSGRADOS`, `DEPENDENCIA`, `ADMIN`) de lo
 **~19 horas (2-3 días de trabajo enfocado)**, distribuidas en 4 fases con puntos de control claros.
 
 ### Vía rápida disponible
-Como los usuarios actuales en producción son de prueba (todos con contraseña `123456`), la fase de migración de datos puede hacerse **destructivamente** (drop + recrear desde `data.sql`), lo que reduce esa fase a 1 hora en lugar de 3.
+Como los usuarios actuales en producción son de prueba, la fase de migración de datos puede hacerse **destructivamente** (drop + recrear desde `data.sql`), lo que reduce esa fase a 1 hora en lugar de 3.
 
 ---
 
@@ -267,7 +267,7 @@ Si por alguna razón hay que preservar IDs y relaciones existentes:
 | DEP002 | División Financiera | financiera@test.com | DEPENDENCIA | 2 (Financiera) | false |
 | DEP003 | Admisiones y Registro | admisiones@test.com | DEPENDENCIA | 3 (Admisiones) | false |
 
-Todas con contraseña `123456` hasheada con BCrypt.
+Todas con contraseña hasheada con BCrypt. La contraseña de las cuentas administrativas no se publica: pídesela al equipo (ver `docs/CREDENCIALES_PRUEBA.md`).
 
 **Tasks granulares:**
 
@@ -436,9 +436,9 @@ Después de cada fase, correr este checklist en `localhost`:
 ### Login
 - [ ] ESTUDIANTE Laura (`20261005 / 123456`) entra y ve "Mis Trámites".
 - [ ] DIRECTOR Maria (`20261002 / 123456`) entra y ve "Bandeja de Solicitudes" del director.
-- [ ] POSGRADOS (`POS001 / 123456`) entra y ve solo "Bandeja de Solicitudes" + "Reportes" en el sidebar.
-- [ ] DEPENDENCIA Biblioteca (`DEP001 / 123456`) entra y ve solo paz y salvos de Biblioteca.
-- [ ] ADMIN (`ADMIN1 / 123456`) entra y ve TODAS las pestañas de configuración del sidebar.
+- [ ] POSGRADOS (`POS001` + contraseña admin) entra y ve solo "Bandeja de Solicitudes" + "Reportes" en el sidebar.
+- [ ] DEPENDENCIA Biblioteca (`DEP001` + contraseña admin) entra y ve solo paz y salvos de Biblioteca.
+- [ ] ADMIN (`ADMIN1` + contraseña admin) entra y ve TODAS las pestañas de configuración del sidebar.
 
 ### Flujo de certificados
 - [ ] Laura solicita un certificado digital → aparece en su historial.

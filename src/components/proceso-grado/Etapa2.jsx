@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SendIcon } from './icons';
 import ConfirmacionGrado from './ConfirmacionGrado';
+import { parseFecha } from '../../constants/procesodeGrado';
 
 const EstadoBadge = ({ estado }) => {
   const config = {
@@ -19,7 +20,7 @@ const EstadoBadge = ({ estado }) => {
 
 const SolicitudEnviada = ({ solicitudGrado }) => {
   const fecha = solicitudGrado?.fechaSolicitud
-    ? new Date(solicitudGrado.fechaSolicitud).toLocaleDateString('es-CO', {
+    ? parseFecha(solicitudGrado.fechaSolicitud).toLocaleDateString('es-CO', {
         day: 'numeric', month: 'long', year: 'numeric',
       })
     : null;

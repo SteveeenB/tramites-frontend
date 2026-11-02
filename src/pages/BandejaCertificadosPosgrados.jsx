@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { apiClient, downloadApiClient } from '../api/apiClient';
+import { parseFecha } from '../constants/procesodeGrado';
 
 const TABS = [
   { id: 'GENERADO',     label: 'Por imprimir' },
@@ -19,7 +20,7 @@ const ESTADOS_BADGE = {
 
 const formatFecha = (s) => {
   if (!s) return '—';
-  const d = new Date(s);
+  const d = parseFecha(s);
   if (Number.isNaN(d.getTime())) return s;
   return d.toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: 'numeric' });
 };
