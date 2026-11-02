@@ -41,12 +41,12 @@
 ### 1.2 SQLs aplicados en Supabase
 
 Ejecutados en orden:
-1. [`migracion_admins_bloque0.sql`](../../../tramites-backend/.docs/sql/migracion_admins_bloque0.sql) — DDL tabla `admins`
-2. [`migracion_admins_bloque1.sql`](../../../tramites-backend/.docs/sql/migracion_admins_bloque1.sql) — `tipo_certificado.dependencia_id`
-3. [`migracion_admins_bloque2_3.sql`](../../../tramites-backend/.docs/sql/migracion_admins_bloque2_3.sql) — INSERT admins + DELETE viejos + ALTER solicitud + ALTER paz_y_salvo + FKs
-4. [`migracion_admins_bloque4.sql`](../../../tramites-backend/.docs/sql/migracion_admins_bloque4.sql) — DROP columnas zombie + DROP usuario.dependencia_id
-5. [`migracion_bloque5e_estados_estudiantes.sql`](../../../tramites-backend/.docs/sql/migracion_bloque5e_estados_estudiantes.sql) — catálogo `estados_estudiantes` + backfill desde `estado_grado`
-6. [`migracion_bloque5a_estudiante_id.sql`](../../../tramites-backend/.docs/sql/migracion_bloque5a_estudiante_id.sql) — FK `estudiante_id` en 3 tablas + backfill por cédula
+1. [`migracion_admins_bloque0.sql`](https://github.com/SteveeenB/tramites-backend/blob/main/.docs/sql/migracion_admins_bloque0.sql) — DDL tabla `admins`
+2. [`migracion_admins_bloque1.sql`](https://github.com/SteveeenB/tramites-backend/blob/main/.docs/sql/migracion_admins_bloque1.sql) — `tipo_certificado.dependencia_id`
+3. [`migracion_admins_bloque2_3.sql`](https://github.com/SteveeenB/tramites-backend/blob/main/.docs/sql/migracion_admins_bloque2_3.sql) — INSERT admins + DELETE viejos + ALTER solicitud + ALTER paz_y_salvo + FKs
+4. [`migracion_admins_bloque4.sql`](https://github.com/SteveeenB/tramites-backend/blob/main/.docs/sql/migracion_admins_bloque4.sql) — DROP columnas zombie + DROP usuario.dependencia_id
+5. [`migracion_bloque5e_estados_estudiantes.sql`](https://github.com/SteveeenB/tramites-backend/blob/main/.docs/sql/migracion_bloque5e_estados_estudiantes.sql) — catálogo `estados_estudiantes` + backfill desde `estado_grado`
+6. [`migracion_bloque5a_estudiante_id.sql`](https://github.com/SteveeenB/tramites-backend/blob/main/.docs/sql/migracion_bloque5a_estudiante_id.sql) — FK `estudiante_id` en 3 tablas + backfill por cédula
 
 ### 1.3 Credenciales de prueba en producción
 

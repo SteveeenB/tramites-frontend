@@ -18,7 +18,7 @@ La v1 asumió, en §3.3, que el refactor real estaba concentrado en `AuthControl
 
 - **5 controllers** llaman a `resolverUsuario(auth)` y asumen que el resultado es siempre `Usuario` (33 sitios). Cuando el actor sea `Admin`, ninguno funciona.
 - **4 tablas** persisten cédulas como FK lógica a `usuario.cedula`: `paz_y_salvo.cedula_responsable`, `tipo_certificado.dependencia_cedula`, `solicitud.cedula_director`, `solicitud.cedula_posgrados`. Los admins en la nueva tabla `admins` (§4.2 del plan v1) no tienen `cedula` — ese campo no está en la DDL.
-- **`PazYSalvoService.iniciarProcesoPazYSalvo`** ([línea 52-53](../../../tramites-backend/src/main/java/com/ufps/tramites/service/PazYSalvoService.java#L52-L53)) materializa la lista de responsables a partir de `usuarioRepository.findByRol_Nombre("DEPENDENCIA"|"POSGRADOS")`. Si los admins migran a `admins`, esta función produce 0 paz y salvos.
+- **`PazYSalvoService.iniciarProcesoPazYSalvo`** ([línea 52-53](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/service/PazYSalvoService.java#L52-L53)) materializa la lista de responsables a partir de `usuarioRepository.findByRol_Nombre("DEPENDENCIA"|"POSGRADOS")`. Si los admins migran a `admins`, esta función produce 0 paz y salvos.
 - **Frontend** depende de `usuario.cedula` para llamar `/certificados/dependencia/{cedula}`, `/certificados/{id}/marcar-listo?cedulaDependencia=`, etc. Cambia el contrato de varios endpoints.
 
 La v1 declaró "67 ocurrencias en 13 archivos, pero la mayoría son `@PreAuthorize` strings que NO cambian". Eso es cierto: las `@PreAuthorize` no cambian. Pero **los 33 `resolverUsuario(auth)` que sí cambian no estaban en la cuenta**.
@@ -33,19 +33,19 @@ La v1 declaró "67 ocurrencias en 13 archivos, pero la mayoría son `@PreAuthori
 
 | Componente | Líneas | Asume | Rompe si admin viene de `admins` |
 |---|---|---|---|
-| [`CertificadoController.resolverUsuario`](../../../tramites-backend/src/main/java/com/ufps/tramites/controller/CertificadoController.java#L135) | 135-138 | `auth.getName()` = cédula en `usuario` | Sí — toda la bandeja de DEPENDENCIA |
-| [`SolicitudController.resolverUsuario`](../../../tramites-backend/src/main/java/com/ufps/tramites/controller/SolicitudController.java#L329) | 329-332 | Idem | Sí — todos los endpoints POSGRADOS |
-| [`PazYSalvoController.resolverUsuario`](../../../tramites-backend/src/main/java/com/ufps/tramites/controller/PazYSalvoController.java#L82) | 82-85 | Idem | Sí — paz y salvos de DEPENDENCIA |
-| [`TramiteController.resolverUsuario`](../../../tramites-backend/src/main/java/com/ufps/tramites/controller/TramiteController.java#L37) | 37-40 | Idem | Bajo impacto (ESTUDIANTE) |
-| [`UsuarioController`](../../../tramites-backend/src/main/java/com/ufps/tramites/controller/UsuarioController.java#L24) | 24-25 | Idem | Sí — `/api/usuarios/me` |
+| [`CertificadoController.resolverUsuario`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/controller/CertificadoController.java#L135) | 135-138 | `auth.getName()` = cédula en `usuario` | Sí — toda la bandeja de DEPENDENCIA |
+| [`SolicitudController.resolverUsuario`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/controller/SolicitudController.java#L329) | 329-332 | Idem | Sí — todos los endpoints POSGRADOS |
+| [`PazYSalvoController.resolverUsuario`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/controller/PazYSalvoController.java#L82) | 82-85 | Idem | Sí — paz y salvos de DEPENDENCIA |
+| [`TramiteController.resolverUsuario`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/controller/TramiteController.java#L37) | 37-40 | Idem | Bajo impacto (ESTUDIANTE) |
+| [`UsuarioController`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/controller/UsuarioController.java#L24) | 24-25 | Idem | Sí — `/api/usuarios/me` |
 
 ### 2.2 Backend — servicios que iteran admins por rol
 
 | Componente | Línea | Comportamiento |
 |---|---|---|
-| [`PazYSalvoService.iniciarProcesoPazYSalvo`](../../../tramites-backend/src/main/java/com/ufps/tramites/service/PazYSalvoService.java#L52) | 52-53 | `usuarioRepository.findByRol_Nombre("DEPENDENCIA"\|"POSGRADOS")` — base del flujo de paz y salvo |
-| [`DependenciaController.listar`](../../../tramites-backend/src/main/java/com/ufps/tramites/controller/DependenciaController.java#L39) | 39 | Idem para poblar dropdown de tipos de certificado |
-| [`DependenciaController.listarUsuariosDependencia`](../../../tramites-backend/src/main/java/com/ufps/tramites/controller/DependenciaController.java#L93) | 93 | Idem para CRUD de responsables |
+| [`PazYSalvoService.iniciarProcesoPazYSalvo`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/service/PazYSalvoService.java#L52) | 52-53 | `usuarioRepository.findByRol_Nombre("DEPENDENCIA"\|"POSGRADOS")` — base del flujo de paz y salvo |
+| [`DependenciaController.listar`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/controller/DependenciaController.java#L39) | 39 | Idem para poblar dropdown de tipos de certificado |
+| [`DependenciaController.listarUsuariosDependencia`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/controller/DependenciaController.java#L93) | 93 | Idem para CRUD de responsables |
 
 ### 2.3 BD — campos que persisten cédulas de admin
 

@@ -542,4 +542,4 @@ Cuando se haga la integración real con la BD oficial:
 **Documentos relacionados:**
 - [`plan_integracion_bd_oficial.md`](plan_integracion_bd_oficial.md) — Estrategia general de integración.
 - [`configuracion_admin.md`](configuracion_admin.md) — Funcionalidades faltantes del admin.
-- [`plan_certificados.md`](../tramites-backend/src/main/java/com/ufps/tramites/rules/plan_certificados.md) — Módulo de certificados (base del trabajo de roles).
+- [`plan_certificados.md`](https://github.com/SteveeenB/tramites-backend/blob/main/docs/rules/plan_certificados.md) — Módulo de certificados (base del trabajo de roles).

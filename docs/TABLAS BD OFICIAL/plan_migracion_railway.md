@@ -3,7 +3,7 @@
 > **Estado:** propuesta de experimento. Documento vivo.
 > **Fuente de verdad del esquema oficial:** [`bd_tablas_completas.md`](bd_tablas_completas.md) — 56 tablas en 9 dominios. **Cuando este plan y `bd_tablas_completas.md` digan cosas distintas, gana `bd_tablas_completas.md`.**
 > **Esquema actual del módulo:** [`base de datos actual modulo.sql`](../../../../.docs/base%20de%20datos%20actual%20modulo.sql) — Supabase PostgreSQL en producción.
-> **Plan de roles cerrado:** [`plan_roles_v3.md`](../plan_roles_v3.md) §9 explica por qué pivotamos a este experimento.
+> **Plan de roles cerrado:** [`plan_roles_v3.md`](../Roles/plan_roles_v3.md) §9 explica por qué pivotamos a este experimento.
 
 ---
 
@@ -26,7 +26,7 @@
 - 6 logins funcionando (5 admins en `admins`, 4 académicos en `usuario`).
 - Refactor de identidad híbrida completo (Bloques 0-4 + Sprint A + Sprint B).
 - Flujos del MVP probados: certificados, paz y salvos, terminación, grado.
-- **Deuda conocida** documentada en [`plan_roles_v3.md`](../plan_roles_v3.md) §8.
+- **Deuda conocida** documentada en [`plan_roles_v3.md`](../Roles/plan_roles_v3.md) §8.
 - 17 tablas propias: `usuario`, `estudiante`, `programa_academico`, `roles`, `admins`, `dependencias`, `solicitud`, `solicitud_certificado`, `tipo_certificado`, `paz_y_salvo`, `pagos`, `convocatoria`, `documento_solicitud`, `documento_cargado`, `tipo_documento_requerido`, `detalle_grado`, `historial_estado_tramite`, `estados_estudiantes`.
 
 ### 1.2 Lo que tiene la BD oficial (Railway, experimento)
@@ -779,8 +779,8 @@ El experimento `migracion-railway` corre en paralelo a otras tareas que siguen e
 - [`bd_tablas_completas.md`](bd_tablas_completas.md) — **esquema oficial completo (fuente de verdad)**.
 - [`../base_de_datos_oficial_posgrados.md`](../base_de_datos_oficial_posgrados.md) — esquema oficial sintetizado por módulos (v1, contexto histórico).
 - [`../clientes_finales_sistema.md`](../clientes_finales_sistema.md) — análisis de identidad/roles oficiales.
-- [`../plan_roles_v3.md`](../plan_roles_v3.md) — plan vivo del módulo de identidad. §9 documenta el pivot que dio origen a este plan.
-- [`../plan_roles_v2.md`](../plan_roles_v2.md) — referencia histórica de decisiones (Bloques 0-5).
+- [`../plan_roles_v3.md`](../Roles/plan_roles_v3.md) — plan vivo del módulo de identidad. §9 documenta el pivot que dio origen a este plan.
+- [`../plan_roles_v2.md`](../Roles/plan_roles_v2.md) — referencia histórica de decisiones (Bloques 0-5).
 - [`../plan_integracion_bd_oficial.md`](../plan_integracion_bd_oficial.md) — plan macro de integración. Este experimento implementa naturalmente las Fases 1, 2 y parte de la 4 de ese plan.
 - [`../../../../.docs/base%20de%20datos%20actual%20modulo.sql`](../../../../.docs/base%20de%20datos%20actual%20modulo.sql) — schema actual en Supabase (origen de la migración).
 

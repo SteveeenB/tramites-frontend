@@ -3,7 +3,7 @@
 > **Estado:** propuesta de cambio sobre `main` actual (Supabase PostgreSQL).
 > **Rama de trabajo:** `certificados-David` (existente en `tramites-backend` y `tramites-frontend`). **Muy desactualizada** respecto a `main` — paso 0 es actualizarla. Si el rebase es demasiado conflictivo, crear `feature/certificados-solo-posgrados` desde `main` y abandonar `certificados-David`. Ver §0.
 > **No confundir con:** [`../TABLAS BD OFICIAL/plan_migracion_railway.md`](../TABLAS%20BD%20OFICIAL/plan_migracion_railway.md). Aquel es el experimento Railway/MySQL; éste cambio va a `main` ya.
-> **Documento de contexto:** [`tramites-backend/src/main/java/com/ufps/tramites/rules/plan_certificados.md`](../../../../tramites-backend/src/main/java/com/ufps/tramites/rules/plan_certificados.md) — la HU11 original.
+> **Documento de contexto:** [`tramites-backend/src/main/java/com/ufps/tramites/rules/plan_certificados.md`](https://github.com/SteveeenB/tramites-backend/blob/main/docs/rules/plan_certificados.md) — la HU11 original.
 
 ---
 
@@ -190,7 +190,7 @@ Documentar en `tramites-backend/.docs/sql/migracion_certificados_solo_posgrados.
 
 ### 5.1 Entity `TipoCertificado.java`
 
-[`tramites-backend/src/main/java/com/ufps/tramites/model/TipoCertificado.java`](../../../../tramites-backend/src/main/java/com/ufps/tramites/model/TipoCertificado.java)
+[`tramites-backend/src/main/java/com/ufps/tramites/model/TipoCertificado.java`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/model/TipoCertificado.java)
 
 **Quitar:**
 - Imports `JoinColumn`, `ManyToOne`.
@@ -202,7 +202,7 @@ Documentar en `tramites-backend/.docs/sql/migracion_certificados_solo_posgrados.
 
 ### 5.2 Controller `AdminTipoCertificadoController.java`
 
-[`tramites-backend/src/main/java/com/ufps/tramites/controller/AdminTipoCertificadoController.java`](../../../../tramites-backend/src/main/java/com/ufps/tramites/controller/AdminTipoCertificadoController.java)
+[`tramites-backend/src/main/java/com/ufps/tramites/controller/AdminTipoCertificadoController.java`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/controller/AdminTipoCertificadoController.java)
 
 **Quitar:**
 - `@Autowired private DependenciaService dependenciaService;`
@@ -215,7 +215,7 @@ Documentar en `tramites-backend/.docs/sql/migracion_certificados_solo_posgrados.
 
 ### 5.3 Controller `CertificadoController.java`
 
-[`tramites-backend/src/main/java/com/ufps/tramites/controller/CertificadoController.java`](../../../../tramites-backend/src/main/java/com/ufps/tramites/controller/CertificadoController.java)
+[`tramites-backend/src/main/java/com/ufps/tramites/controller/CertificadoController.java`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/controller/CertificadoController.java)
 
 **Endpoints de gestión de físicos:**
 
@@ -249,7 +249,7 @@ Quitar la lógica que valida que la dependencia sea dueña del certificado; POSG
 
 ### 5.4 Service `CertificadoService.java`
 
-[`tramites-backend/src/main/java/com/ufps/tramites/service/CertificadoService.java`](../../../../tramites-backend/src/main/java/com/ufps/tramites/service/CertificadoService.java)
+[`tramites-backend/src/main/java/com/ufps/tramites/service/CertificadoService.java`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/service/CertificadoService.java)
 
 **Cambios:**
 - Método `obtenerPorDependencia(Long dependenciaId, String estadoFiltro)`: renombrar a `obtenerBandejaPosgrados(String estadoFiltro)` y quitar el parámetro/filtro por dependencia. Devuelve TODAS las solicitudes físicas (todas las modalidades = FISICA) en el estado dado.
@@ -259,7 +259,7 @@ Quitar la lógica que valida que la dependencia sea dueña del certificado; POSG
 
 ### 5.5 Repository `SolicitudCertificadoRepository.java`
 
-[`tramites-backend/src/main/java/com/ufps/tramites/repository/SolicitudCertificadoRepository.java`](../../../../tramites-backend/src/main/java/com/ufps/tramites/repository/SolicitudCertificadoRepository.java)
+[`tramites-backend/src/main/java/com/ufps/tramites/repository/SolicitudCertificadoRepository.java`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/repository/SolicitudCertificadoRepository.java)
 
 **Cambios:**
 - Si tiene un método `findByDependencia*`, eliminarlo.
@@ -267,7 +267,7 @@ Quitar la lógica que valida que la dependencia sea dueña del certificado; POSG
 
 ### 5.6 `PrincipalResolver` y `ResolvedPrincipal`
 
-[`tramites-backend/src/main/java/com/ufps/tramites/security/PrincipalResolver.java`](../../../../tramites-backend/src/main/java/com/ufps/tramites/security/PrincipalResolver.java)
+[`tramites-backend/src/main/java/com/ufps/tramites/security/PrincipalResolver.java`](https://github.com/SteveeenB/tramites-backend/blob/main/src/main/java/com/ufps/tramites/security/PrincipalResolver.java)
 
 **Sin cambios estructurales.** Aún necesitamos `dependenciaId` en el principal para el flujo de paz y salvos (la dependencia sí gestiona esos). El cambio aquí es solo dejar de usarlo en certificados.
 
@@ -287,7 +287,7 @@ Quitar la lógica que valida que la dependencia sea dueña del certificado; POSG
 
 ### 6.1 Menús — `menuConfig.js`
 
-[`tramites-frontend/src/config/menuConfig.js`](../../../config/menuConfig.js)
+[`tramites-frontend/src/config/menuConfig.js`](../../src/config/menuConfig.js)
 
 **DEPENDENCIA — quitar el item de certificados:**
 ```js
@@ -322,7 +322,7 @@ ADMIN: [
 
 ### 6.2 Formulario ADMIN — `SeccionTiposCertificado.jsx`
 
-[`tramites-frontend/src/pages/posgrados/SeccionTiposCertificado.jsx`](../../../pages/posgrados/SeccionTiposCertificado.jsx) *(si está ubicado allí, no es obligatorio moverlo; solo asegurar que lo renderiza ADMIN)*
+[`tramites-frontend/src/pages/posgrados/SeccionTiposCertificado.jsx`](../../src/pages/posgrados/SeccionTiposCertificado.jsx) *(si está ubicado allí, no es obligatorio moverlo; solo asegurar que lo renderiza ADMIN)*
 
 **Quitar del state inicial:**
 ```js
@@ -403,7 +403,7 @@ descripcion="Define qué certificados pueden solicitar los estudiantes, su preci
 
 ### 6.4 Rutas — `App.js`
 
-[`tramites-frontend/src/App.js`](../../../App.js)
+[`tramites-frontend/src/App.js`](../../src/App.js)
 
 **Cambios:**
 - Ruta que hoy renderiza `BandejaCertificadosDependencia` para DEPENDENCIA → cambiar a renderizar `BandejaCertificadosPosgrados` para POSGRADOS.
@@ -411,7 +411,7 @@ descripcion="Define qué certificados pueden solicitar los estudiantes, su preci
 
 ### 6.5 Vista de selección de sección — `TramitesView.jsx`
 
-[`tramites-frontend/src/pages/TramitesView.jsx`](../../../pages/TramitesView.jsx)
+[`tramites-frontend/src/pages/TramitesView.jsx`](../../src/pages/TramitesView.jsx)
 
 Hoy renderiza distintas secciones según el `id` del menú activo. Ajustes:
 - DEPENDENCIA: ya no tiene rama para `certificados` (queda solo `paz-y-salvo`).
@@ -539,7 +539,7 @@ Probar con los logins demo:
 |---|---|
 | [`../TABLAS BD OFICIAL/plan_migracion_railway.md`](../TABLAS%20BD%20OFICIAL/plan_migracion_railway.md) §3.3 | Quitar la FK `dependencia_id` de `tipo_certificado` después de mergear este cambio a `main` y luego a `migracion-railway`. **Ya añadida una nota anticipatoria en §9b de ese plan.** |
 | [`../Roles/plan_roles_v3.md`](../Roles/plan_roles_v3.md) | Actualizar la matriz de permisos por rol: DEPENDENCIA pierde acceso a certificados; POSGRADOS gana bandeja física; ADMIN mantiene tipos y plantillas. |
-| [`tramites-backend/src/main/java/com/ufps/tramites/rules/plan_certificados.md`](../../../../tramites-backend/src/main/java/com/ufps/tramites/rules/plan_certificados.md) §3.7 y §6.2 | Marcar como deprecado: la decisión "dependencias reutilizan tabla usuario" sigue siendo válida para paz y salvos, pero ya no aplica a certificados. La bandeja de §6.2 se trasladó a POSGRADOS. Añadir nota al inicio. |
+| [`tramites-backend/src/main/java/com/ufps/tramites/rules/plan_certificados.md`](https://github.com/SteveeenB/tramites-backend/blob/main/docs/rules/plan_certificados.md) §3.7 y §6.2 | Marcar como deprecado: la decisión "dependencias reutilizan tabla usuario" sigue siendo válida para paz y salvos, pero ya no aplica a certificados. La bandeja de §6.2 se trasladó a POSGRADOS. Añadir nota al inicio. |
 
 ---
 
