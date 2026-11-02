@@ -56,7 +56,7 @@ El frontend permite a estudiantes, directores, coordinadores de posgrados, admin
 |---|---|---|
 | `REACT_APP_API_URL` | `http://localhost:8080/api` | URL base de la API REST del backend |
 | `REACT_APP_GOOGLE_CLIENT_ID` | `''` | Client ID de Google OAuth (opcional) |
-| `REACT_APP_DEMO_MODE` | `'true'` | Si es `'false'`, oculta el selector de rol demo |
+| `REACT_APP_DEMO_MODE` | sin definir (apagado) | Solo con `'true'` se muestra el selector de usuarios demo y se incluyen sus datos (`src/config/demoUsers.js`) en el build. En producción debe quedar sin definir o en `'false'` |
 
 ### Usuarios Demo
 
@@ -211,7 +211,7 @@ Soporta tres métodos de autenticación:
 |---|---|
 | **Manual** | Formulario con código institucional + contraseña → `POST /api/auth/login` |
 | **Google OAuth** | Botón de Google Identity Services → `POST /api/auth/google` |
-| **Demo** | Selector de perfiles demo (solo si `REACT_APP_DEMO_MODE !== 'false'`) → `POST /api/auth/login-demo` |
+| **Demo** | Selector de perfiles demo (solo si `REACT_APP_DEMO_MODE === 'true'` en el build y `demo.auth.enabled=true` en el backend) → `POST /api/auth/login-demo` |
 
 ---
 

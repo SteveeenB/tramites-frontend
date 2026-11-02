@@ -1,15 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import {
-  DEMO_OPTIONS,
-  DEMO_OPTIONS_PAZ_Y_SALVO,
-  getMenuByRole,
-  getTopLinksByRole,
-  isDemoOptionActive,
-} from '../../config/menuConfig';
+import { getMenuByRole, getTopLinksByRole } from '../../config/menuConfig';
 import { ROLE_COLORS, ROLE_USER_LABELS } from '../../constants/tramitesColors';
-import { DEMO_MODE } from '../../config/appConfig';
+import { demo } from '../../config/appConfig';
 
 export const SidebarLink = ({ children, active = false, activeClass, onClick, compact = false }) => (
   <button
@@ -179,16 +173,16 @@ const AppSidebar = ({
         </div>
 
         {/* Selector de usuario demo */}
-        {DEMO_MODE && (
+        {demo && (
           <div className="border-t border-slate-200 p-5">
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
               Demo — cambiar usuario
             </p>
             <div className="flex flex-col gap-2">
-              {DEMO_OPTIONS.map((opt) => (
+              {demo.DEMO_OPTIONS.map((opt) => (
                 <DemoButton
                   key={opt.key}
-                  active={isDemoOptionActive(opt.key, usuarioAuth)}
+                  active={demo.isDemoOptionActive(opt.key, usuarioAuth)}
                   activeClass={colores.active}
                   onClick={() => handleCambiarRol(opt.key)}
                 >
@@ -198,10 +192,10 @@ const AppSidebar = ({
               <p className="mt-2 text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">
                 Paz y Salvos
               </p>
-              {DEMO_OPTIONS_PAZ_Y_SALVO.map((opt) => (
+              {demo.DEMO_OPTIONS_PAZ_Y_SALVO.map((opt) => (
                 <DemoButton
                   key={opt.key}
-                  active={isDemoOptionActive(opt.key, usuarioAuth)}
+                  active={demo.isDemoOptionActive(opt.key, usuarioAuth)}
                   activeClass={colores.active}
                   onClick={() => handleCambiarRol(opt.key)}
                 >
