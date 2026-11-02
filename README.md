@@ -1,5 +1,14 @@
+[![CI](https://github.com/SteveeenB/tramites-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/SteveeenB/tramites-frontend/actions/workflows/ci.yml)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/SteveeenB/tramites-frontend)
 # tramites-frontend
+
+> **Qué es:** aplicación web para que estudiantes y funcionarios de posgrado de la UFPS gestionen sus trámites en línea (terminación de materias, grado, certificados, paz y salvos y pagos). Su API está en [tramites-backend](https://github.com/SteveeenB/tramites-backend).  
+> **Stack:** React 19 · React Router 7 · Tailwind CSS 3 · Create React App · JWT · Wompi.  
+> **Equipo:** proyecto académico desarrollado por un equipo de 6 personas ([ver Equipo](#10-equipo)).
+
+<!-- Demo en producción (descomentar cuando se confirme que el servicio está activo):
+> **Demo:** [tramites-frontend-r08z.onrender.com](https://tramites-frontend-r08z.onrender.com)
+-->
 
 Documentación técnica del frontend del sistema **GROWEB — TposgradosUFPS**.  
 SPA desarrollada con React.js para la gestión de trámites académicos de posgrado de la Universidad Francisco de Paula Santander (UFPS).
@@ -19,6 +28,8 @@ SPA desarrollada con React.js para la gestión de trámites académicos de posgr
 6. [Componentes Principales](#6-componentes-principales)
 7. [Instalación y Ejecución Local](#7-instalación-y-ejecución-local)
 8. [Flujos de Usuario](#8-flujos-de-usuario)
+9. [Documentación Adicional](#9-documentación-adicional)
+10. [Equipo](#10-equipo)
 
 ---
 .
@@ -492,3 +503,37 @@ git stash pop
 | 2 | Sistema verifica automáticamente | `GET /api/solicitudes/verificar?codigo=UFPS-CERT-43-5440` |
 | 3 | Muestra datos del certificado o error de validación | — |
 
+---
+
+## 9. Documentación Adicional
+
+Documentos de diseño y guías complementarias, en la carpeta [`docs/`](docs/):
+
+| Documento | Contenido |
+|---|---|
+| [`docs/CREDENCIALES_PRUEBA.md`](docs/CREDENCIALES_PRUEBA.md) | Usuarios de prueba para el entorno local |
+| [`docs/Roles/plan_roles.md`](docs/Roles/plan_roles.md) | Plan de roles (versión 1) |
+| [`docs/Roles/plan_roles_v2.md`](docs/Roles/plan_roles_v2.md) | Plan de roles (versión 2) |
+| [`docs/Roles/plan_roles_v3.md`](docs/Roles/plan_roles_v3.md) | Plan de roles (versión 3) |
+| [`docs/Certificados/certificados_posgrados.md`](docs/Certificados/certificados_posgrados.md) | Módulo de certificados de posgrado |
+| [`docs/TABLAS BD OFICIAL/bd_tablas_completas.md`](docs/TABLAS%20BD%20OFICIAL/bd_tablas_completas.md) | Tablas de la base de datos oficial |
+| [`docs/TABLAS BD OFICIAL/plan_migracion_railway.md`](docs/TABLAS%20BD%20OFICIAL/plan_migracion_railway.md) | Plan de migración de la base de datos a Railway |
+| [`docs/base_de_datos_oficial_posgrados.md`](docs/base_de_datos_oficial_posgrados.md) | Base de datos oficial de posgrados |
+| [`docs/plan_integracion_bd_oficial.md`](docs/plan_integracion_bd_oficial.md) | Plan de integración con la base de datos oficial |
+| [`docs/clientes_finales_sistema.md`](docs/clientes_finales_sistema.md) | Clientes finales del sistema |
+| [`docs/Roles_bd_oficial.docx`](docs/Roles_bd_oficial.docx) | Roles en la base de datos oficial (Word) |
+
+---
+
+## 10. Equipo
+
+Proyecto desarrollado para la asignatura **Análisis y Diseño de Sistemas** (UFPS, 2026) por:
+
+| Integrante |
+|---|
+| Raúl David Báez Suárez |
+| Johan Steven Bueno Rojas |
+| Kevin David Arias Villamizar |
+| Santiago Danilo Cepeda Galeano |
+| Diego Alexander Bermúdez Flores |
+| Bryan Alexander Niño López |
