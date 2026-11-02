@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { apiClient, downloadApiClient } from '../api/apiClient';
 import BellNotificaciones from '../components/notificaciones/BellNotificaciones';
 import AppSidebar from '../components/sidebar/AppSidebar';
+import { parseFecha } from '../constants/procesodeGrado';
 
 // ── Badges por estado de la solicitud ─────────────────────────────────
 const ESTADOS_BADGE = {
@@ -26,7 +27,7 @@ const formatPesos = (n) =>
 
 const formatFecha = (s) => {
   if (!s) return '—';
-  const d = new Date(s);
+  const d = parseFecha(s);
   if (Number.isNaN(d.getTime())) return s;
   return d.toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: 'numeric' });
 };
