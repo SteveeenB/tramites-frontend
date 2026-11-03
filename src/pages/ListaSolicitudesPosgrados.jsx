@@ -15,7 +15,7 @@ const CONFIG = {
         icono:        <ClockIcon className="h-5 w-5" />,
         mensajeVacio: 'No hay solicitudes en proceso.',
         colores: {
-            iconWrapper: 'bg-amber-100 text-amber-600',
+            iconWrapper: 'bg-amber-100 text-amber-700',
             badge:       'bg-amber-100 text-amber-700',
             avatar:      'bg-amber-200 text-amber-800',
         },
@@ -26,7 +26,7 @@ const CONFIG = {
         icono:        <CheckCircleIcon className="h-5 w-5" />,
         mensajeVacio: 'No hay solicitudes aprobadas.',
         colores: {
-            iconWrapper: 'bg-green-100 text-green-600',
+            iconWrapper: 'bg-green-100 text-green-700',
             badge:       'bg-green-100 text-green-700',
             avatar:      'bg-green-200 text-green-800',
         },
@@ -71,7 +71,7 @@ const ModalRechazo = ({ solicitud, onClose, onExito }) => {
                     Estudiante: <strong>{solicitud.nombreEstudiante}</strong>
                 </p>
                 <label className="mb-2 block text-sm font-semibold text-gray-700">
-                    Motivo <span className="text-red-500">*</span>
+                    Motivo <span className="text-red-700">*</span>
                 </label>
                 <textarea
                     value={motivo}

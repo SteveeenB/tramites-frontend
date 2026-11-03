@@ -125,7 +125,7 @@ const TablaDetalle = ({ solicitudes, seccion, onResponder, onVolver }) => {
                         <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-400">
                             <seccion.icono className="h-7 w-7" aria-hidden="true" />
                         </div>
-                        <p className="text-sm font-medium text-gray-500">No hay solicitudes en este estado.</p>
+                        <p className="text-sm font-medium text-gray-600">No hay solicitudes en este estado.</p>
                     </div>
                 ) : (
                     <>

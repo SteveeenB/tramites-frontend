@@ -147,9 +147,9 @@ const AppSidebar = ({
         <div className={`flex items-center gap-3 px-5 py-5 ${UI.cabecera}`}>
           <img src="/LOGO.png" alt="Logo UFPS" className="h-9 w-9 shrink-0 rounded-sm" />
           <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-white/80">UFPS</p>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-red-50">UFPS</p>
             <p className="text-[13px] font-semibold leading-tight">Sistema de Posgrados</p>
-            <p className="text-[11px] text-white/80">Trámites</p>
+            <p className="text-[11px] text-red-50">Trámites</p>
           </div>
           <button
             ref={botonCerrarRef}

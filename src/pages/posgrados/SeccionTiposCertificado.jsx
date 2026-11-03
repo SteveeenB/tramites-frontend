@@ -98,9 +98,9 @@ const SeccionTiposCertificado = () => {
 
       <div className="rounded-lg border border-gray-200 bg-white shadow">
         {cargando ? (
-          <div className="py-12 text-center text-sm text-gray-500">Cargando…</div>
+          <div className="py-12 text-center text-sm text-gray-600">Cargando…</div>
         ) : tipos.length === 0 ? (
-          <div className="py-12 text-center text-sm text-gray-500">No hay tipos de certificado configurados.</div>
+          <div className="py-12 text-center text-sm text-gray-600">No hay tipos de certificado configurados.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">

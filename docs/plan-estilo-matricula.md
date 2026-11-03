@@ -39,6 +39,31 @@
 - Teclado: el orden de foco empieza en "Saltar al contenido", luego campana y menú, con anillo visible. En móvil, el drawer recibe el foco al abrir y Esc lo cierra y devuelve el foco al botón.
 - Sin cambios en `src/context`, `src/api`, `src/hooks`, `demoUsers.js` ni `appConfig.js`.
 
+### Verificación E2E con Playwright (3 nov 2026)
+
+Se corrió la misma batería contra `develop` (antes) y contra esta rama (después). Cada corrida usó el backend con perfil `h2` recién arrancado y el modo demo.
+
+**Qué cubre la batería (32 pasos):**
+- **Login:** clave incorrecta y clave correcta.
+- **Menú completo de los 5 roles.**
+- **Director:** abre la lista de pendientes y rechaza una solicitud con motivo obligatorio.
+- **Dependencia:** responde un paz y salvo.
+- **Estudiante:** genera el recibo de un certificado.
+- **Posgrados:** abre la lista de aprobadas.
+- **Móvil a 360 px y teclado.**
+
+**Resultados:**
+
+| Comprobación | `develop` | Rama |
+|---|---|---|
+| Pasos correctos | 32/32 | 32/32 |
+| Llamadas al API por paso | — | Idénticas en los 32 pasos (mismo comportamiento) |
+| Errores de consola | 0 | 0 |
+| axe-core WCAG 2 A/AA (25 pantallas) | 25 pantallas con fallos: 214 elementos con poco contraste y 2 `select` sin etiqueta | **0 fallos** |
+| 360 px sin scroll horizontal | 4 de 5 roles (admin desbordaba: 373 px) | 5 de 5 |
+| Esc cierra el menú móvil y el modal de rechazo | No | Sí |
+| Foco visible en los 10 primeros Tab | 10/10 | 10/10 (empieza en «Saltar al contenido») |
+
 ---
 
 ## 0. Antes de empezar: lo verificado y lo que cambia del prompt

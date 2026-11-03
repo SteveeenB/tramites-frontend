@@ -14,7 +14,7 @@ const CONFIG = {
     mensajeVacio: 'No hay solicitudes de grado pendientes de revisión.',
     conAcciones: true,
     colores: {
-      iconWrapper: 'bg-amber-100 text-amber-600',
+      iconWrapper: 'bg-amber-100 text-amber-700',
       badge: 'bg-amber-100 text-amber-700',
       card: 'border-amber-200 bg-amber-50',
       avatar: 'bg-amber-200 text-amber-800',
@@ -26,7 +26,7 @@ const CONFIG = {
     mensajeVacio: 'No hay solicitudes de grado aprobadas.',
     conAcciones: false,
     colores: {
-      iconWrapper: 'bg-green-100 text-green-600',
+      iconWrapper: 'bg-green-100 text-green-700',
       badge: 'bg-green-100 text-green-700',
       card: 'border-green-200 bg-green-50',
       avatar: 'bg-green-200 text-green-800',

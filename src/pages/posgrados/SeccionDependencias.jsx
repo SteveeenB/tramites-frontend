@@ -128,10 +128,10 @@ const SeccionDependencias = () => {
         </div>
 
         {cargando ? (
-          <div className="py-12 text-center text-sm text-gray-500">Cargando…</div>
+          <div className="py-12 text-center text-sm text-gray-600">Cargando…</div>
         ) : items.length === 0 ? (
           <div className="m-5 rounded-lg border-2 border-dashed border-gray-200 py-10 text-center">
-            <p className="text-sm font-medium text-gray-500">No hay dependencias registradas.</p>
+            <p className="text-sm font-medium text-gray-600">No hay dependencias registradas.</p>
             <p className="mt-1 text-xs text-gray-500">Crea la primera con el botón de arriba.</p>
           </div>
         ) : (
@@ -193,7 +193,7 @@ const SeccionDependencias = () => {
 
         {usuarios.length === 0 ? (
           <div className="m-5 rounded-lg border-2 border-dashed border-gray-200 py-8 text-center">
-            <p className="text-sm font-medium text-gray-500">No hay responsables registrados.</p>
+            <p className="text-sm font-medium text-gray-600">No hay responsables registrados.</p>
             <p className="mt-1 text-xs text-gray-500">Agrega el primero con el botón de arriba.</p>
           </div>
         ) : (
@@ -247,7 +247,7 @@ const SeccionDependencias = () => {
             <div className="space-y-4">
               <div>
                 <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                  Nombre <span className="text-red-500">*</span>
+                  Nombre <span className="text-red-700">*</span>
                 </label>
                 <input type="text" required value={edicion.nombre}
                   onChange={(e) => setEdicion({ ...edicion, nombre: e.target.value })}
@@ -288,7 +288,7 @@ const SeccionDependencias = () => {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
                 <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                  Nombre completo <span className="text-red-500">*</span>
+                  Nombre completo <span className="text-red-700">*</span>
                 </label>
                 <input type="text" required value={nuevoUser.nombreCompleto}
                   onChange={(e) => setNuevoUser({ ...nuevoUser, nombreCompleto: e.target.value })}
@@ -297,7 +297,7 @@ const SeccionDependencias = () => {
               </div>
               <div className="sm:col-span-2">
                 <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                  Código <span className="text-red-500">*</span>
+                  Código <span className="text-red-700">*</span>
                 </label>
                 <input type="text" required value={nuevoUser.codigo}
                   onChange={(e) => setNuevoUser({ ...nuevoUser, codigo: e.target.value.toUpperCase() })}
@@ -315,7 +315,7 @@ const SeccionDependencias = () => {
               </div>
               <div>
                 <label className="mb-1.5 block text-sm font-semibold text-gray-700">
-                  Contraseña <span className="text-red-500">*</span>
+                  Contraseña <span className="text-red-700">*</span>
                 </label>
                 <input type="password" required value={nuevoUser.contrasena}
                   onChange={(e) => setNuevoUser({ ...nuevoUser, contrasena: e.target.value })}

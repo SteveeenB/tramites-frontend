@@ -28,7 +28,7 @@ export const UI = {
   itemHoverSalir: 'hover:bg-primario-suave hover:text-primario',
   badgeRol:       'inline-block rounded bg-primario px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white',
   tarjeta:        'rounded-lg border border-gray-200 bg-white shadow',
-  etiquetaSeccion:'text-xs font-semibold uppercase tracking-wider text-gray-500',
+  etiquetaSeccion:'text-xs font-semibold uppercase tracking-wider text-gray-600',
   titulo:         'text-xl font-bold text-gray-900',
   foco:           'focus:outline-none focus-visible:ring-2 focus-visible:ring-primario-borde focus-visible:ring-offset-1',
   campo:          'w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 transition hover:border-gray-300 focus:border-red-300 focus:outline-none focus:ring-2 focus:ring-primario-borde disabled:cursor-not-allowed disabled:bg-gray-50',

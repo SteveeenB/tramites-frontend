@@ -9,9 +9,9 @@ import {
 import { UI } from '../../constants/tramitesColors';
 
 const TIPOS = {
-  error:       { caja: 'border-red-200 bg-red-50 text-red-800',       icono: XCircleIcon,             colorIcono: 'text-red-600' },
-  exito:       { caja: 'border-green-200 bg-green-50 text-green-800', icono: CheckCircleIcon,         colorIcono: 'text-green-600' },
-  advertencia: { caja: 'border-amber-200 bg-amber-50 text-amber-800', icono: ExclamationTriangleIcon, colorIcono: 'text-amber-600' },
+  error:       { caja: 'border-red-200 bg-red-50 text-red-800',       icono: XCircleIcon,             colorIcono: 'text-red-700' },
+  exito:       { caja: 'border-green-200 bg-green-50 text-green-800', icono: CheckCircleIcon,         colorIcono: 'text-green-700' },
+  advertencia: { caja: 'border-amber-200 bg-amber-50 text-amber-800', icono: ExclamationTriangleIcon, colorIcono: 'text-amber-700' },
   info:        { caja: 'border-blue-200 bg-blue-50 text-blue-800',    icono: InformationCircleIcon,   colorIcono: 'text-blue-600' },
 };
 

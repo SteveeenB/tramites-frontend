@@ -34,7 +34,7 @@ const formatFecha = (s) => {
 
 // ── Sub-componentes UI ────────────────────────────────────────────────
 const WarningIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-amber-500" fill="currentColor">
+  <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-amber-700" fill="currentColor">
     <path d="M1 21h22L12 2 1 21zm11-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
   </svg>
 );
@@ -52,7 +52,7 @@ const RefreshIcon = () => (
 );
 
 const InfoIcon = () => (
-  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-red-500" fill="currentColor">
+  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-red-700" fill="currentColor">
     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
   </svg>
 );
@@ -294,8 +294,8 @@ const Certificados = () => {
   // ── Render ────────────────────────────────────────────────────────
   return (
     <PanelLayout usuario={usuario} selectedMenuId="certificados">
-      <div className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
-        <span className="cursor-pointer hover:text-gray-600" onClick={() => navigate('/tramites')}>Trámites</span>
+      <div className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-600">
+        <button type="button" className="rounded uppercase tracking-wider hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primario-borde" onClick={() => navigate('/tramites')}>Trámites</button>
         <span>/</span>
         <span className="text-red-700">Certificados</span>
       </div>
@@ -335,11 +335,11 @@ const Certificados = () => {
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-semibold text-gray-700">
+            <label htmlFor="tipo-certificado" className="mb-2 block text-sm font-semibold text-gray-700">
               Tipo de Certificado
             </label>
             <div className="relative">
-              <select value={certSeleccionado} onChange={(e) => setCertSeleccionado(e.target.value)}
+              <select id="tipo-certificado" value={certSeleccionado} onChange={(e) => setCertSeleccionado(e.target.value)}
                 className="w-full appearance-none rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 pr-10 text-sm font-semibold text-gray-800 shadow transition focus:border-red-300 focus:outline-none focus:ring-2 focus:ring-primario-borde">
                 {tipos.map((c) => (
                   <option key={c.codigo} value={c.codigo}>{c.label}</option>
@@ -410,12 +410,12 @@ const Certificados = () => {
 
       {/* Historial unificado */}
       {cargando ? (
-        <div className="flex justify-center py-12 text-sm text-gray-500">Cargando historial...</div>
+        <div className="flex justify-center py-12 text-sm text-gray-600">Cargando historial...</div>
       ) : historial.length > 0 ? (
         <div className="rounded-lg border border-gray-200 bg-white shadow overflow-hidden">
           <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
             <h3 className="text-base font-bold text-gray-900">Mis Certificados</h3>
-            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-500">
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">
               {historial.length} solicitud{historial.length !== 1 ? 'es' : ''}
             </span>
           </div>
@@ -517,7 +517,7 @@ const Certificados = () => {
           <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
             <CertIcon />
           </div>
-          <p className="text-sm font-semibold text-gray-500">Sin solicitudes aún</p>
+          <p className="text-sm font-semibold text-gray-600">Sin solicitudes aún</p>
           <p className="mt-1 text-xs text-gray-500">
             Al generar un recibo de pago, aparecerá aquí el historial de tus certificados.
           </p>

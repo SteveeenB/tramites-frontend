@@ -30,7 +30,7 @@ const DetalleEtapa1 = ({
       <div className="rounded-lg border border-green-200 bg-green-50 p-6 shadow">
         {/* Encabezado */}
         <div className="mb-5 flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700">
             <CheckIcon />
           </div>
           <div className="min-w-0">
@@ -136,7 +136,7 @@ const DetalleEtapa1 = ({
         <>
           {solicitud?.estado === 'RECHAZADA' && (
             <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-red-500">Solicitud rechazada</p>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-red-700">Solicitud rechazada</p>
               <p className="text-sm font-medium text-red-800">
                 {solicitud.observaciones || 'Tu solicitud fue rechazada por el director.'}
               </p>

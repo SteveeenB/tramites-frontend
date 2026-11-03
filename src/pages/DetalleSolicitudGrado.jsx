@@ -187,9 +187,9 @@ const DetalleSolicitudGrado = () => {
                 <div className="rounded-lg border border-gray-200 bg-gray-50 p-6 shadow">
                   <h3 className="mb-4 text-base font-bold text-gray-900">Documentos adjuntos</h3>
                   {cargandoDocs ? (
-                    <p className="text-sm text-gray-500">Cargando documentos…</p>
+                    <p className="text-sm text-gray-600">Cargando documentos…</p>
                   ) : documentos.length === 0 ? (
-                    <p className="text-sm text-gray-500">No hay documentos adjuntos.</p>
+                    <p className="text-sm text-gray-600">No hay documentos adjuntos.</p>
                   ) : (
                     <div className="flex flex-col gap-3">
                       {documentos.map(doc => <DocCard key={doc.id} doc={doc} />)}

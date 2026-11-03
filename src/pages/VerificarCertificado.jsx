@@ -38,7 +38,7 @@ export default function VerificarCertificado() {
                 <div className="mx-auto flex max-w-2xl items-center gap-3">
                     <img src="/LOGO.png" alt="Logo UFPS" className="h-10 w-10 rounded-sm" />
                     <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-widest text-white/80">UFPS · Sistema de Posgrados</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-widest text-red-50">UFPS · Sistema de Posgrados</p>
                         <h1 className="text-lg font-bold">Verificación de Certificados</h1>
                     </div>
                 </div>
@@ -135,7 +135,7 @@ export default function VerificarCertificado() {
                                 </div>
 
                                 <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 flex items-center gap-3">
-                                    <svg className="h-5 w-5 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <svg className="h-5 w-5 text-green-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>

@@ -95,7 +95,7 @@ const SeccionPazYSalvo = ({ solicitudId, onTodosAprobados }) => {
   return (
     <div className={`rounded-lg border p-6 shadow ${hayRechazados ? 'border-red-200 bg-red-50' : 'border-amber-200 bg-amber-50'}`}>
       <div className="mb-4 flex items-center gap-3">
-        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${hayRechazados ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-600'}`}>
+        <div className={`flex h-10 w-10 items-center justify-center rounded-full ${hayRechazados ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>
           <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -197,7 +197,7 @@ const ModalPagoCeremonia = ({ fecha, solicitudId, cedula, onClose, onExito }) =>
           {(
             <>
               <div className="mb-5 rounded-lg border border-red-100 bg-red-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-red-400 mb-1">Fecha seleccionada</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-red-700 mb-1">Fecha seleccionada</p>
                 <p className="text-sm font-bold text-gray-900">{fecha?.label}</p>
                 <p className="text-xs text-gray-500">{fecha?.hora} · {fecha?.lugar}</p>
               </div>
@@ -301,7 +301,7 @@ const SeccionFechaGrado = ({ solicitudGrado, onFechaConfirmada }) => {
           </div>
           <div>
             <h4 className="text-base font-bold text-gray-900">Paso 3 — Elegir Fecha de Grado</h4>
-            <p className="text-xs text-gray-500">Selecciona la fecha y modalidad de tu preferencia</p>
+            <p className="text-xs text-gray-600">Selecciona la fecha y modalidad de tu preferencia</p>
           </div>
         </div>
 
@@ -311,7 +311,7 @@ const SeccionFechaGrado = ({ solicitudGrado, onFechaConfirmada }) => {
         </p>
 
         {fechas === null && (
-          <p className="mb-4 text-sm text-gray-500">Cargando fechas disponibles…</p>
+          <p className="mb-4 text-sm text-gray-600">Cargando fechas disponibles…</p>
         )}
         {errorFechas && (
           <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{errorFechas}</p>
@@ -340,7 +340,7 @@ const SeccionFechaGrado = ({ solicitudGrado, onFechaConfirmada }) => {
                   <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${esCer ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'}`}>
                     {esCer ? <AcademicCapIcon className="h-3.5 w-3.5" aria-hidden="true" /> : <DocumentTextIcon className="h-3.5 w-3.5" aria-hidden="true" />} {esCer ? 'Ceremonia' : 'Secretaría'}
                   </span>
-                  <span className={`text-xs font-semibold ${esCer ? 'text-red-700' : 'text-green-600'}`}>
+                  <span className={`text-xs font-semibold ${esCer ? 'text-red-700' : 'text-green-700'}`}>
                     {esCer ? `+ ${valorCeremonia}` : 'Sin costo extra'}
                   </span>
                 </div>
@@ -418,7 +418,7 @@ const ConfirmacionGrado = ({ solicitudGrado }) => {
       {/* Banner de aprobación */}
       <div className="rounded-lg border border-green-200 bg-green-50 p-5 shadow">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700">
             <CheckIcon className="h-5 w-5" />
           </div>
           <div>
@@ -432,7 +432,7 @@ const ConfirmacionGrado = ({ solicitudGrado }) => {
       {!pagoRealizado && <SeccionPago solicitudGrado={solicitudGrado} onPagoConfirmado={() => setPagoRealizado(true)} />}
       {pagoRealizado && (
         <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-3">
-          <CheckIcon className="h-5 w-5 text-green-600 shrink-0" />
+          <CheckIcon className="h-5 w-5 text-green-700 shrink-0" />
           <p className="text-sm font-semibold text-green-800">Paso 1 completado — Pago de Derechos de Grado confirmado</p>
         </div>
       )}
@@ -441,7 +441,7 @@ const ConfirmacionGrado = ({ solicitudGrado }) => {
       {pagoRealizado && !fechaYaElegida && !pazYSalvosOk && <SeccionPazYSalvo solicitudId={solicitudGrado.id} onTodosAprobados={handleTodosAprobados} />}
       {pagoRealizado && (pazYSalvosOk || fechaYaElegida) && (
         <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-3">
-          <CheckIcon className="h-5 w-5 text-green-600 shrink-0" />
+          <CheckIcon className="h-5 w-5 text-green-700 shrink-0" />
           <p className="text-sm font-semibold text-green-800">Paso 2 completado — Verificación de paz y salvos aprobada</p>
         </div>
       )}
@@ -450,7 +450,7 @@ const ConfirmacionGrado = ({ solicitudGrado }) => {
       {pagoRealizado && pazYSalvosOk && !fechaYaElegida && <SeccionFechaGrado solicitudGrado={solicitudGrado} onFechaConfirmada={(f) => setFechaGradoInfo(f)} />}
       {pagoRealizado && fechaYaElegida && (
         <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-3">
-          <CheckIcon className="h-5 w-5 text-green-600 shrink-0" />
+          <CheckIcon className="h-5 w-5 text-green-700 shrink-0" />
           <p className="text-sm font-semibold text-green-800">
             Paso 3 completado — {fechaGradoInfo?.label || solicitudGrado?.fechaGrado}
           </p>
@@ -461,7 +461,7 @@ const ConfirmacionGrado = ({ solicitudGrado }) => {
       {pagoRealizado && fechaYaElegida && (
         <div className="rounded-lg border border-green-200 bg-green-50 p-6 shadow">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700">
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342" />
               </svg>

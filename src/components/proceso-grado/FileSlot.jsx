@@ -55,7 +55,7 @@ const FileSlot = ({ label, formats, required = false, accept, file, onChange, ic
       >
         {file ? (
           <>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
             <p className="max-w-full truncate text-center text-xs font-medium text-green-700">
@@ -64,7 +64,7 @@ const FileSlot = ({ label, formats, required = false, accept, file, onChange, ic
             <button
               type="button"
               onClick={handleRemove}
-              className="mt-1 text-xs font-semibold text-red-500 hover:text-red-800"
+              className="mt-1 text-xs font-semibold text-red-700 hover:text-red-800"
             >
               Cambiar archivo
             </button>
@@ -72,7 +72,7 @@ const FileSlot = ({ label, formats, required = false, accept, file, onChange, ic
         ) : (
           <>
             {ICONS[icon]}
-            <p className="text-xs font-medium text-gray-500">Seleccionar archivo</p>
+            <p className="text-xs font-medium text-gray-600">Seleccionar archivo</p>
           </>
         )}
       </div>

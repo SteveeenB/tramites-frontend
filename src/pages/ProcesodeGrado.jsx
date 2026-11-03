@@ -41,7 +41,7 @@ const ProcesodeGrado = () => {
     return layout(
       <>
         <div className="flex h-64 items-center justify-center">
-          <p className="text-gray-500">Cargando proceso de grado…</p>
+          <p className="text-gray-600">Cargando proceso de grado…</p>
         </div>
       </>
     );
@@ -89,13 +89,13 @@ const ProcesodeGrado = () => {
 
   return layout(
     <>
-      <div className="mb-5 text-xs font-semibold uppercase tracking-wider text-gray-500">
+      <div className="mb-5 text-xs font-semibold uppercase tracking-wider text-gray-600">
         TRÁMITES / ACADÉMICO
       </div>
 
       <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <h1 className="text-xl font-bold text-gray-900">Proceso de Grado</h1>
-        <div className="text-sm font-medium text-gray-500">{fechaActual}</div>
+        <div className="text-sm font-medium text-gray-600">{fechaActual}</div>
       </div>
 
       <EtapasResumen

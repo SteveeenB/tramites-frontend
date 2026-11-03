@@ -117,7 +117,7 @@ export default function BandejaCertificadosPosgrados() {
     <div>
       <div className="mb-6">
         <h1 className="text-xl font-bold text-gray-900 mb-1">Certificados</h1>
-        <p className="text-sm text-gray-500">{usuario?.nombre}</p>
+        <p className="text-sm text-gray-600">{usuario?.nombre}</p>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4">
@@ -152,9 +152,9 @@ export default function BandejaCertificadosPosgrados() {
       )}
 
       {loading ? (
-        <div className="text-center py-20 text-gray-500">Cargando…</div>
+        <div className="text-center py-20 text-gray-600">Cargando…</div>
       ) : filtradas.length === 0 ? (
-        <div className="text-center py-20 text-gray-500">No hay solicitudes en este estado</div>
+        <div className="text-center py-20 text-gray-600">No hay solicitudes en este estado</div>
       ) : (
         <div className="rounded-lg border border-gray-200 bg-white shadow overflow-hidden">
           <div className="overflow-x-auto">

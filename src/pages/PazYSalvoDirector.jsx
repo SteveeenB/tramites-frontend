@@ -117,10 +117,10 @@ export default function PazYSalvoDirector() {
     <div>
       <div className="mb-8">
         <h1 className="text-xl font-bold text-gray-900 mb-1">Mis Paz y Salvos</h1>
-        <p className="text-sm text-gray-500">Solicitudes de paz y salvo como Director de Programa</p>
+        <p className="text-sm text-gray-600">Solicitudes de paz y salvo como Director de Programa</p>
         {pendientes > 0 && (
           <div className="mt-4 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 flex items-center gap-2">
-            <span className="text-amber-600 font-bold text-lg">{pendientes}</span>
+            <span className="text-amber-700 font-bold text-lg">{pendientes}</span>
             <span className="text-amber-700 text-sm">pendiente(s) de su confirmación</span>
           </div>
         )}
@@ -140,9 +140,9 @@ export default function PazYSalvoDirector() {
       </div>
 
       {loading ? (
-        <div className="text-center py-20 text-gray-500">Cargando...</div>
+        <div className="text-center py-20 text-gray-600">Cargando...</div>
       ) : filtradas.length === 0 ? (
-        <div className="text-center py-20 text-gray-500">No hay solicitudes en este estado</div>
+        <div className="text-center py-20 text-gray-600">No hay solicitudes en este estado</div>
       ) : (
         <div className="space-y-3">
           {filtradas.map(ps => (

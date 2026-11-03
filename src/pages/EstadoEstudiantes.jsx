@@ -77,7 +77,7 @@ export default function EstadoEstudiantes() {
     <div>
       <div className="mb-8">
         <h1 className="text-xl font-bold text-gray-900 mb-1">Estado de Estudiantes</h1>
-        <p className="text-sm text-gray-500">Seguimiento del proceso de grado por estudiante</p>
+        <p className="text-sm text-gray-600">Seguimiento del proceso de grado por estudiante</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
@@ -119,9 +119,9 @@ export default function EstadoEstudiantes() {
       </div>
 
       {loading ? (
-        <div className="text-center py-20 text-gray-500">Cargando...</div>
+        <div className="text-center py-20 text-gray-600">Cargando...</div>
       ) : error ? (
-        <div className="text-center py-20 text-red-500">{error}</div>
+        <div className="text-center py-20 text-red-700">{error}</div>
       ) : filtrados.length === 0 ? (
         <div className="text-center py-20 text-gray-500">No se encontraron estudiantes</div>
       ) : (

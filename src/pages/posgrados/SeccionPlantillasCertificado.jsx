@@ -177,7 +177,7 @@ const SeccionPlantillasCertificado = () => {
       />
 
       {cargando ? (
-        <p className="text-sm text-gray-500">Cargando tipos de certificado...</p>
+        <p className="text-sm text-gray-600">Cargando tipos de certificado...</p>
       ) : (
         <div className="grid gap-4 lg:grid-cols-[260px_1fr]">
           {/* Sidebar de tipos */}
@@ -198,7 +198,7 @@ const SeccionPlantillasCertificado = () => {
                   }`}
                 >
                   <span className="block font-mono font-semibold">{t.codigo}</span>
-                  <span className={`block truncate text-[11px] ${seleccionado?.id === t.id ? 'text-gray-300' : 'text-gray-500'}`}>
+                  <span className={`block truncate text-[11px] ${seleccionado?.id === t.id ? 'text-red-50' : 'text-gray-500'}`}>
                     {t.label}
                   </span>
                 </button>
@@ -287,7 +287,7 @@ const SeccionPlantillasCertificado = () => {
                 </div>
               </>
             ) : (
-              <p className="text-sm text-gray-500">Selecciona un tipo de certificado para editar su plantilla.</p>
+              <p className="text-sm text-gray-600">Selecciona un tipo de certificado para editar su plantilla.</p>
             )}
           </div>
         </div>

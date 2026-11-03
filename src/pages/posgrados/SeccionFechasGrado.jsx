@@ -136,7 +136,7 @@ const SeccionFechasGrado = () => {
         }
       />
 
-      {cargando && <p className="text-sm text-gray-500">Cargando fechas de grado…</p>}
+      {cargando && <p className="text-sm text-gray-600">Cargando fechas de grado…</p>}
       {error && <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</p>}
       {errorAccion && <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{errorAccion}</p>}
 

@@ -29,8 +29,8 @@ const EtapasResumen = ({ etapa1Completada, etapa2Disponible, solicitud, solicitu
           <div
             className={`flex h-10 w-10 items-center justify-center rounded-full ${
               mostrarComoCompletada
-                ? 'bg-green-100 text-green-600'
-                : 'bg-amber-100 text-amber-600'
+                ? 'bg-green-100 text-green-700'
+                : 'bg-amber-100 text-amber-700'
             }`}
           >
             {mostrarComoCompletada ? <CheckIcon /> : <WarningIcon />}
@@ -39,7 +39,7 @@ const EtapasResumen = ({ etapa1Completada, etapa2Disponible, solicitud, solicitu
             <h3 className="font-semibold text-gray-900">Terminación de Materias</h3>
             <span
               className={`text-xs font-semibold uppercase tracking-wide ${
-                mostrarComoCompletada ? 'text-green-600' : 'text-amber-600'
+                mostrarComoCompletada ? 'text-green-700' : 'text-amber-700'
               }`}
             >
               {solicitud
@@ -57,7 +57,7 @@ const EtapasResumen = ({ etapa1Completada, etapa2Disponible, solicitud, solicitu
         <div className="mb-3 flex items-center gap-3">
           <div
             className={`flex h-10 w-10 items-center justify-center rounded-full ${
-              etapa2Abierta ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-500'
+              etapa2Abierta ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
             }`}
           >
             {etapa2Abierta ? <OpenLockIcon /> : <LockIcon />}
