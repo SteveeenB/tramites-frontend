@@ -27,14 +27,14 @@ const DetalleEtapa1 = ({
 }) => {
   if (aprobada) {
     return (
-      <div className="rounded-2xl border border-green-200 bg-green-50 p-6 shadow-sm">
+      <div className="rounded-lg border border-green-200 bg-green-50 p-6 shadow">
         {/* Encabezado */}
         <div className="mb-5 flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700">
             <CheckIcon />
           </div>
           <div className="min-w-0">
-            <span className="font-semibold text-slate-900">Etapa 1: Terminación de Materias</span>
+            <span className="font-semibold text-gray-900">Etapa 1: Terminación de Materias</span>
             <span className="ml-3 inline-block rounded-full bg-green-100 px-3 py-0.5 text-xs font-semibold uppercase tracking-wide text-green-700">
               Aprobada
             </span>
@@ -46,32 +46,32 @@ const DetalleEtapa1 = ({
           <div className="mb-5 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
             {solicitud.radicado && (
               <div className="col-span-2">
-                <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">N.° de radicado</p>
+                <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-gray-500">N.° de radicado</p>
                 <p className="font-mono text-sm font-semibold text-red-700">{solicitud.radicado}</p>
               </div>
             )}
             <div>
-              <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Trámite</p>
-              <p className="font-medium text-slate-800">Terminación de Materias</p>
+              <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-gray-500">Trámite</p>
+              <p className="font-medium text-gray-800">Terminación de Materias</p>
             </div>
             <div>
-              <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Fecha de solicitud</p>
-              <p className="font-medium text-slate-800">{fmtFecha(solicitud.fechaSolicitud)}</p>
+              <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-gray-500">Fecha de solicitud</p>
+              <p className="font-medium text-gray-800">{fmtFecha(solicitud.fechaSolicitud)}</p>
             </div>
             <div>
-              <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Fecha de aprobación</p>
-              <p className="font-medium text-slate-800">{fmtFecha(solicitud.fechaDecision)}</p>
+              <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-gray-500">Fecha de aprobación</p>
+              <p className="font-medium text-gray-800">{fmtFecha(solicitud.fechaDecision)}</p>
             </div>
             {solicitud.cedulaDirector && (
               <div>
-                <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Director</p>
-                <p className="font-medium text-slate-800">{solicitud.cedulaDirector}</p>
+                <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-gray-500">Director</p>
+                <p className="font-medium text-gray-800">{solicitud.cedulaDirector}</p>
               </div>
             )}
             {solicitud.observacionesDirector && (
               <div className="col-span-2">
-                <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Observaciones del director</p>
-                <p className="font-medium text-slate-800">{solicitud.observacionesDirector}</p>
+                <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-gray-500">Observaciones del director</p>
+                <p className="font-medium text-gray-800">{solicitud.observacionesDirector}</p>
               </div>
             )}
           </div>
@@ -84,7 +84,7 @@ const DetalleEtapa1 = ({
             cargando={descargandoCert}
           />
         ) : (
-          <p className="text-xs font-medium text-slate-400">
+          <p className="text-xs font-medium text-gray-500">
             El acta estará disponible cuando la oficina de posgrados la genere.
           </p>
         )}
@@ -93,21 +93,21 @@ const DetalleEtapa1 = ({
   }
 
   return (
-    <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="rounded-lg border border-gray-200 bg-white p-6 shadow">
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-red-600">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-red-700">
           <WarningIcon />
         </div>
-        <h3 className="text-xl font-bold text-slate-900">Etapa 1: Requisitos previos</h3>
+        <h3 className="text-xl font-bold text-gray-900">Etapa 1: Requisitos previos</h3>
       </div>
 
       {/* Barra de créditos */}
       <div className="mb-5">
         <div className="mb-2 flex items-center justify-between">
-          <span className="font-medium text-slate-700">Créditos aprobados</span>
-          <span className="text-lg font-bold text-slate-900">{porcentaje}%</span>
+          <span className="font-medium text-gray-700">Créditos aprobados</span>
+          <span className="text-lg font-bold text-gray-900">{porcentaje}%</span>
         </div>
-        <div className="h-3 rounded-full bg-slate-200">
+        <div className="h-3 rounded-full bg-gray-200">
           <div
             className={`h-3 rounded-full transition-all ${
               porcentaje === 100 ? 'bg-green-500' : 'bg-orange-500'
@@ -117,14 +117,14 @@ const DetalleEtapa1 = ({
         </div>
       </div>
 
-      <p className="mb-5 max-w-2xl text-sm leading-6 text-slate-600">
+      <p className="mb-5 max-w-2xl text-sm leading-6 text-gray-600">
         {porcentaje >= 100
           ? 'Has completado el 100% de los créditos requeridos.'
           : `Te faltan ${faltantes} créditos. Debes completar el 100% para habilitar este trámite.`}
       </p>
 
       <div className="mb-6 flex flex-wrap gap-3">
-        <span className="rounded-full bg-slate-100 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-700">
+        <span className="rounded-full bg-gray-100 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-gray-700">
           Estado académico: {estadoAcademico || 'Regular'}
         </span>
       </div>
@@ -135,22 +135,22 @@ const DetalleEtapa1 = ({
       ) : (
         <>
           {solicitud?.estado === 'RECHAZADA' && (
-            <div className="mb-4 rounded-2xl border border-red-200 bg-red-50 p-4">
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-red-500">Solicitud rechazada</p>
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-red-700">Solicitud rechazada</p>
               <p className="text-sm font-medium text-red-800">
                 {solicitud.observaciones || 'Tu solicitud fue rechazada por el director.'}
               </p>
-              <p className="mt-2 text-xs text-red-600">Puedes enviar una nueva solicitud.</p>
+              <p className="mt-2 text-xs text-red-700">Puedes enviar una nueva solicitud.</p>
             </div>
           )}
           <button
             type="button"
             disabled={!etapa1Completada || enviando}
             onClick={onSolicitar}
-            className={`mb-3 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition ${
+            className={`mb-3 inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold transition ${
               etapa1Completada && !enviando
-                ? 'bg-red-600 text-white hover:bg-red-700'
-                : 'cursor-not-allowed bg-slate-300 text-slate-500'
+                ? 'bg-primario text-white hover:bg-primario-hover'
+                : 'cursor-not-allowed bg-gray-300 text-gray-500'
             }`}
           >
             <SendIcon />
@@ -158,12 +158,12 @@ const DetalleEtapa1 = ({
           </button>
 
           {!etapa1Completada && (
-            <p className="text-sm font-medium text-red-600">
+            <p className="text-sm font-medium text-red-700">
               No disponible: debes completar el 100% de los créditos requeridos.
             </p>
           )}
           {errorSolicitud && (
-            <p className="mt-2 text-sm font-medium text-red-600">{errorSolicitud}</p>
+            <p className="mt-2 text-sm font-medium text-red-700">{errorSolicitud}</p>
           )}
         </>
       )}

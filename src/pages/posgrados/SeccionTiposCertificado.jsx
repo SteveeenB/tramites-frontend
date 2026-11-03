@@ -88,24 +88,24 @@ const SeccionTiposCertificado = () => {
         descripcion="Define qué certificados pueden solicitar los estudiantes, su precio base y costo logístico físico."
         accion={
           <button type="button" onClick={() => setEdicion({ ...TIPO_VACIO })}
-            className="rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700">
+            className="rounded-lg bg-primario px-4 py-2 text-sm font-semibold text-white transition hover:bg-primario-hover">
             + Nuevo tipo
           </button>
         }
       />
 
-      {error && <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-600">{error}</div>}
+      {error && <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</div>}
 
-      <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="rounded-lg border border-gray-200 bg-white shadow">
         {cargando ? (
-          <div className="py-12 text-center text-sm text-slate-400">Cargando…</div>
+          <div className="py-12 text-center text-sm text-gray-600">Cargando…</div>
         ) : tipos.length === 0 ? (
-          <div className="py-12 text-center text-sm text-slate-400">No hay tipos de certificado configurados.</div>
+          <div className="py-12 text-center text-sm text-gray-600">No hay tipos de certificado configurados.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-slate-50 text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
+                <tr className="border-b border-gray-200 bg-gray-50 text-sm font-semibold text-gray-600">
                   <th className="px-4 py-3 text-left">Código</th>
                   <th className="px-4 py-3 text-left">Label</th>
                   <th className="px-4 py-3 text-right">Precio digital</th>
@@ -114,24 +114,24 @@ const SeccionTiposCertificado = () => {
                   <th className="px-4 py-3 text-center">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-gray-100">
                 {tipos.map((t) => (
-                  <tr key={t.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-mono text-xs text-slate-700">{t.codigo}</td>
-                    <td className="px-4 py-3 text-slate-800">{t.label}</td>
-                    <td className="px-4 py-3 text-right text-slate-800">{formatPesos(t.precioDigital)}</td>
-                    <td className="px-4 py-3 text-right text-slate-600">+{formatPesos(t.costoLogisticaFisica)}</td>
+                  <tr key={t.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 font-mono text-xs text-gray-700">{t.codigo}</td>
+                    <td className="px-4 py-3 text-gray-800">{t.label}</td>
+                    <td className="px-4 py-3 text-right text-gray-800">{formatPesos(t.precioDigital)}</td>
+                    <td className="px-4 py-3 text-right text-gray-600">+{formatPesos(t.costoLogisticaFisica)}</td>
                     <td className="px-4 py-3 text-center">
                       <button type="button" onClick={() => toggleActivo(t)}
                         className={`rounded-full px-3 py-0.5 text-xs font-semibold ${t.activo
                           ? 'bg-emerald-100 text-emerald-700'
-                          : 'bg-slate-100 text-slate-500'}`}>
+                          : 'bg-gray-100 text-gray-500'}`}>
                         {t.activo ? 'Sí' : 'No'}
                       </button>
                     </td>
                     <td className="px-4 py-3 text-center">
                       <button type="button" onClick={() => setEdicion({ ...t })}
-                        className="rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+                        className="rounded-lg border border-gray-300 px-3 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50">
                         Editar
                       </button>
                     </td>
@@ -145,79 +145,79 @@ const SeccionTiposCertificado = () => {
 
       {edicion && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <form onSubmit={guardarTipo} className="w-full max-w-2xl rounded-3xl bg-white p-6 shadow-2xl overflow-y-auto max-h-[90vh]">
-            <h3 className="mb-4 text-lg font-bold text-slate-900">
+          <form onSubmit={guardarTipo} className="w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl overflow-y-auto max-h-[90vh]">
+            <h3 className="mb-4 text-lg font-bold text-gray-900">
               {edicion.id ? 'Editar tipo de certificado' : 'Nuevo tipo de certificado'}
             </h3>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Código</label>
+                <label className="mb-1 block text-sm font-semibold text-gray-700">Código</label>
                 <input type="text" required value={edicion.codigo} disabled={!!edicion.id}
                   onChange={(e) => setEdicion({ ...edicion, codigo: e.target.value.toUpperCase() })}
                   placeholder="CONSTANCIA_ALGO"
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono disabled:bg-slate-50 disabled:text-slate-500" />
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm font-mono disabled:bg-gray-50 disabled:text-gray-500" />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Activo</label>
+                <label className="mb-1 block text-sm font-semibold text-gray-700">Activo</label>
                 <select value={edicion.activo} onChange={(e) => setEdicion({ ...edicion, activo: e.target.value === 'true' })}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
                   <option value="true">Sí</option>
                   <option value="false">No</option>
                 </select>
               </div>
               <div className="sm:col-span-2">
-                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Label (visible al estudiante)</label>
+                <label className="mb-1 block text-sm font-semibold text-gray-700">Label (visible al estudiante)</label>
                 <input type="text" required value={edicion.label}
                   onChange={(e) => setEdicion({ ...edicion, label: e.target.value })}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
               </div>
               <div className="sm:col-span-2">
-                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Descripción</label>
+                <label className="mb-1 block text-sm font-semibold text-gray-700">Descripción</label>
                 <textarea rows={2} value={edicion.descripcion || ''}
                   onChange={(e) => setEdicion({ ...edicion, descripcion: e.target.value })}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
                   Precio digital (COP)
-                  <span className="ml-2 font-normal normal-case text-[10px] text-slate-400">↑/↓ ±1.000</span>
+                  <span className="ml-2 font-normal normal-case text-[10px] text-gray-500">↑/↓ ±1.000</span>
                 </label>
                 <input step="any" type="number" min="0" required value={edicion.precioDigital}
                   onChange={(e) => setEdicion({ ...edicion, precioDigital: Number(e.target.value) })}
                   onKeyDown={stepMil('precioDigital')}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
                   + Costo logística física (COP)
-                  <span className="ml-2 font-normal normal-case text-[10px] text-slate-400">↑/↓ ±1.000</span>
+                  <span className="ml-2 font-normal normal-case text-[10px] text-gray-500">↑/↓ ±1.000</span>
                 </label>
                 <input step="any" type="number" min="0" value={edicion.costoLogisticaFisica || 0}
                   onChange={(e) => setEdicion({ ...edicion, costoLogisticaFisica: Number(e.target.value) })}
                   onKeyDown={stepMil('costoLogisticaFisica')}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
               </div>
               <div>
-                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Tiempo entrega (días)</label>
+                <label className="mb-1 block text-sm font-semibold text-gray-700">Tiempo entrega (días)</label>
                 <input type="number" min="0" value={edicion.tiempoEntregaDias || 0}
                   onChange={(e) => setEdicion({ ...edicion, tiempoEntregaDias: Number(e.target.value) })}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
               </div>
               <div className="sm:col-span-2">
-                <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Dirección de la oficina</label>
+                <label className="mb-1 block text-sm font-semibold text-gray-700">Dirección de la oficina</label>
                 <input type="text" value={edicion.direccionOficina || ''}
                   onChange={(e) => setEdicion({ ...edicion, direccionOficina: e.target.value })}
                   placeholder="Bloque A - Oficina 203"
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" />
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
               <button type="button" onClick={() => setEdicion(null)}
-                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
                 Cancelar
               </button>
               <button type="submit" disabled={guardando}
-                className="rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50">
+                className="rounded-lg bg-primario px-4 py-2 text-sm font-semibold text-white hover:bg-primario-hover disabled:opacity-50">
                 {guardando ? 'Guardando…' : 'Guardar'}
               </button>
             </div>

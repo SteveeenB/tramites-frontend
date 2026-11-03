@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import TarjetaAccion from './TarjetaAccion';
+import EncabezadoPagina from '../ui/EncabezadoPagina';
 import { GraduationIcon, CertificateIcon } from './icons';
 
 const ContenidoEstudiante = ({ datosModulo }) => {
@@ -9,12 +10,9 @@ const ContenidoEstudiante = ({ datosModulo }) => {
 
   return (
     <>
-      <div className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-        TRÁMITES / ACADÉMICO
-      </div>
-      <h2 className="mb-7 text-3xl font-bold text-slate-900">Mis Trámites</h2>
+      <EncabezadoPagina migas="Trámites / Académico" titulo="Mis Trámites" />
 
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <TarjetaAccion
           icono={<GraduationIcon />}
           titulo="Proceso de Grado"

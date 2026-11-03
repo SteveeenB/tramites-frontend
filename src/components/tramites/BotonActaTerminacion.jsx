@@ -20,7 +20,7 @@ const BotonActaTerminacion = ({ onGenerar, disabled = false, cargando = false })
       type="button"
       onClick={onGenerar}
       disabled={inactivo}
-      className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold text-white transition
+      className={`inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold text-white transition
         bg-green-700 hover:bg-green-800
         ${inactivo ? 'cursor-not-allowed opacity-50' : ''}`}
     >

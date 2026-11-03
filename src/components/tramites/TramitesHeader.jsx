@@ -1,42 +1,29 @@
 import React from 'react';
-import { ROLE_LABELS, ROLE_COLORS } from '../../constants/tramitesColors';
-import BellNotificaciones from '../notificaciones/BellNotificaciones';
+import { Bars3Icon } from '@heroicons/react/24/outline';
+import { UI } from '../../constants/tramitesColors';
 
-const TramitesHeader = ({ usuario, rol, onMenuToggle }) => {
-  const colores = ROLE_COLORS[rol] || ROLE_COLORS.ESTUDIANTE;
-
-  return (
-    <header
-      className={`flex items-center justify-between gap-4 px-6 py-4 text-white shadow-sm md:px-8 ${colores.header}`}
+/**
+ * Mini-header de móvil, igual al del Módulo de Matrícula: en escritorio no hay
+ * header, todo vive en la sidebar fija. Aquí van el botón del menú, el logo,
+ * el título del sistema y la campana (que el layout pasa solo en móvil).
+ */
+const TramitesHeader = ({ onMenuToggle, botonMenuRef, menuAbierto = false, campana = null }) => (
+  <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-gray-200 bg-white px-4 py-3 shadow md:hidden">
+    <button
+      ref={botonMenuRef}
+      type="button"
+      onClick={onMenuToggle}
+      className={`flex h-9 w-9 items-center justify-center rounded-lg text-gray-700 hover:bg-gray-100 ${UI.foco}`}
+      aria-label="Abrir menú"
+      aria-controls="sidebar"
+      aria-expanded={menuAbierto}
     >
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={onMenuToggle}
-          className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20 hover:bg-white/30 lg:hidden"
-          aria-label="Abrir menú"
-        >
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-        <h1 className="text-lg font-bold uppercase tracking-[0.18em] md:text-xl">
-          {ROLE_LABELS[rol] || rol}
-        </h1>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <BellNotificaciones rol={rol} />
-
-        <div className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold">
-            {(usuario?.nombre || 'U').slice(0, 2).toUpperCase()}
-          </div>
-          <p className="hidden text-sm font-semibold sm:block">{usuario?.nombre}</p>
-        </div>
-      </div>
-    </header>
-  );
-};
+      <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+    </button>
+    <img src="/LOGO.png" alt="" className="h-7 w-7 rounded-sm" />
+    <p className="min-w-0 flex-1 truncate text-sm font-bold text-gray-800">Sistema de Posgrados</p>
+    {campana}
+  </header>
+);
 
 export default TramitesHeader;

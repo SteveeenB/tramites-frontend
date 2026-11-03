@@ -44,19 +44,20 @@ export default function ResultadoPago() {
     const handleVolver = () => navigate(esCertificado ? '/certificados' : '/proceso-de-grado');
 
     return (
-        <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
+        <div className="min-h-screen bg-fondo flex items-center justify-center px-4">
             <div className="w-full max-w-md">
 
-                <div className="text-center mb-8">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">
-                        UFPS — Sistema de Trámites de Posgrado
+                <div className="mb-8 flex items-center justify-center gap-3">
+                    <img src="/LOGO.png" alt="Logo UFPS" className="h-10 w-10 rounded-sm" />
+                    <p className="text-xs font-semibold uppercase tracking-widest text-gray-600">
+                        UFPS · Sistema de Posgrados
                     </p>
                 </div>
 
-                <div className="rounded-3xl bg-white shadow-lg overflow-hidden">
+                <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow animate-fade-in-up">
 
                     {/* Banner */}
-                    <div className={`px-6 py-8 flex flex-col items-center text-center ${esAprobado ? 'bg-green-500' : esRechazado ? 'bg-red-500' : 'bg-amber-500'}`}>
+                    <div className={`px-6 py-8 flex flex-col items-center text-center ${esAprobado ? 'bg-green-700' : esRechazado ? 'bg-primario' : 'bg-amber-700'}`}>
                         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/20 mb-4">
                             {esAprobado ? (
                                 <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -72,9 +73,9 @@ export default function ResultadoPago() {
                                 </svg>
                             )}
                         </div>
-                        <h2 className="text-2xl font-bold text-white mb-1">
+                        <h1 className="text-xl font-bold text-white mb-1">
                             {esAprobado ? '¡Pago exitoso!' : esRechazado ? 'Pago rechazado' : 'Pago en proceso'}
-                        </h2>
+                        </h1>
                         <p className="text-sm text-white/80">
                             {esAprobado
                                 ? 'Tu pago fue procesado correctamente.'
@@ -86,23 +87,23 @@ export default function ResultadoPago() {
 
                     {/* Detalle */}
                     <div className="p-6 space-y-4">
-                        <div className="rounded-2xl bg-slate-50 p-4 space-y-3">
+                        <div className="rounded-lg bg-gray-50 p-4 space-y-3">
                             {referencia && (
                                 <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">Referencia</span>
-                                    <span className="text-sm font-mono font-medium text-slate-800">{referencia}</span>
+                                    <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">Referencia</span>
+                                    <span className="text-sm font-mono font-medium text-gray-800">{referencia}</span>
                                 </div>
                             )}
                             {monto && (
                                 <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">Valor pagado</span>
-                                    <span className="text-sm font-bold text-slate-900">
+                                    <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">Valor pagado</span>
+                                    <span className="text-sm font-bold text-gray-900">
                                         {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(monto)}
                                     </span>
                                 </div>
                             )}
                             <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">Estado</span>
+                                <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">Estado</span>
                                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${esAprobado ? 'bg-green-100 text-green-700' : esRechazado ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>
                                     {esAprobado ? 'Aprobado' : esRechazado ? 'Rechazado' : 'Pendiente'}
                                 </span>
@@ -110,33 +111,33 @@ export default function ResultadoPago() {
                         </div>
 
                         {esAprobado && (
-                            <div className="rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-800">
+                            <div className="rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-800">
                                 Tu proceso ha sido actualizado. Puedes continuar con los siguientes pasos.
                             </div>
                         )}
 
                         {esRechazado && (
-                            <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-800">
+                            <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-800">
                                 El pago fue rechazado o cancelado. Puedes intentarlo nuevamente desde tu proceso de grado.
                             </div>
                         )}
 
                         {!esAprobado && !esRechazado && (
-                            <div className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800">
+                            <div className="rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800">
                                 Si completaste el pago, el estado se actualizará en unos segundos al volver a tu proceso.
                             </div>
                         )}
 
                         <button
                             onClick={handleVolver}
-                            className="w-full rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white hover:bg-red-700 transition"
+                            className="w-full rounded-lg bg-primario px-5 py-3 text-sm font-semibold text-white hover:bg-primario-hover transition"
                         >
                             {esCertificado ? 'Volver a Certificados' : 'Volver al proceso de grado'}
                         </button>
                     </div>
                 </div>
 
-                <p className="text-center text-xs text-slate-400 mt-6">
+                <p className="text-center text-xs text-gray-500 mt-6">
                     Universidad Francisco de Paula Santander · Sección de Posgrados
                 </p>
             </div>

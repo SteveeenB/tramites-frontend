@@ -32,20 +32,20 @@ const DocCard = ({ doc }) => {
   const label    = TIPO_DOC[doc.tipo] || doc.tipo;
   const fileUrl  = doc.url;
 
-  const iconBg  = esImagen ? 'bg-blue-500' : esPdf ? 'bg-red-500' : 'bg-slate-500';
+  const iconBg  = esImagen ? 'bg-blue-500' : esPdf ? 'bg-red-500' : 'bg-gray-500';
   const iconTxt = esImagen ? 'IMG' : esPdf ? 'PDF' : 'DOC';
 
   return (
-    <div className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow">
       <div className="flex min-w-0 items-center gap-3">
         <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white ${iconBg}`}>
           {iconTxt}
         </div>
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-slate-800">{label}</p>
-          <p className="truncate text-xs text-slate-500">
+          <p className="truncate text-sm font-semibold text-gray-800">{label}</p>
+          <p className="truncate text-xs text-gray-500">
             {doc.nombreOriginal}
-            {doc.tamano ? <span className="ml-1 text-slate-400">· {formatBytes(doc.tamano)}</span> : null}
+            {doc.tamano ? <span className="ml-1 text-gray-500">· {formatBytes(doc.tamano)}</span> : null}
           </p>
         </div>
       </div>
@@ -65,7 +65,7 @@ const DocCard = ({ doc }) => {
             href={fileUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
+            className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-700 transition hover:bg-gray-200"
           >
             Descargar
           </a>
@@ -112,7 +112,7 @@ const DetalleSolicitudGrado = () => {
             <button
               type="button"
               onClick={() => navigate(`/tramites/bandeja-director/grado/${estado}`)}
-              className="mb-6 flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-700"
+              className="mb-6 flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-700"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -121,7 +121,7 @@ const DetalleSolicitudGrado = () => {
             </button>
 
             {(cargando || !solicitud) && (
-              <div className="flex items-center justify-center py-20 text-slate-400">
+              <div className="flex items-center justify-center py-20 text-gray-500">
                 <span className="text-sm font-medium">Cargando solicitud…</span>
               </div>
             )}
@@ -130,20 +130,20 @@ const DetalleSolicitudGrado = () => {
               <div className="mx-auto flex max-w-3xl flex-col gap-6">
 
                 {/* ── Info general ────────────────────────────────────── */}
-                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="rounded-lg border border-gray-200 bg-white p-6 shadow">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                         Solicitud de Grado
                       </p>
                       <p className="font-mono text-xs font-semibold text-red-700">
                         {solicitud.radicado ?? `#${solicitud.id}`}
                       </p>
-                      <h2 className="mt-1 text-xl font-bold text-slate-900">
+                      <h2 className="mt-1 text-xl font-bold text-gray-900">
                         {solicitud.tituloProyecto || 'Sin título'}
                       </h2>
                       {solicitud.tipoProyecto && (
-                        <p className="mt-0.5 text-sm text-slate-500">
+                        <p className="mt-0.5 text-sm text-gray-500">
                           {TIPO_PROYECTO[solicitud.tipoProyecto] ?? solicitud.tipoProyecto}
                         </p>
                       )}
@@ -151,24 +151,24 @@ const DetalleSolicitudGrado = () => {
                     <EstadoBadge estado={solicitud.estado} />
                   </div>
 
-                  <div className="mt-5 grid grid-cols-2 gap-4 border-t border-slate-100 pt-5 sm:grid-cols-3">
+                  <div className="mt-5 grid grid-cols-2 gap-4 border-t border-gray-100 pt-5 sm:grid-cols-3">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Estudiante</p>
-                      <p className="mt-0.5 text-sm font-medium text-slate-800">{solicitud.estudiante?.nombre}</p>
-                      <p className="text-xs text-slate-500">CC {solicitud.estudiante?.cedula}</p>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Estudiante</p>
+                      <p className="mt-0.5 text-sm font-medium text-gray-800">{solicitud.estudiante?.nombre}</p>
+                      <p className="text-xs text-gray-500">CC {solicitud.estudiante?.cedula}</p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Programa</p>
-                      <p className="mt-0.5 text-sm font-medium text-slate-800">{solicitud.estudiante?.programa || '—'}</p>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Programa</p>
+                      <p className="mt-0.5 text-sm font-medium text-gray-800">{solicitud.estudiante?.programa || '—'}</p>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Fecha</p>
-                      <p className="mt-0.5 text-sm font-medium text-slate-800">{solicitud.fechaSolicitud || '—'}</p>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Fecha</p>
+                      <p className="mt-0.5 text-sm font-medium text-gray-800">{solicitud.fechaSolicitud || '—'}</p>
                     </div>
                   </div>
 
                   {solicitud.observacionesDirector && (
-                    <div className="mt-4 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                    <div className="mt-4 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-600">
                       <span className="font-semibold">Observaciones: </span>
                       {solicitud.observacionesDirector}
                     </div>
@@ -177,19 +177,19 @@ const DetalleSolicitudGrado = () => {
 
                 {/* ── Resumen del proyecto ─────────────────────────────── */}
                 {solicitud.resumenProyecto && (
-                  <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <h3 className="mb-3 text-base font-bold text-slate-900">Resumen del Proyecto</h3>
-                    <p className="text-sm leading-relaxed text-slate-600">{solicitud.resumenProyecto}</p>
+                  <div className="rounded-lg border border-gray-200 bg-white p-6 shadow">
+                    <h3 className="mb-3 text-base font-bold text-gray-900">Resumen del Proyecto</h3>
+                    <p className="text-sm leading-relaxed text-gray-600">{solicitud.resumenProyecto}</p>
                   </div>
                 )}
 
                 {/* ── Documentos ──────────────────────────────────────── */}
-                <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
-                  <h3 className="mb-4 text-base font-bold text-slate-900">Documentos adjuntos</h3>
+                <div className="rounded-lg border border-gray-200 bg-gray-50 p-6 shadow">
+                  <h3 className="mb-4 text-base font-bold text-gray-900">Documentos adjuntos</h3>
                   {cargandoDocs ? (
-                    <p className="text-sm text-slate-400">Cargando documentos…</p>
+                    <p className="text-sm text-gray-600">Cargando documentos…</p>
                   ) : documentos.length === 0 ? (
-                    <p className="text-sm text-slate-400">No hay documentos adjuntos.</p>
+                    <p className="text-sm text-gray-600">No hay documentos adjuntos.</p>
                   ) : (
                     <div className="flex flex-col gap-3">
                       {documentos.map(doc => <DocCard key={doc.id} doc={doc} />)}
@@ -199,7 +199,7 @@ const DetalleSolicitudGrado = () => {
 
                 {/* ── Acciones ────────────────────────────────────────── */}
                 {errorAccion && (
-                  <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{errorAccion}</p>
+                  <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{errorAccion}</p>
                 )}
 
                 {esPendiente && (
@@ -208,7 +208,7 @@ const DetalleSolicitudGrado = () => {
                       type="button"
                       disabled={!!accionEnCurso}
                       onClick={() => setModalRechazo(true)}
-                      className="rounded-xl border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-100 disabled:opacity-50"
+                      className="rounded-lg border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-100 disabled:opacity-50"
                     >
                       Rechazar
                     </button>
@@ -216,7 +216,7 @@ const DetalleSolicitudGrado = () => {
                       type="button"
                       disabled={!!accionEnCurso}
                       onClick={handleAprobar}
-                      className="rounded-xl bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:opacity-50"
+                      className="rounded-lg bg-green-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-800 disabled:opacity-50"
                     >
                       {accionEnCurso ? 'Procesando…' : 'Aprobar Solicitud'}
                     </button>

@@ -1,14 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
-import { ROLE_COLORS } from '../../constants/tramitesColors';
+import {
+  BellIcon,
+  ClipboardDocumentCheckIcon,
+  ClockIcon,
+} from '@heroicons/react/24/outline';
+import { UI } from '../../constants/tramitesColors';
 import { useNotificaciones } from '../../hooks/useNotificaciones';
 import ToastNotificacion from './ToastNotificacion';
 
 const ICONO_TIPO = {
-  ESTADO_CAMBIADO: '📋',
-  PLAZO_VENCIDO:   '⏰',
-  GENERAL:         '🔔',
+  ESTADO_CAMBIADO: ClipboardDocumentCheckIcon,
+  PLAZO_VENCIDO:   ClockIcon,
+  GENERAL:         BellIcon,
+};
+
+// La campana va en el bloque "Sesión activa" de la sidebar (escritorio) o en
+// el mini-header (móvil). Solo cambia hacia dónde se abre el panel.
+const VARIANTES = {
+  sidebar: { panel: 'left-0' },
+  barra:   { panel: 'right-0' },
 };
 
 const formatFecha = (iso) => {
@@ -17,8 +29,8 @@ const formatFecha = (iso) => {
   return d.toLocaleDateString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
 };
 
-const BellNotificaciones = ({ rol }) => {
-  const colores = ROLE_COLORS[rol] || ROLE_COLORS.ESTUDIANTE;
+const BellNotificaciones = ({ variante = 'barra' }) => {
+  const v = VARIANTES[variante] || VARIANTES.barra;
   const { notificaciones, noLeidas, toasts, marcar, dismissToast } = useNotificaciones();
   const [abierto, setAbierto] = useState(false);
   const panelRef = useRef(null);
@@ -48,10 +60,8 @@ const BellNotificaciones = ({ rol }) => {
     }
   };
 
-  // Badge color: texto blanco sobre fondo del rol
   const badgeClass = `absolute -top-1.5 -right-1.5 flex h-4 min-w-[1rem] items-center
-    justify-center rounded-full px-1 text-[10px] font-bold leading-none text-white
-    ${colores.header}`;
+    justify-center rounded-full bg-primario px-1 text-[10px] font-bold leading-none text-white`;
 
   return (
     <>
@@ -59,20 +69,15 @@ const BellNotificaciones = ({ rol }) => {
       <div className="relative">
         <button
           ref={botonRef}
-          onClick={() => setAbierto((v) => !v)}
+          type="button"
+          onClick={() => setAbierto((abiertoAntes) => !abiertoAntes)}
           aria-label="Notificaciones"
           aria-expanded={abierto}
-          className="relative flex h-9 w-9 items-center justify-center rounded-full
-                     bg-white/20 text-white transition hover:bg-white/30 focus:outline-none
-                     focus-visible:ring-2 focus-visible:ring-white"
+          className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-600
+                     transition-colors hover:bg-gray-200/70 hover:text-gray-900 focus:outline-none
+                     focus-visible:ring-2 focus-visible:ring-primario-borde"
         >
-          {/* Bell SVG */}
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-               fill="currentColor" className="h-5 w-5" aria-hidden>
-            <path d="M12 2a7 7 0 0 0-7 7v3.586l-1.707 1.707A1 1 0 0 0 4 16h16a1 1 0
-                     0 0 .707-1.707L19 12.586V9a7 7 0 0 0-7-7zm0 18a2 2 0 0 1-2-2h4a2
-                     2 0 0 1-2 2z"/>
-          </svg>
+          <BellIcon className="h-5 w-5" aria-hidden="true" />
 
           {noLeidas > 0 && (
             <span className={badgeClass} aria-label={`${noLeidas} notificaciones sin leer`}>
@@ -85,13 +90,13 @@ const BellNotificaciones = ({ rol }) => {
         {abierto && (
           <div
             ref={panelRef}
-            className="absolute right-0 top-11 z-50 w-80 rounded-xl border border-slate-200
-                       bg-white shadow-xl"
+            className={`absolute top-11 z-50 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-lg
+                        border border-gray-200 bg-white text-gray-900 shadow-lg animate-dropdown-in ${v.panel}`}
             role="dialog"
             aria-label="Panel de notificaciones"
           >
             {/* Cabecera del panel */}
-            <div className={`flex items-center justify-between rounded-t-xl px-4 py-2.5 ${colores.header}`}>
+            <div className={`flex items-center justify-between px-4 py-2.5 ${UI.cabecera}`}>
               <span className="text-sm font-semibold text-white">Notificaciones</span>
               {noLeidas > 0 && (
                 <span className="rounded-full bg-white/30 px-2 py-0.5 text-xs font-bold text-white">
@@ -101,59 +106,53 @@ const BellNotificaciones = ({ rol }) => {
             </div>
 
             {/* Lista */}
-            <ul className="max-h-80 overflow-y-auto divide-y divide-slate-100">
+            <ul className="max-h-80 overflow-y-auto divide-y divide-gray-100">
               {notificaciones.length === 0 ? (
                 <li className="flex flex-col items-center gap-2 py-10 px-4 text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                       fill="none" stroke="currentColor" strokeWidth="1.5"
-                       className="h-10 w-10 text-slate-300" aria-hidden>
-                    <path strokeLinecap="round" strokeLinejoin="round"
-                          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002
-                             6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388
-                             6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0
-                             11-6 0v-1m6 0H9"/>
-                  </svg>
-                  <p className="text-sm font-medium text-slate-500">Sin notificaciones</p>
-                  <p className="text-xs text-slate-400">
+                  <BellIcon className="h-10 w-10 text-gray-300" aria-hidden="true" />
+                  <p className="text-sm font-medium text-gray-600">Sin notificaciones</p>
+                  <p className="text-xs text-gray-500">
                     Aquí aparecerán las actualizaciones de tus trámites.
                   </p>
                 </li>
               ) : (
-                notificaciones.map((n) => (
+                notificaciones.map((n) => {
+                  const Icono = ICONO_TIPO[n.tipo] || ICONO_TIPO.GENERAL;
+                  return (
                   <li key={n.id}>
                     <button
+                      type="button"
                       onClick={() => handleClickNoti(n)}
-                      className={`w-full px-4 py-3 text-left transition hover:bg-slate-50
+                      className={`w-full px-4 py-3 text-left transition-colors hover:bg-gray-50 focus:outline-none focus-visible:bg-gray-50
                                   ${n.leida ? 'opacity-60' : ''}`}
                     >
                       <div className="flex items-start gap-2">
-                        <span className="mt-0.5 text-base leading-none" aria-hidden>
-                          {ICONO_TIPO[n.tipo] || ICONO_TIPO.GENERAL}
-                        </span>
+                        <Icono className="mt-0.5 h-4 w-4 shrink-0 text-primario" aria-hidden="true" />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
-                            <p className="truncate text-sm font-semibold text-slate-800">
+                            <p className="truncate text-sm font-semibold text-gray-900">
                               {n.titulo}
                             </p>
                             {!n.leida && (
-                              <span className={`shrink-0 h-2 w-2 rounded-full ${colores.header}`}
+                              <span className="h-2 w-2 shrink-0 rounded-full bg-primario"
                                     aria-label="No leída" />
                             )}
                           </div>
-                          <p className="line-clamp-2 text-xs text-slate-500 mt-0.5">{n.mensaje}</p>
-                          <p className="mt-1 text-[10px] text-slate-400">{formatFecha(n.fechaCreacion)}</p>
+                          <p className="line-clamp-2 text-xs text-gray-600 mt-0.5">{n.mensaje}</p>
+                          <p className="mt-1 text-[10px] text-gray-500">{formatFecha(n.fechaCreacion)}</p>
                         </div>
                       </div>
                     </button>
                   </li>
-                ))
+                  );
+                })
               )}
             </ul>
 
             {/* Pie */}
             {notificaciones.length > 0 && (
-              <div className="border-t border-slate-100 px-4 py-2 text-center">
-                <p className="text-xs text-slate-400">
+              <div className="border-t border-gray-100 px-4 py-2 text-center">
+                <p className="text-xs text-gray-500">
                   {notificaciones.filter((n) => !n.leida).length === 0
                     ? 'Todo al día'
                     : 'Haz clic en cada notificación para marcarla como leída'}

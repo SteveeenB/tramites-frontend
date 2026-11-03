@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { getMisSolicitudesPazYSalvo, responderPazYSalvo } from '../api/pazYSalvoApi';
+import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const Badge = ({ estado }) => {
   const styles = {
@@ -34,39 +35,45 @@ const ModalRespuesta = ({ item, onClose, onConfirm }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
         <h2 className="text-xl font-bold text-gray-800 mb-1">Confirmar Paz y Salvo</h2>
         <p className="text-sm text-gray-500 mb-2">Estudiante: <span className="font-semibold">{item.nombreEstudiante}</span></p>
-        <p className="text-xs text-red-600 font-medium mb-6 bg-red-50 rounded-lg px-3 py-2">
+        <p className="text-xs text-red-700 font-medium mb-6 bg-red-50 rounded-lg px-3 py-2">
           Este es su paz y salvo como Director de Programa
         </p>
         <div className="mb-4 flex gap-3">
           <button
+            type="button"
+            aria-pressed={decision === 'APROBADO'}
             onClick={() => setDecision('APROBADO')}
-            className={`flex-1 py-2 rounded-xl border-2 font-semibold transition-all ${decision === 'APROBADO' ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-500'}`}
+            className={`flex flex-1 items-center justify-center gap-2 py-2 rounded-lg border-2 font-semibold transition-all ${decision === 'APROBADO' ? 'border-green-600 bg-green-50 text-green-800' : 'border-gray-200 text-gray-600'}`}
           >
-            ✓ A Paz y Salvo
+            <CheckIcon className="h-4 w-4" aria-hidden="true" />
+            A Paz y Salvo
           </button>
           <button
+            type="button"
+            aria-pressed={decision === 'RECHAZADO'}
             onClick={() => setDecision('RECHAZADO')}
-            className={`flex-1 py-2 rounded-xl border-2 font-semibold transition-all ${decision === 'RECHAZADO' ? 'border-red-500 bg-red-50 text-red-700' : 'border-gray-200 text-gray-500'}`}
+            className={`flex flex-1 items-center justify-center gap-2 py-2 rounded-lg border-2 font-semibold transition-all ${decision === 'RECHAZADO' ? 'border-red-600 bg-red-50 text-red-800' : 'border-gray-200 text-gray-600'}`}
           >
-            ✗ No está a Paz y Salvo
+            <XMarkIcon className="h-4 w-4" aria-hidden="true" />
+            No está a Paz y Salvo
           </button>
         </div>
         <textarea
           value={obs}
           onChange={e => setObs(e.target.value)}
           rows={3}
-          className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm mb-6 focus:outline-none focus:ring-2 focus:ring-red-400"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm mb-6 focus:outline-none focus:ring-2 focus:ring-primario-borde"
           placeholder="Observaciones (opcional)"
         />
         <div className="flex gap-3">
-          <button onClick={onClose} className="flex-1 py-2 border border-gray-300 rounded-xl text-gray-600 font-medium">Cancelar</button>
+          <button onClick={onClose} className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-600 font-medium">Cancelar</button>
           <button
             onClick={submit}
             disabled={loading}
-            className={`flex-1 py-2 rounded-xl font-semibold text-white disabled:opacity-50 ${decision === 'APROBADO' ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`}
+            className={`flex-1 py-2 rounded-lg font-semibold text-white disabled:opacity-50 ${decision === 'APROBADO' ? 'bg-green-700 hover:bg-green-800' : 'bg-primario hover:bg-primario-hover'}`}
           >
             {loading ? 'Guardando...' : 'Confirmar'}
           </button>
@@ -107,13 +114,13 @@ export default function PazYSalvoDirector() {
   const pendientes = solicitudes.filter(s => s.estado === 'PENDIENTE').length;
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div>
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-slate-900 mb-1">Mis Paz y Salvos</h2>
-        <p className="text-sm text-slate-500">Solicitudes de paz y salvo como Director de Programa</p>
+        <h1 className="text-xl font-bold text-gray-900 mb-1">Mis Paz y Salvos</h1>
+        <p className="text-sm text-gray-600">Solicitudes de paz y salvo como Director de Programa</p>
         {pendientes > 0 && (
-          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-center gap-2">
-            <span className="text-amber-600 font-bold text-lg">{pendientes}</span>
+          <div className="mt-4 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 flex items-center gap-2">
+            <span className="text-amber-700 font-bold text-lg">{pendientes}</span>
             <span className="text-amber-700 text-sm">pendiente(s) de su confirmación</span>
           </div>
         )}
@@ -124,7 +131,7 @@ export default function PazYSalvoDirector() {
           <button
             key={f}
             onClick={() => setFiltro(f)}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filtro === f ? 'bg-red-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${filtro === f ? 'bg-primario text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`}
           >
             {f === 'TODOS' ? 'Todos' : f.charAt(0) + f.slice(1).toLowerCase()}
             <span className="ml-1.5 text-xs">({f === 'TODOS' ? solicitudes.length : solicitudes.filter(s => s.estado === f).length})</span>
@@ -133,13 +140,13 @@ export default function PazYSalvoDirector() {
       </div>
 
       {loading ? (
-        <div className="text-center py-20 text-gray-400">Cargando...</div>
+        <div className="text-center py-20 text-gray-600">Cargando...</div>
       ) : filtradas.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">No hay solicitudes en este estado</div>
+        <div className="text-center py-20 text-gray-600">No hay solicitudes en este estado</div>
       ) : (
         <div className="space-y-3">
           {filtradas.map(ps => (
-            <div key={ps.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center justify-between gap-4">
+            <div key={ps.id} className="bg-white rounded-lg border border-gray-100 shadow p-5 flex items-center justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-semibold text-gray-900">{ps.nombreEstudiante || ps.cedulaEstudiante}</span>
@@ -155,7 +162,7 @@ export default function PazYSalvoDirector() {
               {ps.estado === 'PENDIENTE' && (
                 <button
                   onClick={() => setModal(ps)}
-                  className="px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 transition-all whitespace-nowrap"
+                  className="px-4 py-2 bg-primario text-white rounded-lg text-sm font-semibold hover:bg-primario-hover transition-all whitespace-nowrap"
                 >
                   Responder
                 </button>
