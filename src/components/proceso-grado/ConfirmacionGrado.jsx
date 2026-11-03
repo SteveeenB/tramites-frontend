@@ -25,7 +25,7 @@ const SeccionPago = ({ solicitudGrado, onPagoConfirmado }) => {
           </div>
           <div>
             <h4 className="text-base font-bold text-gray-900">Paso 1 — Pago de Derechos de Grado</h4>
-            <p className="text-xs text-gray-500">Pendiente de pago</p>
+            <p className="text-xs text-gray-600">Pendiente de pago</p>
           </div>
         </div>
         <p className="mb-4 text-sm text-gray-600 leading-6">
@@ -199,7 +199,7 @@ const ModalPagoCeremonia = ({ fecha, solicitudId, cedula, onClose, onExito }) =>
               <div className="mb-5 rounded-lg border border-red-100 bg-red-50 p-4">
                 <p className="text-xs font-semibold uppercase tracking-wide text-red-700 mb-1">Fecha seleccionada</p>
                 <p className="text-sm font-bold text-gray-900">{fecha?.label}</p>
-                <p className="text-xs text-gray-500">{fecha?.hora} · {fecha?.lugar}</p>
+                <p className="text-xs text-gray-600">{fecha?.hora} · {fecha?.lugar}</p>
               </div>
               <div className="mb-5 rounded-lg border border-gray-200 bg-gray-50 p-4 flex items-center justify-between">
                 <div>
@@ -334,7 +334,7 @@ const SeccionFechaGrado = ({ solicitudGrado, onFechaConfirmada }) => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-gray-900">{f.label}</p>
-                  <p className="text-xs text-gray-500">{f.hora} · {f.lugar}</p>
+                  <p className="text-xs text-gray-600">{f.hora} · {f.lugar}</p>
                 </div>
                 <div className="shrink-0 flex flex-col items-end gap-1">
                   <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${esCer ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'}`}>
