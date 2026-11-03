@@ -74,10 +74,10 @@ export default function EstadoEstudiantes() {
   }, {});
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div>
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-slate-900 mb-1">Estado de Estudiantes</h2>
-        <p className="text-sm text-slate-500">Seguimiento del proceso de grado por estudiante</p>
+        <h1 className="text-xl font-bold text-gray-900 mb-1">Estado de Estudiantes</h1>
+        <p className="text-sm text-gray-500">Seguimiento del proceso de grado por estudiante</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
@@ -85,11 +85,11 @@ export default function EstadoEstudiantes() {
           <button
             key={et.key}
             onClick={() => setFiltroEtapa(filtroEtapa === et.key ? 'TODOS' : et.key)}
-            className={`p-4 rounded-2xl border-2 text-left transition-all ${
+            className={`p-4 rounded-lg border-2 text-left transition-all ${
               filtroEtapa === et.key ? 'border-red-500 bg-red-50' : 'border-gray-100 bg-white hover:border-gray-200'
             }`}
           >
-            <div className={`text-3xl font-black mb-1 ${filtroEtapa === et.key ? 'text-red-700' : 'text-gray-800'}`}>
+            <div className={`text-2xl font-semibold mb-1 ${filtroEtapa === et.key ? 'text-red-700' : 'text-gray-800'}`}>
               {conteos[et.key]}
             </div>
             <div className="flex items-center gap-1.5">
@@ -106,12 +106,12 @@ export default function EstadoEstudiantes() {
           value={busqueda}
           onChange={e => setBusqueda(e.target.value)}
           placeholder="Buscar por nombre, cédula o código..."
-          className="flex-1 border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+          className="flex-1 border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primario-borde"
         />
         {filtroEtapa !== 'TODOS' && (
           <button
             onClick={() => setFiltroEtapa('TODOS')}
-            className="px-4 py-2 bg-gray-100 rounded-xl text-sm text-gray-600 hover:bg-gray-200 font-medium"
+            className="px-4 py-2 bg-gray-100 rounded-lg text-sm text-gray-600 hover:bg-gray-200 font-medium"
           >
             Limpiar filtro
           </button>
@@ -119,13 +119,13 @@ export default function EstadoEstudiantes() {
       </div>
 
       {loading ? (
-        <div className="text-center py-20 text-gray-400">Cargando...</div>
+        <div className="text-center py-20 text-gray-500">Cargando...</div>
       ) : error ? (
         <div className="text-center py-20 text-red-500">{error}</div>
       ) : filtrados.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">No se encontraron estudiantes</div>
+        <div className="text-center py-20 text-gray-500">No se encontraron estudiantes</div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-lg border border-gray-100 shadow overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -142,13 +142,13 @@ export default function EstadoEstudiantes() {
                     className={`border-b border-gray-50 hover:bg-gray-50 transition-colors ${i % 2 === 0 ? '' : 'bg-gray-50/30'}`}>
                     <td className="px-5 py-4">
                       <div className="font-semibold text-gray-900">{est.nombre}</div>
-                      <div className="text-xs text-gray-400">{est.cedula}</div>
+                      <div className="text-xs text-gray-500">{est.cedula}</div>
                     </td>
                     <td className="px-5 py-4 text-gray-600">{est.codigo || '—'}</td>
                     <td className="px-5 py-4 min-w-[140px]">
                       {est.totalCreditos > 0
                         ? <BarraProgreso creditos={est.creditosAprobados || 0} total={est.totalCreditos} />
-                        : <span className="text-gray-400">—</span>
+                        : <span className="text-gray-500">—</span>
                       }
                     </td>
                     <td className="px-5 py-4">
@@ -159,7 +159,7 @@ export default function EstadoEstudiantes() {
               </tbody>
             </table>
           </div>
-          <div className="px-5 py-3 border-t border-gray-100 text-xs text-gray-400">
+          <div className="px-5 py-3 border-t border-gray-100 text-xs text-gray-500">
             {filtrados.length} estudiante(s) · Total programa: {estudiantes.length}
           </div>
         </div>

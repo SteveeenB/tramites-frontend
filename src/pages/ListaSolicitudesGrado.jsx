@@ -10,11 +10,10 @@ import { formatFecha } from '../constants/procesodeGrado';
 const CONFIG = {
   pendientes: {
     label: 'Solicitudes Pendientes', sublabel: 'Solicitud de Grado',
-    icono: <ClockIcon className="h-6 w-6" />,
+    icono: <ClockIcon className="h-5 w-5" />,
     mensajeVacio: 'No hay solicitudes de grado pendientes de revisión.',
     conAcciones: true,
     colores: {
-      header: 'bg-gradient-to-r from-amber-400 to-orange-500',
       iconWrapper: 'bg-amber-100 text-amber-600',
       badge: 'bg-amber-100 text-amber-700',
       card: 'border-amber-200 bg-amber-50',
@@ -23,11 +22,10 @@ const CONFIG = {
   },
   aprobadas: {
     label: 'Solicitudes Aprobadas', sublabel: 'Solicitud de Grado',
-    icono: <CheckCircleIcon className="h-6 w-6" />,
+    icono: <CheckCircleIcon className="h-5 w-5" />,
     mensajeVacio: 'No hay solicitudes de grado aprobadas.',
     conAcciones: false,
     colores: {
-      header: 'bg-gradient-to-r from-green-400 to-emerald-600',
       iconWrapper: 'bg-green-100 text-green-600',
       badge: 'bg-green-100 text-green-700',
       card: 'border-green-200 bg-green-50',
@@ -36,12 +34,11 @@ const CONFIG = {
   },
   rechazadas: {
     label: 'Solicitudes Rechazadas', sublabel: 'Solicitud de Grado',
-    icono: <XCircleIcon className="h-6 w-6" />,
+    icono: <XCircleIcon className="h-5 w-5" />,
     mensajeVacio: 'No hay solicitudes de grado rechazadas.',
     conAcciones: false,
     colores: {
-      header: 'bg-gradient-to-r from-red-400 to-rose-600',
-      iconWrapper: 'bg-red-100 text-red-600',
+      iconWrapper: 'bg-red-100 text-red-700',
       badge: 'bg-red-100 text-red-700',
       card: 'border-red-200 bg-red-50',
       avatar: 'bg-red-200 text-red-800',
@@ -55,10 +52,10 @@ const BarraCreditos = ({ aprobados, requeridos }) => {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-semibold text-slate-700">{aprobados ?? 0} / {requeridos ?? 0}</span>
-        <span className="text-xs text-slate-400">{pct}%</span>
+        <span className="text-xs font-semibold text-gray-700">{aprobados ?? 0} / {requeridos ?? 0}</span>
+        <span className="text-xs text-gray-500">{pct}%</span>
       </div>
-      <div className="h-1.5 w-24 rounded-full bg-slate-200">
+      <div className="h-1.5 w-24 rounded-full bg-gray-200">
         <div
           className={`h-1.5 rounded-full ${pct >= 100 ? 'bg-green-500' : 'bg-amber-400'}`}
           style={{ width: `${pct}%` }}
@@ -91,8 +88,8 @@ const ListaSolicitudesGrado = () => {
 
   if (!cfg) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-100">
-        <p className="font-medium text-red-600">Sección no válida.</p>
+      <div className="flex min-h-screen items-center justify-center bg-gray-100">
+        <p className="font-medium text-red-700">Sección no válida.</p>
       </div>
     );
   }
@@ -106,15 +103,15 @@ const ListaSolicitudesGrado = () => {
             {(s.estudiante?.nombre || 'E').slice(0, 2).toUpperCase()}
           </div>
           <div>
-            <p className="font-medium text-slate-900">{s.estudiante?.nombre}</p>
-            <p className="text-xs text-slate-500">CC {s.estudiante?.cedula}</p>
+            <p className="font-medium text-gray-900">{s.estudiante?.nombre}</p>
+            <p className="text-xs text-gray-500">CC {s.estudiante?.cedula}</p>
           </div>
         </div>
       ),
     },
     {
       header: 'Programa',
-      render: (s) => <p className="text-sm text-slate-600">{s.estudiante?.programa || '—'}</p>,
+      render: (s) => <p className="text-sm text-gray-600">{s.estudiante?.programa || '—'}</p>,
     },
     {
       header: 'Créditos',
@@ -127,7 +124,7 @@ const ListaSolicitudesGrado = () => {
     },
     {
       header: 'Fecha',
-      render: (s) => <p className="text-sm text-slate-600">{formatFecha(s.fechaSolicitud)}</p>,
+      render: (s) => <p className="text-sm text-gray-600">{formatFecha(s.fechaSolicitud)}</p>,
     },
     {
       header: 'Docs',
@@ -152,7 +149,7 @@ const ListaSolicitudesGrado = () => {
             type="button"
             disabled={accionEnCurso === s.id}
             onClick={() => aprobar(s.id)}
-            className="rounded-lg bg-green-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg bg-green-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-green-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {accionEnCurso === s.id ? 'Procesando…' : 'Aprobar'}
           </button>
@@ -160,7 +157,7 @@ const ListaSolicitudesGrado = () => {
             type="button"
             disabled={accionEnCurso === s.id}
             onClick={() => setSolicitudARechazar(s)}
-            className="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg bg-primario px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-primario-hover disabled:cursor-not-allowed disabled:opacity-50"
           >
             Rechazar
           </button>
@@ -169,7 +166,7 @@ const ListaSolicitudesGrado = () => {
       <button
         type="button"
         onClick={() => navigate(`/tramites/bandeja-director/grado/${estado}/${s.id}`)}
-        className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
+        className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 hover:text-gray-900"
       >
         <EyeIcon className="h-3.5 w-3.5" />
         Ver
@@ -178,20 +175,20 @@ const ListaSolicitudesGrado = () => {
   );
 
   const renderMobileCard = (s) => (
-    <div key={s.id} className={`rounded-xl border p-4 shadow-sm ${cfg.colores.card}`}>
+    <div key={s.id} className={`rounded-lg border p-4 shadow ${cfg.colores.card}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${cfg.colores.avatar}`}>
             {(s.estudiante?.nombre || 'E').slice(0, 2).toUpperCase()}
           </div>
           <div>
-            <p className="font-medium text-slate-900">{s.estudiante?.nombre}</p>
-            <p className="text-xs text-slate-500">{formatFecha(s.fechaSolicitud)}</p>
+            <p className="font-medium text-gray-900">{s.estudiante?.nombre}</p>
+            <p className="text-xs text-gray-500">{formatFecha(s.fechaSolicitud)}</p>
           </div>
         </div>
         <EstadoBadge estado={s.estado} />
       </div>
-      <div className="mt-3 space-y-2 text-xs text-slate-500">
+      <div className="mt-3 space-y-2 text-xs text-gray-500">
         <p>{s.estudiante?.programa || '—'}</p>
         <div className="flex items-center gap-4">
           <BarraCreditos
@@ -201,7 +198,7 @@ const ListaSolicitudesGrado = () => {
           <DocsBadge cargados={s.documentosCargados} requeridos={s.documentosRequeridos} />
         </div>
         {s.observacionesDirector && (
-          <p className="italic text-slate-400">{s.observacionesDirector}</p>
+          <p className="italic text-gray-500">{s.observacionesDirector}</p>
         )}
       </div>
       <div className="mt-4 flex gap-2">
@@ -211,7 +208,7 @@ const ListaSolicitudesGrado = () => {
               type="button"
               disabled={accionEnCurso === s.id}
               onClick={() => aprobar(s.id)}
-              className="flex-1 rounded-lg bg-green-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex-1 rounded-lg bg-green-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-green-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {accionEnCurso === s.id ? 'Proc…' : 'Aprobar'}
             </button>
@@ -219,7 +216,7 @@ const ListaSolicitudesGrado = () => {
               type="button"
               disabled={accionEnCurso === s.id}
               onClick={() => setSolicitudARechazar(s)}
-              className="flex-1 rounded-lg bg-red-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex-1 rounded-lg bg-primario px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-primario-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               Rechazar
             </button>
@@ -228,7 +225,7 @@ const ListaSolicitudesGrado = () => {
         <button
           type="button"
           onClick={() => navigate(`/tramites/bandeja-director/grado/${estado}/${s.id}`)}
-          className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-50"
+          className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:bg-gray-50"
         >
           <EyeIcon className="h-3.5 w-3.5" />
           Ver

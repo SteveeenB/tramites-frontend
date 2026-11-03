@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { formatCOP } from '../../constants/procesodeGrado';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
 
@@ -55,10 +56,10 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget && !cargando) onClose(); }}
     >
-      <div className="relative mx-4 w-full max-w-md rounded-3xl bg-white shadow-2xl">
+      <div className="relative mx-4 w-full max-w-md rounded-lg bg-white shadow-xl">
 
         {/* Header */}
-        <div className="rounded-t-3xl bg-gradient-to-r from-red-600 to-red-800 px-6 py-5 text-white">
+        <div className="rounded-t-lg bg-gradient-to-r from-red-700 to-red-600 px-6 py-5 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
@@ -73,9 +74,9 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
               </div>
             </div>
             {!cargando && (
-              <button onClick={onClose}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-white/70 hover:bg-white/20">
-                ✕
+              <button type="button" onClick={onClose} aria-label="Cerrar"
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-white/80 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                <XMarkIcon className="h-5 w-5" aria-hidden="true" />
               </button>
             )}
           </div>
@@ -85,23 +86,23 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
         <div className="px-6 py-6 space-y-4">
 
           {/* Detalle del pago */}
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 flex items-center justify-between">
+          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Concepto</p>
-              <p className="text-sm font-medium text-slate-800">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Concepto</p>
+              <p className="text-sm font-medium text-gray-800">
                 {tipoPago === 'TERMINACION' ? 'Terminación de Materias'
                   : tipoPago === 'GRADO' ? 'Derechos de Grado'
                     : 'Derechos de Ceremonia'}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Total</p>
-              <p className="text-xl font-bold text-slate-900">{formatCOP(monto)}</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Total</p>
+              <p className="text-xl font-bold text-gray-900">{formatCOP(monto)}</p>
             </div>
           </div>
 
           {/* Info Wompi */}
-          <div className="rounded-2xl bg-red-50 border border-red-100 px-4 py-3 flex items-start gap-3">
+          <div className="rounded-lg bg-red-50 border border-red-100 px-4 py-3 flex items-start gap-3">
             <svg className="h-5 w-5 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -112,7 +113,7 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
           </div>
 
           {error && (
-            <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
               {error}
             </div>
           )}
@@ -123,7 +124,7 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
               type="button"
               onClick={onClose}
               disabled={cargando}
-              className="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+              className="flex-1 rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50"
             >
               Cancelar
             </button>
@@ -131,7 +132,7 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
               type="button"
               onClick={handlePagar}
               disabled={cargando}
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-white hover:bg-red-700 disabled:opacity-60"
+              className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-primario px-4 py-3 text-sm font-bold text-white hover:bg-primario-hover disabled:opacity-60"
             >
               {cargando ? (
                 <>
@@ -152,7 +153,7 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
             </button>
           </div>
 
-          <p className="text-center text-xs text-slate-400">
+          <p className="text-center text-xs text-gray-500">
             Pago seguro procesado por <strong>Wompi</strong> · SSL encriptado
           </p>
         </div>

@@ -13,7 +13,7 @@ const TABS = [
 const ESTADOS_BADGE = {
   GENERADO:     { label: 'Por imprimir',       className: 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-300' },
   LISTO_RETIRO: { label: 'Listo para retiro',  className: 'bg-teal-100    text-teal-700    ring-1 ring-teal-300'    },
-  ENTREGADO:    { label: 'Entregado',          className: 'bg-slate-100   text-slate-600   ring-1 ring-slate-300'   },
+  ENTREGADO:    { label: 'Entregado',          className: 'bg-gray-100   text-gray-600   ring-1 ring-gray-300'   },
   PENDIENTE_PAGO:{ label: 'Pendiente de pago', className: 'bg-amber-100   text-amber-700   ring-1 ring-amber-300'   },
   PAGADO:       { label: 'Pagado',             className: 'bg-blue-100    text-blue-700    ring-1 ring-blue-300'    },
 };
@@ -114,10 +114,10 @@ export default function BandejaCertificadosPosgrados() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div>
       <div className="mb-6">
-        <h2 className="text-3xl font-bold text-slate-900 mb-1">Certificados</h2>
-        <p className="text-sm text-slate-500">{usuario?.nombre}</p>
+        <h1 className="text-xl font-bold text-gray-900 mb-1">Certificados</h1>
+        <p className="text-sm text-gray-500">{usuario?.nombre}</p>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4">
@@ -126,7 +126,7 @@ export default function BandejaCertificadosPosgrados() {
             key={t.id}
             onClick={() => setTab(t.id)}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-              tab === t.id ? 'bg-red-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+              tab === t.id ? 'bg-primario text-white' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
             }`}
           >
             {t.label}
@@ -141,26 +141,26 @@ export default function BandejaCertificadosPosgrados() {
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
           placeholder="Buscar por cédula o nombre del estudiante…"
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100"
+          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm shadow focus:border-red-300 focus:outline-none focus:ring-2 focus:ring-primario-borde"
         />
       </div>
 
       {error && (
-        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
           {error}
         </div>
       )}
 
       {loading ? (
-        <div className="text-center py-20 text-gray-400">Cargando…</div>
+        <div className="text-center py-20 text-gray-500">Cargando…</div>
       ) : filtradas.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">No hay solicitudes en este estado</div>
+        <div className="text-center py-20 text-gray-500">No hay solicitudes en este estado</div>
       ) : (
-        <div className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="rounded-lg border border-gray-200 bg-white shadow overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-slate-50 text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
+                <tr className="border-b border-gray-200 bg-gray-50 text-sm font-semibold text-gray-600">
                   <th className="px-4 py-3 text-left">N°</th>
                   <th className="px-4 py-3 text-left">Cédula</th>
                   <th className="px-4 py-3 text-left">Estudiante</th>
@@ -170,18 +170,18 @@ export default function BandejaCertificadosPosgrados() {
                   <th className="px-4 py-3 text-center">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-gray-100">
                 {filtradas.map((s, i) => {
-                  const badge = ESTADOS_BADGE[s.estado] || { label: s.estado, className: 'bg-slate-100 text-slate-600' };
+                  const badge = ESTADOS_BADGE[s.estado] || { label: s.estado, className: 'bg-gray-100 text-gray-600' };
                   return (
-                    <tr key={s.id} className="hover:bg-slate-50 align-top">
-                      <td className="px-4 py-4 text-slate-500 font-semibold">{i + 1}</td>
-                      <td className="px-4 py-4 text-slate-700 font-medium">{s.estudiante?.cedula || s.cedula}</td>
-                      <td className="px-4 py-4 text-slate-700">{s.estudiante?.nombre || '—'}</td>
-                      <td className="px-4 py-4 text-slate-700 max-w-xs">
+                    <tr key={s.id} className="hover:bg-gray-50 align-top">
+                      <td className="px-4 py-4 text-gray-500 font-semibold">{i + 1}</td>
+                      <td className="px-4 py-4 text-gray-700 font-medium">{s.estudiante?.cedula || s.cedula}</td>
+                      <td className="px-4 py-4 text-gray-700">{s.estudiante?.nombre || '—'}</td>
+                      <td className="px-4 py-4 text-gray-700 max-w-xs">
                         <span className="line-clamp-2">{s.tipoLabel || s.tipoCertificado}</span>
                       </td>
-                      <td className="px-4 py-4 text-slate-600">{formatFecha(s.fechaSolicitud)}</td>
+                      <td className="px-4 py-4 text-gray-600">{formatFecha(s.fechaSolicitud)}</td>
                       <td className="px-4 py-4 text-center">
                         <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap ${badge.className}`}>
                           {badge.label}
@@ -194,7 +194,7 @@ export default function BandejaCertificadosPosgrados() {
                               type="button"
                               onClick={() => handleDescargar(s.id)}
                               disabled={descargando === s.id}
-                              className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+                              className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-60"
                             >
                               {descargando === s.id ? 'Descargando…' : 'Descargar PDF'}
                             </button>
@@ -204,7 +204,7 @@ export default function BandejaCertificadosPosgrados() {
                               type="button"
                               onClick={() => handleMarcarListo(s.id)}
                               disabled={accionando === s.id}
-                              className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-60"
+                              className="rounded-lg bg-primario px-3 py-1.5 text-xs font-bold text-white hover:bg-primario-hover disabled:opacity-60"
                             >
                               {accionando === s.id ? '...' : 'Marcar listo para retiro'}
                             </button>
@@ -214,13 +214,13 @@ export default function BandejaCertificadosPosgrados() {
                               type="button"
                               onClick={() => handleMarcarEntregado(s.id)}
                               disabled={accionando === s.id}
-                              className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700 disabled:opacity-60"
+                              className="rounded-lg bg-green-700 px-3 py-1.5 text-xs font-bold text-white hover:bg-green-800 disabled:opacity-60"
                             >
                               {accionando === s.id ? '...' : 'Marcar entregado'}
                             </button>
                           )}
                           {s.estado === 'ENTREGADO' && (
-                            <span className="text-xs text-slate-400 text-center">
+                            <span className="text-xs text-gray-500 text-center">
                               {formatFecha(s.fechaEntrega)}
                             </span>
                           )}

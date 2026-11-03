@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { CLASE_CAMPO } from '../../components/ui/Campo';
 import PosgradosHeader from '../../components/posgrados/PosgradosHeader';
 import { fechasGradoApi } from '../../api/fechasGradoApi';
 import { formatearFechaGrado } from '../../constants/procesodeGrado';
@@ -34,14 +35,14 @@ const ModalFecha = ({ inicial, onGuardar, onCancelar }) => {
     }
   };
 
-  const input = 'w-full rounded-xl border-2 border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-800 focus:border-slate-500 focus:outline-none';
-  const label = 'mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500';
+  const input = CLASE_CAMPO;
+  const label = 'mb-1.5 block text-sm font-semibold text-gray-700';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget && !guardando) onCancelar(); }}>
-      <div className="mx-4 w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
-        <h3 className="mb-4 text-base font-bold text-slate-900">{editando ? 'Editar fecha de grado' : 'Nueva fecha de grado'}</h3>
+      <div className="mx-4 w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+        <h3 className="mb-4 text-base font-bold text-gray-900">{editando ? 'Editar fecha de grado' : 'Nueva fecha de grado'}</h3>
 
         <div className="space-y-4">
           <div>
@@ -51,8 +52,8 @@ const ModalFecha = ({ inicial, onGuardar, onCancelar }) => {
           <div>
             <label className={label}>Modalidad</label>
             <select value={form.modalidad} onChange={set('modalidad')} className={input}>
-              <option value="CEREMONIA">🎓 Ceremonia (costo adicional)</option>
-              <option value="SECRETARIA">📄 Secretaría (sin costo extra)</option>
+              <option value="CEREMONIA">Ceremonia (costo adicional)</option>
+              <option value="SECRETARIA">Secretaría (sin costo extra)</option>
             </select>
           </div>
           <div>
@@ -65,15 +66,15 @@ const ModalFecha = ({ inicial, onGuardar, onCancelar }) => {
           </div>
         </div>
 
-        {error && <p className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-xs font-medium text-red-700">{error}</p>}
+        {error && <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-700">{error}</p>}
 
         <div className="mt-5 flex gap-3">
           <button type="button" onClick={onCancelar} disabled={guardando}
-            className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50">
+            className="flex-1 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50">
             Cancelar
           </button>
           <button type="button" onClick={handleGuardar} disabled={guardando}
-            className="flex-1 rounded-xl bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50">
+            className="flex-1 rounded-lg bg-primario px-4 py-2.5 text-sm font-semibold text-white hover:bg-primario-hover disabled:opacity-50">
             {guardando ? 'Guardando…' : 'Guardar'}
           </button>
         </div>
@@ -115,7 +116,7 @@ const SeccionFechasGrado = () => {
   };
 
   const estado = (f) => {
-    if (f.fecha < hoyISO()) return { texto: 'Vencida', clase: 'bg-slate-200 text-slate-500' };
+    if (f.fecha < hoyISO()) return { texto: 'Vencida', clase: 'bg-gray-200 text-gray-500' };
     return f.activa
       ? { texto: 'Publicada', clase: 'bg-emerald-100 text-emerald-700' }
       : { texto: 'Oculta', clase: 'bg-amber-100 text-amber-700' };
@@ -129,27 +130,27 @@ const SeccionFechasGrado = () => {
         descripcion="Publica las fechas que los estudiantes podrán elegir en el Paso 3 del proceso de grado. Solo se ofrecen las publicadas y no vencidas."
         accion={
           <button type="button" onClick={() => setModal({})}
-            className="rounded-xl bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-700">
+            className="rounded-lg bg-primario px-4 py-2.5 text-sm font-semibold text-white hover:bg-primario-hover">
             + Nueva fecha
           </button>
         }
       />
 
-      {cargando && <p className="text-sm text-slate-400">Cargando fechas de grado…</p>}
-      {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</p>}
-      {errorAccion && <p className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{errorAccion}</p>}
+      {cargando && <p className="text-sm text-gray-500">Cargando fechas de grado…</p>}
+      {error && <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</p>}
+      {errorAccion && <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{errorAccion}</p>}
 
       {!cargando && !error && fechas.length === 0 && (
-        <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+        <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
           Aún no hay fechas de grado. Mientras no publiques ninguna, los estudiantes no podrán completar el Paso 3.
         </p>
       )}
 
       {!cargando && !error && fechas.length > 0 && (
-        <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-slate-50 text-xs font-bold uppercase tracking-[0.12em] text-slate-400">
+              <tr className="border-b border-gray-200 bg-gray-50 text-sm font-semibold text-gray-600">
                 <th className="px-4 py-3 text-left">Fecha</th>
                 <th className="px-4 py-3 text-left">Modalidad</th>
                 <th className="px-4 py-3 text-left">Hora</th>
@@ -158,30 +159,30 @@ const SeccionFechasGrado = () => {
                 <th className="px-4 py-3 text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-gray-100">
               {fechas.map((f) => {
                 const est = estado(f);
                 return (
-                  <tr key={f.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-800">{formatearFechaGrado(f.fecha)}</td>
-                    <td className="px-4 py-3 text-slate-700">{f.modalidad === 'CEREMONIA' ? '🎓 Ceremonia' : '📄 Secretaría'}</td>
-                    <td className="px-4 py-3 text-slate-700">{f.hora}</td>
-                    <td className="px-4 py-3 text-slate-700">{f.lugar}</td>
+                  <tr key={f.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 font-medium text-gray-800">{formatearFechaGrado(f.fecha)}</td>
+                    <td className="px-4 py-3 text-gray-700">{f.modalidad === 'CEREMONIA' ? 'Ceremonia' : 'Secretaría'}</td>
+                    <td className="px-4 py-3 text-gray-700">{f.hora}</td>
+                    <td className="px-4 py-3 text-gray-700">{f.lugar}</td>
                     <td className="px-4 py-3 text-center">
                       <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${est.clase}`}>{est.texto}</span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex justify-center gap-2">
                         <button type="button" onClick={() => setModal(f)}
-                          className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+                          className="rounded-lg border border-gray-300 px-2.5 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50">
                           Editar
                         </button>
                         <button type="button" onClick={() => alternarActiva(f)}
-                          className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50">
+                          className="rounded-lg border border-gray-300 px-2.5 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-50">
                           {f.activa ? 'Ocultar' : 'Publicar'}
                         </button>
                         <button type="button" onClick={() => eliminar(f)}
-                          className="rounded-lg border border-red-200 px-2.5 py-1 text-xs font-semibold text-red-600 hover:bg-red-50">
+                          className="rounded-lg border border-red-200 px-2.5 py-1 text-xs font-semibold text-red-700 hover:bg-red-50">
                           Eliminar
                         </button>
                       </div>

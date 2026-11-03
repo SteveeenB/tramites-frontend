@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { useProcesodeGrado } from '../hooks/useProcesodeGrado';
-import AppSidebar from '../components/sidebar/AppSidebar';
+import PanelLayout from '../components/layout/PanelLayout';
 import EtapasResumen from '../components/proceso-grado/EtapasResumen';
 import DetalleEtapa1 from '../components/proceso-grado/DetalleEtapa1';
 import Etapa2 from '../components/proceso-grado/Etapa2';
-import BellNotificaciones from '../components/notificaciones/BellNotificaciones';
 
 const ProcesodeGrado = () => {
   const {
@@ -29,56 +29,19 @@ const ProcesodeGrado = () => {
     day: 'numeric', month: 'long', year: 'numeric',
   });
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  // Layout base compartido (sidebar + header siempre visibles).
-  // Es una función que devuelve JSX, NO un componente: si fuera `const Layout =
-  // () => ...` dentro del componente, cada render crearía un tipo nuevo y React
-  // desmontaría todo el árbol (sidebar, campana, contenido), abriendo un
-  // EventSource SSE nuevo y recargando notificaciones en cada render.
+  // PanelLayout es un componente estable (definido en su propio módulo), así
+  // que la sidebar y la campana no se desmontan entre renders.
   const layout = (children) => (
-    <div className="min-h-screen bg-slate-100 text-slate-800">
-      <div className="flex min-h-screen flex-col lg:flex-row">
-        <AppSidebar
-          usuario={usuario}
-          selectedMenuId="proceso-de-grado"
-          sidebarOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-        />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <header className="flex items-center justify-between gap-4 bg-red-600 px-6 py-4 text-white shadow-sm md:px-8">
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setSidebarOpen(true)}
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/20 hover:bg-white/30 lg:hidden"
-                aria-label="Abrir menú"
-              >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-              <h1 className="text-lg font-bold uppercase tracking-[0.18em] md:text-xl">ESTUDIANTES</h1>
-            </div>
-            <div className="flex items-center gap-3">
-              <BellNotificaciones rol={usuario?.rol} />
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-sm font-semibold">
-                {usuario?.nombre?.slice(0, 2).toUpperCase()}
-              </div>
-              <p className="hidden text-sm font-semibold sm:block">{usuario?.nombre}</p>
-            </div>
-          </header>
-          <main className="flex-1 p-6 md:p-8">{children}</main>
-        </div>
-      </div>
-    </div>
+    <PanelLayout usuario={usuario} selectedMenuId="proceso-de-grado">
+      {children}
+    </PanelLayout>
   );
 
   if (cargando) {
     return layout(
       <>
         <div className="flex h-64 items-center justify-center">
-          <p className="text-slate-500">Cargando proceso de grado…</p>
+          <p className="text-gray-500">Cargando proceso de grado…</p>
         </div>
       </>
     );
@@ -88,8 +51,8 @@ const ProcesodeGrado = () => {
     return layout(
       <>
         <div className="flex h-64 flex-col items-center justify-center gap-3">
-          <p className="font-medium text-red-600">{errorPagina || 'Sin datos disponibles'}</p>
-          <p className="text-sm text-slate-500">
+          <p className="font-medium text-red-700">{errorPagina || 'Sin datos disponibles'}</p>
+          <p className="text-sm text-gray-500">
             Verifica que el backend esté corriendo o cambia de usuario en el panel demo.
           </p>
         </div>
@@ -126,13 +89,13 @@ const ProcesodeGrado = () => {
 
   return layout(
     <>
-      <div className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+      <div className="mb-5 text-xs font-semibold uppercase tracking-wider text-gray-500">
         TRÁMITES / ACADÉMICO
       </div>
 
       <div className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <h2 className="text-3xl font-bold text-slate-900">Proceso de Grado</h2>
-        <div className="text-sm font-medium text-slate-500">{fechaActual}</div>
+        <h1 className="text-xl font-bold text-gray-900">Proceso de Grado</h1>
+        <div className="text-sm font-medium text-gray-500">{fechaActual}</div>
       </div>
 
       <EtapasResumen
@@ -147,13 +110,14 @@ const ProcesodeGrado = () => {
         <div className="flex flex-col gap-6">
           {detalleEtapa1}
           {etapa2}
-          <aside className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h3 className="mb-3 text-lg font-bold text-slate-900">¿Necesitas ayuda?</h3>
-            <p className="mb-4 text-sm leading-6 text-slate-600">
+          <aside className="rounded-lg border border-gray-200 bg-white p-6 shadow">
+            <h3 className="mb-3 text-lg font-bold text-gray-900">¿Necesitas ayuda?</h3>
+            <p className="mb-4 text-sm leading-6 text-gray-600">
               Si consideras que hay un error en tus créditos, contacta a la oficina de Registro y Control Académico.
             </p>
-            <button type="button" className="text-sm font-semibold text-red-600 hover:text-red-700">
-              Contactar soporte académico ↗
+            <button type="button" className="inline-flex items-center gap-1 rounded text-sm font-semibold text-red-700 hover:text-red-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primario-borde">
+              Contactar soporte académico
+              <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
             </button>
           </aside>
         </div>
@@ -162,13 +126,14 @@ const ProcesodeGrado = () => {
         <div className="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
           {detalleEtapa1}
           {etapa2}
-          <aside className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm xl:col-start-2 xl:row-start-2">
-            <h3 className="mb-3 text-lg font-bold text-slate-900">¿Necesitas ayuda?</h3>
-            <p className="mb-4 text-sm leading-6 text-slate-600">
+          <aside className="rounded-lg border border-gray-200 bg-white p-6 shadow xl:col-start-2 xl:row-start-2">
+            <h3 className="mb-3 text-lg font-bold text-gray-900">¿Necesitas ayuda?</h3>
+            <p className="mb-4 text-sm leading-6 text-gray-600">
               Si consideras que hay un error en tus créditos, contacta a la oficina de Registro y Control Académico.
             </p>
-            <button type="button" className="text-sm font-semibold text-red-600 hover:text-red-700">
-              Contactar soporte académico ↗
+            <button type="button" className="inline-flex items-center gap-1 rounded text-sm font-semibold text-red-700 hover:text-red-800 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primario-borde">
+              Contactar soporte académico
+              <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
             </button>
           </aside>
         </div>

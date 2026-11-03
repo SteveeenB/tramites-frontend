@@ -30,7 +30,7 @@ const DetalleSolicitudDirector = () => {
       <button
         type="button"
         onClick={() => navigate(`/tramites/bandeja-director/${estado}`)}
-        className="mb-6 flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-700"
+        className="mb-6 flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-700"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -39,17 +39,17 @@ const DetalleSolicitudDirector = () => {
       </button>
 
       {(cargando || !solicitud) && (
-        <div className="flex items-center justify-center py-20 text-slate-400">
+        <div className="flex items-center justify-center py-20 text-gray-500">
           <span className="text-sm font-medium">Cargando solicitud…</span>
         </div>
       )}
 
       {!cargando && solicitud && (
         <div className="flex max-w-3xl flex-col gap-6">
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="min-w-0">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
                   Terminación de Materias
                 </p>
                 <p className="font-mono text-xs font-semibold text-blue-700">
@@ -59,28 +59,28 @@ const DetalleSolicitudDirector = () => {
               <EstadoBadge estado={solicitud.estado} />
             </div>
 
-            <div className="mt-5 grid grid-cols-2 gap-4 border-t border-slate-100 pt-5 sm:grid-cols-3">
+            <div className="mt-5 grid grid-cols-2 gap-4 border-t border-gray-100 pt-5 sm:grid-cols-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Estudiante</p>
-                <p className="mt-0.5 text-sm font-medium text-slate-800">{solicitud.estudiante?.nombre}</p>
-                <p className="text-xs text-slate-500">CC {solicitud.estudiante?.cedula}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Estudiante</p>
+                <p className="mt-0.5 text-sm font-medium text-gray-800">{solicitud.estudiante?.nombre}</p>
+                <p className="text-xs text-gray-500">CC {solicitud.estudiante?.cedula}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Programa</p>
-                <p className="mt-0.5 text-sm font-medium text-slate-800">{solicitud.estudiante?.programa || '—'}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Programa</p>
+                <p className="mt-0.5 text-sm font-medium text-gray-800">{solicitud.estudiante?.programa || '—'}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Fecha solicitud</p>
-                <p className="mt-0.5 text-sm font-medium text-slate-800">{formatFecha(solicitud.fechaSolicitud)}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Fecha solicitud</p>
+                <p className="mt-0.5 text-sm font-medium text-gray-800">{formatFecha(solicitud.fechaSolicitud)}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Valor del trámite</p>
-                <p className="mt-0.5 text-sm font-medium text-slate-800">{formatCOP(solicitud.costo)}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Valor del trámite</p>
+                <p className="mt-0.5 text-sm font-medium text-gray-800">{formatCOP(solicitud.costo)}</p>
               </div>
             </div>
 
             {solicitud.observaciones && (
-              <div className="mt-4 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+              <div className="mt-4 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-600">
                 <span className="font-semibold">Observaciones: </span>
                 {solicitud.observaciones}
               </div>
@@ -88,7 +88,7 @@ const DetalleSolicitudDirector = () => {
           </div>
 
           {errorAccion && (
-            <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{errorAccion}</p>
+            <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{errorAccion}</p>
           )}
 
           {esPendiente && (
@@ -97,7 +97,7 @@ const DetalleSolicitudDirector = () => {
                 type="button"
                 disabled={!!accionEnCurso}
                 onClick={() => setModalRechazo(true)}
-                className="rounded-xl border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-100 disabled:opacity-50"
+                className="rounded-lg border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-100 disabled:opacity-50"
               >
                 Rechazar
               </button>
@@ -105,7 +105,7 @@ const DetalleSolicitudDirector = () => {
                 type="button"
                 disabled={!!accionEnCurso}
                 onClick={handleAprobar}
-                className="rounded-xl bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700 disabled:opacity-50"
+                className="rounded-lg bg-green-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-green-800 disabled:opacity-50"
               >
                 {accionEnCurso ? 'Procesando…' : 'Aprobar Solicitud'}
               </button>

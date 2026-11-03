@@ -177,12 +177,12 @@ const SeccionPlantillasCertificado = () => {
       />
 
       {cargando ? (
-        <p className="text-sm text-slate-500">Cargando tipos de certificado...</p>
+        <p className="text-sm text-gray-500">Cargando tipos de certificado...</p>
       ) : (
         <div className="grid gap-4 lg:grid-cols-[260px_1fr]">
           {/* Sidebar de tipos */}
-          <aside className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
-            <p className="px-2 py-1 text-xs font-bold uppercase tracking-wider text-slate-400">
+          <aside className="rounded-lg border border-gray-200 bg-white p-3 shadow">
+            <p className="px-2 py-1 text-xs font-bold uppercase tracking-wider text-gray-500">
               Tipos de Certificado
             </p>
             <div className="mt-2 space-y-1">
@@ -193,12 +193,12 @@ const SeccionPlantillasCertificado = () => {
                   onClick={() => seleccionarTipo(t)}
                   className={`w-full rounded-lg px-3 py-2 text-left text-xs transition ${
                     seleccionado?.id === t.id
-                      ? 'bg-slate-800 text-white'
-                      : 'text-slate-700 hover:bg-slate-50'
+                      ? 'bg-primario text-white'
+                      : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   <span className="block font-mono font-semibold">{t.codigo}</span>
-                  <span className={`block truncate text-[11px] ${seleccionado?.id === t.id ? 'text-slate-300' : 'text-slate-500'}`}>
+                  <span className={`block truncate text-[11px] ${seleccionado?.id === t.id ? 'text-gray-300' : 'text-gray-500'}`}>
                     {t.label}
                   </span>
                 </button>
@@ -207,19 +207,19 @@ const SeccionPlantillasCertificado = () => {
           </aside>
 
           {/* Panel editor */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow">
             {seleccionado ? (
               <>
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <div>
-                    <p className="font-mono text-xs text-slate-400">{seleccionado.codigo}</p>
-                    <h3 className="text-lg font-bold text-slate-900">{seleccionado.label}</h3>
+                    <p className="font-mono text-xs text-gray-500">{seleccionado.codigo}</p>
+                    <h3 className="text-lg font-bold text-gray-900">{seleccionado.label}</h3>
                   </div>
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={() => setVerPreview((v) => !v)}
-                      className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                      className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-semibold text-gray-700 hover:bg-gray-50"
                     >
                       {verPreview ? 'Ocultar vista previa' : 'Vista previa'}
                     </button>
@@ -227,7 +227,7 @@ const SeccionPlantillasCertificado = () => {
                       type="button"
                       onClick={guardar}
                       disabled={guardando}
-                      className="rounded-lg bg-slate-800 px-4 py-1.5 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-60"
+                      className="rounded-lg bg-primario px-4 py-1.5 text-sm font-semibold text-white hover:bg-primario-hover disabled:opacity-60"
                     >
                       {guardando ? 'Guardando…' : 'Guardar'}
                     </button>
@@ -245,7 +245,7 @@ const SeccionPlantillasCertificado = () => {
                 )}
 
                 {verPreview ? (
-                  <div className="mb-4 overflow-auto rounded-lg border border-slate-200 bg-white" style={{ height: 520 }}>
+                  <div className="mb-4 overflow-auto rounded-lg border border-gray-200 bg-white" style={{ height: 520 }}>
                     <iframe
                       title="Vista previa del certificado"
                       srcDoc={htmlPreview}
@@ -260,16 +260,16 @@ const SeccionPlantillasCertificado = () => {
                     onChange={(e) => setHtml(e.target.value)}
                     rows={22}
                     spellCheck={false}
-                    className="mb-3 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-slate-400"
+                    className="mb-3 w-full rounded-lg border border-gray-300 px-3 py-2 font-mono text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-primario-borde"
                     placeholder={`<!DOCTYPE html>\n<html>…</html>`}
                   />
                 )}
 
                 {/* Variables clicables */}
                 <div>
-                  <p className="mb-1.5 text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <p className="mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-500">
                     Variables disponibles{' '}
-                    <span className="font-normal normal-case text-slate-400">(clic para insertar en el cursor)</span>
+                    <span className="font-normal normal-case text-gray-500">(clic para insertar en el cursor)</span>
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {VARIABLES.map(({ key, label }) => (
@@ -278,7 +278,7 @@ const SeccionPlantillasCertificado = () => {
                         type="button"
                         onClick={() => insertarVariable(key)}
                         title={label}
-                        className="rounded-md bg-slate-100 px-2 py-0.5 font-mono text-xs text-slate-700 hover:bg-slate-200 transition"
+                        className="rounded-md bg-gray-100 px-2 py-0.5 font-mono text-xs text-gray-700 hover:bg-gray-200 transition"
                       >
                         {`{{${key}}}`}
                       </button>
@@ -287,7 +287,7 @@ const SeccionPlantillasCertificado = () => {
                 </div>
               </>
             ) : (
-              <p className="text-sm text-slate-400">Selecciona un tipo de certificado para editar su plantilla.</p>
+              <p className="text-sm text-gray-500">Selecciona un tipo de certificado para editar su plantilla.</p>
             )}
           </div>
         </div>
