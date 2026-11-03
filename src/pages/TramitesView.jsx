@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useTramitesData } from '../hooks/useTramitesData';
-import AppSidebar from '../components/sidebar/AppSidebar';
-import TramitesHeader from '../components/tramites/TramitesHeader';
+import PanelLayout from '../components/layout/PanelLayout';
 import ContenidoEstudiante from '../components/tramites/ContenidoEstudiante';
 import ContenidoDirector from '../components/tramites/ContenidoDirector';
 import BandejaDependencia from './BandejaDependencia';
@@ -47,7 +46,6 @@ const TramitesView = () => {
     useTramitesData();
   const location = useLocation();
   const esRutaRaiz = location.pathname === '/tramites' || location.pathname === '/tramites/';
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const renderContenido = () => {
     // DEPENDENCIA
@@ -75,25 +73,15 @@ const TramitesView = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-800">
-      <div className="flex min-h-screen flex-col lg:flex-row">
-        <AppSidebar
-          usuario={usuario}
-          rol={rol}
-          menuItems={menuItems}
-          selectedMenuId={selectedMenuId}
-          onSeleccion={manejarSeleccion}
-          sidebarOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-        />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <TramitesHeader usuario={usuario} rol={rol} onMenuToggle={() => setSidebarOpen(true)} />
-          <main className="flex-1 p-6 md:p-8">
-            {esRutaRaiz ? renderContenido() : <Outlet />}
-          </main>
-        </div>
-      </div>
-    </div>
+    <PanelLayout
+      usuario={usuario}
+      rol={rol}
+      menuItems={menuItems}
+      selectedMenuId={selectedMenuId}
+      onSeleccion={manejarSeleccion}
+    >
+      {esRutaRaiz ? renderContenido() : <Outlet />}
+    </PanelLayout>
   );
 };
 

@@ -10,7 +10,7 @@ const EstadoBadge = ({ estado }) => {
     APROBADA:    { label: 'Aprobada',               cls: 'bg-green-100 text-green-700'  },
     RECHAZADA:   { label: 'Rechazada',              cls: 'bg-red-100 text-red-700'      },
   };
-  const { label, cls } = config[estado] ?? { label: estado, cls: 'bg-slate-100 text-slate-600' };
+  const { label, cls } = config[estado] ?? { label: estado, cls: 'bg-gray-100 text-gray-600' };
   return (
     <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${cls}`}>
       {label}
@@ -27,9 +27,9 @@ const SolicitudEnviada = ({ solicitudGrado }) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-start gap-3 rounded-2xl bg-yellow-50 border border-yellow-200 p-4">
+      <div className="flex items-start gap-3 rounded-lg bg-yellow-50 border border-yellow-200 p-4">
         <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
               d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -43,11 +43,11 @@ const SolicitudEnviada = ({ solicitudGrado }) => {
       </div>
 
       {solicitudGrado?.tituloProyecto && (
-        <div className="rounded-2xl border border-slate-200 bg-white p-4">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Proyecto</p>
-          <p className="text-sm font-semibold text-slate-800 leading-snug">{solicitudGrado.tituloProyecto}</p>
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-500">Proyecto</p>
+          <p className="text-sm font-semibold text-gray-800 leading-snug">{solicitudGrado.tituloProyecto}</p>
           {solicitudGrado.tipoProyecto && (
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-gray-500">
               {solicitudGrado.tipoProyecto.replace(/_/g, ' ').toLowerCase().replace(/^\w/, c => c.toUpperCase())}
             </p>
           )}
@@ -56,7 +56,7 @@ const SolicitudEnviada = ({ solicitudGrado }) => {
 
       <div className="flex items-center justify-between">
         <EstadoBadge estado={solicitudGrado.estado} />
-        {fecha && <p className="text-xs text-slate-400">Enviada el {fecha}</p>}
+        {fecha && <p className="text-xs text-gray-500">Enviada el {fecha}</p>}
       </div>
     </div>
   );
@@ -65,9 +65,9 @@ const SolicitudEnviada = ({ solicitudGrado }) => {
 const SolicitudRechazada = ({ solicitudGrado, onNuevaSolicitud }) => (
   <div className="flex flex-col gap-4">
     {/* Banner de rechazo con motivo */}
-    <div className="flex items-start gap-3 rounded-2xl bg-red-50 border border-red-200 p-4">
+    <div className="flex items-start gap-3 rounded-lg bg-red-50 border border-red-200 p-4">
       <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-red-100">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </div>
@@ -84,23 +84,23 @@ const SolicitudRechazada = ({ solicitudGrado, onNuevaSolicitud }) => (
 
     {/* Proyecto que fue rechazado */}
     {solicitudGrado?.tituloProyecto && (
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 opacity-60">
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Proyecto rechazado</p>
-        <p className="text-sm font-semibold text-slate-700 leading-snug line-through">
+      <div className="rounded-lg border border-gray-200 bg-white p-4 opacity-60">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-500">Proyecto rechazado</p>
+        <p className="text-sm font-semibold text-gray-700 leading-snug line-through">
           {solicitudGrado.tituloProyecto}
         </p>
       </div>
     )}
 
     {/* Opción de reiniciar */}
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-      <p className="mb-3 text-sm text-slate-600 leading-6">
+    <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+      <p className="mb-3 text-sm text-gray-600 leading-6">
         Puedes corregir las observaciones indicadas y presentar una nueva solicitud de grado.
       </p>
       <button
         type="button"
         onClick={onNuevaSolicitud}
-        className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+        className="inline-flex items-center gap-2 rounded-lg bg-primario px-5 py-3 text-sm font-semibold text-white transition hover:bg-primario-hover"
       >
         <SendIcon />
         Presentar nueva solicitud
@@ -114,19 +114,19 @@ const Etapa2 = ({ etapa2Disponible, solicitudGrado, onSolicitudGradoCreada }) =>
 
   return (
     <aside
-      className={`rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm ${
+      className={`rounded-lg border border-gray-200 bg-gray-50 p-6 shadow ${
         etapa2Disponible ? 'opacity-100' : 'opacity-60'
       }`}
     >
-      <h3 className="mb-3 text-xl font-bold text-slate-900">Etapa 2: Solicitud de Grado</h3>
+      <h3 className="mb-3 text-xl font-bold text-gray-900">Etapa 2: Solicitud de Grado</h3>
 
       {/* ── Bloqueada ─────────────────────────────────────────────────── */}
       {!etapa2Disponible && (
         <>
-          <p className="text-sm leading-6 text-slate-600">
+          <p className="text-sm leading-6 text-gray-600">
             Disponible una vez aprobada la Terminación de Materias.
           </p>
-          <div className="mt-4 inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600">
+          <div className="mt-4 inline-flex items-center rounded-full bg-gray-200 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gray-600">
             Bloqueada
           </div>
         </>
@@ -135,13 +135,13 @@ const Etapa2 = ({ etapa2Disponible, solicitudGrado, onSolicitudGradoCreada }) =>
        {/* ── Sin solicitud: botón para iniciar ────────────────────────── */}
        {etapa2Disponible && !solicitudGrado && (
          <>
-           <p className="text-sm leading-6 text-slate-600">
+           <p className="text-sm leading-6 text-gray-600">
              Todos los requisitos académicos están cumplidos. Puedes iniciar tu solicitud de grado.
            </p>
            <button
              type="button"
              onClick={() => navigate('/proceso-de-grado/solicitud-grado')}
-             className="mt-4 inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+             className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primario px-5 py-3 text-sm font-semibold text-white transition hover:bg-primario-hover"
            >
              <SendIcon />
              Iniciar Proceso de Grado

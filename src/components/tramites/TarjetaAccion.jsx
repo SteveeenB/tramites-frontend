@@ -1,32 +1,30 @@
 import React from 'react';
-import { ArrowRightIcon } from './icons';
+import { ChevronRightIcon } from '@heroicons/react/24/outline';
+import { Boton, Tarjeta } from '../ui';
 
 const TarjetaAccion = ({ icono, titulo, descripcion, etiqueta, onClick, deshabilitada = false }) => (
-  <div
-    className={`flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition ${
-      deshabilitada ? 'opacity-60' : 'hover:shadow-md'
+  <Tarjeta
+    className={`flex flex-col justify-between animate-fade-in-up transition ${
+      deshabilitada ? 'opacity-60' : 'hover:border-gray-300 hover:shadow-md'
     }`}
   >
     <div>
-      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-red-50 text-red-600">
+      <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-primario-suave text-primario">
         {icono}
       </div>
-      <h3 className="mb-2 text-lg font-bold text-slate-900">{titulo}</h3>
-      <p className="text-sm leading-6 text-slate-600">{descripcion}</p>
+      <h2 className="mb-1.5 text-base font-semibold text-gray-900">{titulo}</h2>
+      <p className="text-sm leading-6 text-gray-600">{descripcion}</p>
     </div>
-    <button
-      type="button"
+    <Boton
+      className="mt-5 self-start"
       onClick={onClick}
       disabled={deshabilitada}
-      className={`mt-5 inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
-        deshabilitada
-          ? 'cursor-not-allowed bg-slate-100 text-slate-400'
-          : 'bg-red-600 text-white hover:bg-red-700'
-      }`}
+      iconoDerecha={ChevronRightIcon}
+      variante={deshabilitada ? 'secundario' : 'primario'}
     >
-      {etiqueta} <ArrowRightIcon />
-    </button>
-  </div>
+      {etiqueta}
+    </Boton>
+  </Tarjeta>
 );
 
 export default TarjetaAccion;

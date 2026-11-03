@@ -12,10 +12,10 @@ const CONFIG = {
     pendientes: {
         label:        'En Proceso',
         sublabel:     'Solicitudes activas pendientes de acción',
-        icono:        <ClockIcon className="h-6 w-6" />,
+        icono:        <ClockIcon className="h-5 w-5" />,
         mensajeVacio: 'No hay solicitudes en proceso.',
         colores: {
-            iconWrapper: 'bg-amber-100 text-amber-600',
+            iconWrapper: 'bg-amber-100 text-amber-700',
             badge:       'bg-amber-100 text-amber-700',
             avatar:      'bg-amber-200 text-amber-800',
         },
@@ -23,10 +23,10 @@ const CONFIG = {
     aprobadas: {
         label:        'Aprobadas',
         sublabel:     'Solicitudes aprobadas exitosamente',
-        icono:        <CheckCircleIcon className="h-6 w-6" />,
+        icono:        <CheckCircleIcon className="h-5 w-5" />,
         mensajeVacio: 'No hay solicitudes aprobadas.',
         colores: {
-            iconWrapper: 'bg-green-100 text-green-600',
+            iconWrapper: 'bg-green-100 text-green-700',
             badge:       'bg-green-100 text-green-700',
             avatar:      'bg-green-200 text-green-800',
         },
@@ -34,10 +34,10 @@ const CONFIG = {
     rechazadas: {
         label:        'Rechazadas',
         sublabel:     'Solicitudes no aprobadas',
-        icono:        <XCircleIcon className="h-6 w-6" />,
+        icono:        <XCircleIcon className="h-5 w-5" />,
         mensajeVacio: 'No hay solicitudes rechazadas.',
         colores: {
-            iconWrapper: 'bg-red-100 text-red-600',
+            iconWrapper: 'bg-red-100 text-red-700',
             badge:       'bg-red-100 text-red-700',
             avatar:      'bg-red-200 text-red-800',
         },
@@ -65,29 +65,29 @@ const ModalRechazo = ({ solicitud, onClose, onExito }) => {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
             onClick={(e) => { if (e.target === e.currentTarget && !enviando) onClose(); }}>
-            <div className="mx-4 w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl">
-                <h3 className="mb-1 text-lg font-bold text-slate-900">Rechazar solicitud</h3>
-                <p className="mb-4 text-sm text-slate-500">
+            <div className="mx-4 w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+                <h3 className="mb-1 text-lg font-bold text-gray-900">Rechazar solicitud</h3>
+                <p className="mb-4 text-sm text-gray-500">
                     Estudiante: <strong>{solicitud.nombreEstudiante}</strong>
                 </p>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    Motivo <span className="text-red-500">*</span>
+                <label className="mb-2 block text-sm font-semibold text-gray-700">
+                    Motivo <span className="text-red-700">*</span>
                 </label>
                 <textarea
                     value={motivo}
                     onChange={(e) => { setMotivo(e.target.value); setError(null); }}
                     rows={4}
                     placeholder="Describe el motivo del rechazo…"
-                    className="mb-3 w-full rounded-xl border-2 border-slate-200 px-4 py-3 text-sm focus:border-red-400 focus:outline-none resize-none"
+                    className="mb-3 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm focus:border-red-300 focus:outline-none resize-none focus:ring-2 focus:ring-primario-borde"
                 />
-                {error && <p className="mb-3 rounded-xl bg-red-50 px-4 py-2 text-xs text-red-700">{error}</p>}
+                {error && <p className="mb-3 rounded-lg bg-red-50 px-4 py-2 text-xs text-red-700">{error}</p>}
                 <div className="flex gap-3">
                     <button onClick={onClose} disabled={enviando}
-                        className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50">
+                        className="flex-1 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:opacity-50">
                         Cancelar
                     </button>
                     <button onClick={handleRechazar} disabled={enviando || !motivo.trim()}
-                        className="flex-1 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50">
+                        className="flex-1 rounded-lg bg-primario px-4 py-2.5 text-sm font-semibold text-white hover:bg-primario-hover disabled:opacity-50">
                         {enviando ? 'Rechazando…' : 'Confirmar'}
                     </button>
                 </div>
@@ -122,7 +122,7 @@ const ListaSolicitudesPosgrados = () => {
 
     const cfg = CONFIG[estado];
     if (!cfg) {
-        return <p className="font-medium text-red-600">Sección no válida.</p>;
+        return <p className="font-medium text-red-700">Sección no válida.</p>;
     }
 
     const listaBase = tipo === 'terminacion'
@@ -194,19 +194,19 @@ const ListaSolicitudesPosgrados = () => {
                         {(s.nombreEstudiante || '?').slice(0, 2).toUpperCase()}
                     </div>
                     <div>
-                        <p className="font-medium text-slate-900">{s.nombreEstudiante || '—'}</p>
-                        <p className="text-xs text-slate-500">CC {s.cedulaEstudiante} · Cód. {s.codigoEstudiante || '—'}</p>
+                        <p className="font-medium text-gray-900">{s.nombreEstudiante || '—'}</p>
+                        <p className="text-xs text-gray-500">CC {s.cedulaEstudiante} · Cód. {s.codigoEstudiante || '—'}</p>
                     </div>
                 </div>
             ),
         },
         {
             header: 'Programa',
-            render: (s) => <p className="text-sm text-slate-600">{s.programa || '—'}</p>,
+            render: (s) => <p className="text-sm text-gray-600">{s.programa || '—'}</p>,
         },
         {
             header: 'Fecha',
-            render: (s) => <p className="text-sm text-slate-600">{formatFecha(s.fechaSolicitud)}</p>,
+            render: (s) => <p className="text-sm text-gray-600">{formatFecha(s.fechaSolicitud)}</p>,
         },
         {
             header: 'Estado',
@@ -214,7 +214,7 @@ const ListaSolicitudesPosgrados = () => {
         },
         ...(tipo === 'grado' ? [{
             header: 'Proyecto',
-            render: (s) => <p className="text-sm text-slate-600 max-w-xs truncate">{s.tituloProyecto || '—'}</p>,
+            render: (s) => <p className="text-sm text-gray-600 max-w-xs truncate">{s.tituloProyecto || '—'}</p>,
         }] : []),
     ];
 
@@ -225,7 +225,7 @@ const ListaSolicitudesPosgrados = () => {
                     type="button"
                     disabled={generandoId === s.id}
                     onClick={() => handleGenerar(s)}
-                    className="rounded-lg bg-green-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg bg-green-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-green-800 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     {generandoId === s.id ? 'Generando…' : 'Generar acta'}
                 </button>
@@ -235,7 +235,7 @@ const ListaSolicitudesPosgrados = () => {
                     type="button"
                     disabled={generandoId === s.id}
                     onClick={() => setSolicitudARechazar(s)}
-                    className="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg bg-primario px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-primario-hover disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     Rechazar
                 </button>
@@ -244,33 +244,33 @@ const ListaSolicitudesPosgrados = () => {
     );
 
     const renderMobileCard = (s) => (
-        <div key={s.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div key={s.id} className="rounded-lg border border-gray-200 bg-white p-4 shadow">
             <div className="flex items-start justify-between gap-3 mb-2">
                 <div className="flex items-center gap-2">
                     <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${cfg.colores.avatar}`}>
                         {(s.nombreEstudiante || '?').slice(0, 2).toUpperCase()}
                     </div>
                     <div>
-                        <p className="font-medium text-slate-900">{s.nombreEstudiante || '—'}</p>
-                        <p className="text-xs text-slate-500">{formatFecha(s.fechaSolicitud)}</p>
+                        <p className="font-medium text-gray-900">{s.nombreEstudiante || '—'}</p>
+                        <p className="text-xs text-gray-500">{formatFecha(s.fechaSolicitud)}</p>
                     </div>
                 </div>
                 <EstadoBadge estado={s.estado} />
             </div>
-            <div className="text-xs text-slate-500 mb-3">
+            <div className="text-xs text-gray-500 mb-3">
                 <p>{s.programa || '—'}</p>
                 <p>CC {s.cedulaEstudiante}</p>
             </div>
             <div className="flex gap-2 flex-wrap">
                 {puedeGenerar(s) && (
                     <button type="button" disabled={generandoId === s.id} onClick={() => handleGenerar(s)}
-                        className="flex-1 rounded-lg bg-green-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-600 disabled:opacity-50">
+                        className="flex-1 rounded-lg bg-green-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-800 disabled:opacity-50">
                         {generandoId === s.id ? 'Generando…' : 'Generar acta'}
                     </button>
                 )}
                 {puedeRechazar(s) && (
                     <button type="button" disabled={generandoId === s.id} onClick={() => setSolicitudARechazar(s)}
-                        className="flex-1 rounded-lg bg-red-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-600 disabled:opacity-50">
+                        className="flex-1 rounded-lg bg-primario px-3 py-1.5 text-xs font-semibold text-white hover:bg-primario-hover disabled:opacity-50">
                         Rechazar
                     </button>
                 )}

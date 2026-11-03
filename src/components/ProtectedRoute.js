@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import Cargando from './ui/Cargando';
 
 // En modo demo, ignoramos el chequeo de rol para que cambiar de usuario
 // no dispare redirects molestos a /no-autorizado. Cuando se desactive el
@@ -10,7 +11,7 @@ import { DEMO_MODE } from '../config/appConfig';
 export const ProtectedRoute = ({ children, rolesPermitidos }) => {
   const { usuario, cargando } = useContext(AuthContext);
 
-  if (cargando) return <div>Cargando...</div>;
+  if (cargando) return <Cargando texto="Cargando..." className="min-h-screen" />;
 
   if (!usuario) return <Navigate to="/login" replace />;
 

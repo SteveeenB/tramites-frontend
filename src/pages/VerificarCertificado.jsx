@@ -32,18 +32,13 @@ export default function VerificarCertificado() {
     }, [codigoUrl]);
 
     return (
-        <div className="min-h-screen bg-slate-100 flex flex-col">
+        <div className="min-h-screen bg-fondo flex flex-col">
             {/* Header institucional */}
-            <header className="bg-red-600 text-white px-6 py-4 shadow-md">
-                <div className="max-w-2xl mx-auto flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
-                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                    </div>
+            <header className="bg-primario px-6 py-4 text-white shadow">
+                <div className="mx-auto flex max-w-2xl items-center gap-3">
+                    <img src="/LOGO.png" alt="Logo UFPS" className="h-10 w-10 rounded-sm" />
                     <div>
-                        <p className="text-xs font-semibold uppercase tracking-widest text-red-200">UFPS — Sección de Posgrados</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-widest text-red-50">UFPS · Sistema de Posgrados</p>
                         <h1 className="text-lg font-bold">Verificación de Certificados</h1>
                     </div>
                 </div>
@@ -53,9 +48,9 @@ export default function VerificarCertificado() {
                 <div className="w-full max-w-2xl space-y-6">
 
                     {/* Instrucciones */}
-                    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                        <h2 className="mb-2 text-lg font-bold text-slate-900">Verificar autenticidad</h2>
-                        <p className="mb-4 text-sm text-slate-600 leading-6">
+                    <div className="rounded-lg border border-gray-200 bg-white p-6 shadow">
+                        <h2 className="mb-2 text-lg font-bold text-gray-900">Verificar autenticidad</h2>
+                        <p className="mb-4 text-sm text-gray-600 leading-6">
                             Ingresa el código de verificación que aparece en el certificado expedido por la
                             Sección de Posgrados de la Universidad Francisco de Paula Santander.
                             El código tiene el formato <strong>UFPS-TM-XXX-XXXX</strong>.
@@ -67,12 +62,14 @@ export default function VerificarCertificado() {
                                 onChange={(e) => setCodigo(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && verificar(codigo)}
                                 placeholder="Ej: UFPS-TM-55-0010"
-                                className="flex-1 rounded-xl border-2 border-slate-200 px-4 py-3 text-sm font-mono text-slate-800 focus:border-red-500 focus:outline-none"
+                                aria-label="Código de verificación"
+                                className="flex-1 rounded-lg border border-gray-200 px-4 py-3 text-sm font-mono text-gray-800 focus:border-red-300 focus:outline-none focus:ring-2 focus:ring-primario-borde"
                             />
                             <button
+                                type="button"
                                 onClick={() => verificar(codigo)}
                                 disabled={cargando || !codigo.trim()}
-                                className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="inline-flex items-center gap-2 rounded-lg bg-primario px-5 py-3 text-sm font-semibold text-white hover:bg-primario-hover disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {cargando ? (
                                     <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
@@ -91,14 +88,14 @@ export default function VerificarCertificado() {
 
                     {/* Error de conexión */}
                     {error && (
-                        <div className="rounded-2xl border border-red-200 bg-red-50 p-5">
+                        <div className="rounded-lg border border-red-200 bg-red-50 p-5">
                             <p className="text-sm font-medium text-red-700">{error}</p>
                         </div>
                     )}
 
                     {/* Resultado: VÁLIDO */}
                     {resultado?.valido && (
-                        <div className="rounded-2xl border-2 border-green-400 bg-white shadow-md overflow-hidden">
+                        <div className="rounded-lg border-2 border-green-400 bg-white shadow-md overflow-hidden">
                             {/* Banner verde */}
                             <div className="bg-green-500 px-6 py-4 flex items-center gap-3">
                                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
@@ -115,30 +112,30 @@ export default function VerificarCertificado() {
                             {/* Datos del certificado */}
                             <div className="p-6 space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="rounded-xl bg-slate-50 p-4">
-                                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">Nombre</p>
-                                        <p className="text-sm font-semibold text-slate-900">{resultado.nombre}</p>
+                                    <div className="rounded-lg bg-gray-50 p-4">
+                                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Nombre</p>
+                                        <p className="text-sm font-semibold text-gray-900">{resultado.nombre}</p>
                                     </div>
-                                    <div className="rounded-xl bg-slate-50 p-4">
-                                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">Cédula</p>
-                                        <p className="text-sm font-semibold text-slate-900">{resultado.cedula}</p>
+                                    <div className="rounded-lg bg-gray-50 p-4">
+                                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Cédula</p>
+                                        <p className="text-sm font-semibold text-gray-900">{resultado.cedula}</p>
                                     </div>
-                                    <div className="rounded-xl bg-slate-50 p-4 col-span-2">
-                                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">Programa académico</p>
-                                        <p className="text-sm font-semibold text-slate-900">{resultado.programa}</p>
+                                    <div className="rounded-lg bg-gray-50 p-4 col-span-2">
+                                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Programa académico</p>
+                                        <p className="text-sm font-semibold text-gray-900">{resultado.programa}</p>
                                     </div>
-                                    <div className="rounded-xl bg-slate-50 p-4">
-                                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">Fecha de expedición</p>
-                                        <p className="text-sm font-semibold text-slate-900">{resultado.fechaAprobacion}</p>
+                                    <div className="rounded-lg bg-gray-50 p-4">
+                                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Fecha de expedición</p>
+                                        <p className="text-sm font-semibold text-gray-900">{resultado.fechaAprobacion}</p>
                                     </div>
-                                    <div className="rounded-xl bg-slate-50 p-4">
-                                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-1">Código de verificación</p>
+                                    <div className="rounded-lg bg-gray-50 p-4">
+                                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1">Código de verificación</p>
                                         <p className="text-sm font-mono font-semibold text-red-700">{resultado.codigo}</p>
                                     </div>
                                 </div>
 
-                                <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 flex items-center gap-3">
-                                    <svg className="h-5 w-5 text-green-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 flex items-center gap-3">
+                                    <svg className="h-5 w-5 text-green-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -153,7 +150,7 @@ export default function VerificarCertificado() {
 
                     {/* Resultado: INVÁLIDO */}
                     {resultado && !resultado.valido && (
-                        <div className="rounded-2xl border-2 border-red-400 bg-white shadow-md overflow-hidden">
+                        <div className="rounded-lg border-2 border-red-400 bg-white shadow-md overflow-hidden">
                             <div className="bg-red-500 px-6 py-4 flex items-center gap-3">
                                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
                                     <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -166,8 +163,8 @@ export default function VerificarCertificado() {
                                 </div>
                             </div>
                             <div className="p-6">
-                                <p className="text-sm text-slate-700 mb-4">{resultado.mensaje}</p>
-                                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+                                <p className="text-sm text-gray-700 mb-4">{resultado.mensaje}</p>
+                                <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3">
                                     <p className="text-sm text-red-800">
                                         Si crees que esto es un error, comunícate con la Sección de Posgrados de la UFPS.
                                     </p>
@@ -177,7 +174,7 @@ export default function VerificarCertificado() {
                     )}
 
                     {/* Footer */}
-                    <p className="text-center text-xs text-slate-400">
+                    <p className="text-center text-xs text-gray-500">
                         Universidad Francisco de Paula Santander · Sección de Posgrados · San José de Cúcuta, Colombia
                     </p>
                 </div>
