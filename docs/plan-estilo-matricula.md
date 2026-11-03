@@ -64,6 +64,22 @@ Se corrió la misma batería contra `develop` (antes) y contra esta rama (despu�
 | Esc cierra el menú móvil y el modal de rechazo | No | Sí |
 | Foco visible en los 10 primeros Tab | 10/10 | 10/10 (empieza en «Saltar al contenido») |
 
+**Flujo completo de grado y paz y salvos (10 pasos):**
+1. La estudiante envía la solicitud de grado con foto y acta.
+2. El director la aprueba, lo que crea los paz y salvos.
+3. Biblioteca rechaza con motivo obligatorio.
+4. Financiera aprueba.
+5. El director responde su propio paz y salvo.
+6. Posgrados responde el suyo.
+7. La estudiante ve el estado.
+
+Comparado con `develop` anterior:
+- Mismas llamadas al API en los 10 pasos.
+- 0 errores de consola.
+- axe pasa de 35 elementos con fallos a 0 en 4 pantallas: formulario de grado, lista del director, modal de responder y vista de la estudiante.
+
+Los archivos adjuntos se suben a un sustituto local de Supabase Storage. El servicio real no está configurado en el entorno de prueba; el sustituto acepta la subida, la descarga y la URL firmada que usa `SupabaseStorageService`.
+
 ---
 
 ## 0. Antes de empezar: lo verificado y lo que cambia del prompt

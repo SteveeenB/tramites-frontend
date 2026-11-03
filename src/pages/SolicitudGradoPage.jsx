@@ -61,7 +61,7 @@ const SolicitudGradoPage = () => {
       <button
         type="button"
         onClick={() => navigate('/proceso-de-grado')}
-        className="mb-6 flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-gray-700"
+        className="mb-6 flex items-center gap-2 rounded text-sm font-semibold text-gray-600 hover:text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primario-borde"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -84,10 +84,11 @@ const SolicitudGradoPage = () => {
 
               <div className="flex flex-col gap-5">
                 <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
+                  <label htmlFor="titulo-proyecto" className="mb-1.5 block text-sm font-semibold text-gray-700">
                     Título del Proyecto/Tesis <span className="text-red-700">*</span>
                   </label>
                   <input
+                    id="titulo-proyecto"
                     type="text"
                     value={tituloProyecto}
                     onChange={(e) => setTituloProyecto(e.target.value)}
@@ -97,10 +98,11 @@ const SolicitudGradoPage = () => {
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
+                  <label htmlFor="resumen-proyecto" className="mb-1.5 block text-sm font-semibold text-gray-700">
                     Resumen del Proyecto/Tesis <span className="text-red-700">*</span>
                   </label>
                   <textarea
+                    id="resumen-proyecto"
                     value={resumen}
                     onChange={(e) => setResumen(e.target.value)}
                     placeholder="Describa brevemente su proyecto o tesis"
@@ -110,10 +112,11 @@ const SolicitudGradoPage = () => {
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
+                  <label htmlFor="tipo-proyecto" className="mb-1.5 block text-sm font-semibold text-gray-700">
                     Tipo de Proyecto <span className="text-red-700">*</span>
                   </label>
                   <select
+                    id="tipo-proyecto"
                     value={tipoProyecto}
                     onChange={(e) => setTipoProyecto(e.target.value)}
                     className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-800 outline-none transition focus:border-red-300 focus:ring-2 focus:ring-primario-borde"
