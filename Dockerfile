@@ -6,7 +6,7 @@ ARG REACT_APP_DEMO_MODE=false
 ENV REACT_APP_DEMO_MODE=${REACT_APP_DEMO_MODE}
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 COPY . .
 RUN npm run build
