@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { getApiBaseUrl } from '../config/runtimeConfig';
 
-const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+const apiBase = getApiBaseUrl();
 
 export default function ResultadoPago() {
     const [searchParams] = useSearchParams();
