@@ -1,3 +1,6 @@
+// Debe coincidir con los parámetros que arma WompiService.java en el backend.
+// Si el backend agrega o quita uno (p. ej. expiration-time), actualizar esta
+// lista o el pago se rechaza con "datos de pago no válidos".
 const WOMPI_CHECKOUT_ACTION = 'https://checkout.wompi.co/p/';
 const CHECKOUT_PARAMETERS = [
   'public-key',
