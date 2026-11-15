@@ -13,11 +13,12 @@ RUN npm run build
 
 FROM nginxinc/nginx-unprivileged:1.27-alpine
 
-COPY --chown=nginx:nginx --from=build /app/build /usr/share/nginx/html
-COPY nginx/default.conf /etc/nginx/conf.d/default.conf
-COPY docker-entrypoint.sh /docker-entrypoint.sh
+COPY --chown=root:root --chmod=0555 --from=build /app/build /usr/share/nginx/html
+COPY --chown=root:root --chmod=0444 nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --chown=root:root --chmod=0444 docker-entrypoint.sh /usr/local/bin/frontend-entrypoint.sh
 
 USER nginx
 EXPOSE 8080
 
-CMD ["/bin/sh", "/docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/sh"]
+CMD ["/usr/local/bin/frontend-entrypoint.sh"]
