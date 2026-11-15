@@ -11,14 +11,13 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM nginx:1.27-alpine
+FROM nginxinc/nginx-unprivileged:1.27-alpine
 
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --chown=nginx:nginx --from=build /app/build /usr/share/nginx/html
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-RUN chmod +x /docker-entrypoint.sh
+USER nginx
+EXPOSE 8080
 
-EXPOSE 80
-
-CMD ["/docker-entrypoint.sh"]
+CMD ["/bin/sh", "/docker-entrypoint.sh"]
