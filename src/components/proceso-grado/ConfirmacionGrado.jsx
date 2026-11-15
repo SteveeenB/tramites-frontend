@@ -5,6 +5,8 @@ import { formatFecha, formatearFechaGrado } from '../../constants/procesodeGrado
 import { solicitudesApi } from '../../api/solicitudesApi';
 import { fechasGradoApi } from '../../api/fechasGradoApi';
 import { getEstadoPazYSalvos } from '../../api/pazYSalvoApi';
+import { getApiBaseUrl } from '../../config/runtimeConfig';
+import { submitWompiCheckout } from '../../utils/wompiCheckout';
 import ModalPagoPSE from './ModalPagoPSE';
 
 /* ─── Constantes ─────────────────────────────────────────────────────── */
@@ -160,7 +162,7 @@ const ModalPagoCeremonia = ({ fecha, solicitudId, cedula, onClose, onExito }) =>
     setProcesando(true);
     try {
       const token = localStorage.getItem('auth_token');
-      const resp = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080/api'}/pagos/crear`, {
+      const resp = await fetch(`${getApiBaseUrl()}/pagos/crear`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({
@@ -170,10 +172,10 @@ const ModalPagoCeremonia = ({ fecha, solicitudId, cedula, onClose, onExito }) =>
         }),
       });
       const data = await resp.json();
-      window.location.href = data.checkoutUrl;
+      if (!submitWompiCheckout(data?.checkoutUrl)) throw new Error('El servidor devolvió datos de pago no válidos.');
     } catch (e) {
       setProcesando(false);
-      alert('Error al conectar con el servicio de pagos');
+      alert(e.message || 'Error al conectar con el servicio de pagos');
     }
   };
 

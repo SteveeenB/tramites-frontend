@@ -1,9 +1,10 @@
 import React, { createContext, useState, useCallback, useEffect } from 'react';
 import { demo } from '../config/appConfig';
+import { getApiBaseUrl } from '../config/runtimeConfig';
 
 export const AuthContext = createContext();
 
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+const BASE_URL = getApiBaseUrl();
 const TOKEN_KEY = 'auth_token';
 
 // Decodifica el payload del JWT sin verificar firma (solo para leer claims en cliente)
