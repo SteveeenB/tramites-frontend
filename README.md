@@ -382,6 +382,8 @@ Portal público de verificación. Lee `?codigo=` de la URL y llama a `GET /api/s
 
 ## 7. Instalación y Ejecución Local
 
+Para construir y probar el contenedor Docker desde cero, sigue [DEPLOY.md](DEPLOY.md).
+
 ### Requisitos
 
 - Node.js 18+

@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 WORKDIR /app
 ARG REACT_APP_DEMO_MODE=false
 ENV REACT_APP_DEMO_MODE=${REACT_APP_DEMO_MODE}

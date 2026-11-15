@@ -1,5 +1,5 @@
 const DEFAULT_CONFIG = {
-  API_URL: 'http://localhost:8080/api',
+  API_URL: process.env.REACT_APP_API_URL || '/api',
   GOOGLE_CLIENT_ID: '',
 };
 

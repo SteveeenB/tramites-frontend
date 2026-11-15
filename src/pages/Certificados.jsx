@@ -5,6 +5,7 @@ import { apiClient, downloadApiClient } from '../api/apiClient';
 import PanelLayout from '../components/layout/PanelLayout';
 import { parseFecha } from '../constants/procesodeGrado';
 import { COLORES_IMPRESION as C } from '../constants/tramitesColors';
+import { getWompiCheckoutUrl } from '../utils/wompiCheckout';
 
 // ── Badges por estado de la solicitud ─────────────────────────────────
 const ESTADOS_BADGE = {
@@ -165,7 +166,9 @@ const Certificados = () => {
         method: 'POST',
         body: JSON.stringify({ certificadoId: id, cedula: usuario.cedula }),
       });
-      window.location.href = data.checkoutUrl;
+      const checkoutUrl = getWompiCheckoutUrl(data?.checkoutUrl);
+      if (!checkoutUrl) throw new Error('El servidor devolvió una URL de pago no válida.');
+      window.location.assign(checkoutUrl);
     } catch (e) {
       setError(e.message);
       setPagando(null);

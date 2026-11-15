@@ -1,4 +1,4 @@
 window.__APP_CONFIG__ = {
-  API_URL: 'http://localhost:8080/api',
+  API_URL: '/api',
   GOOGLE_CLIENT_ID: '',
 };
