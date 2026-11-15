@@ -2,12 +2,13 @@ import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { DEMO_MODE } from '../config/appConfig';
+import { getApiBaseUrl, getGoogleClientId } from '../config/runtimeConfig';
 import { ExclamationCircleIcon, EyeIcon, EyeSlashIcon, LockClosedIcon, UserIcon } from '@heroicons/react/24/outline';
 import { Boton, CLASE_CAMPO } from '../components/ui';
 import { UI } from '../constants/tramitesColors';
 
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
-const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
+const BASE_URL = getApiBaseUrl();
+const GOOGLE_CLIENT_ID = getGoogleClientId();
 
 export default function Login() {
   const { login, usuario } = useContext(AuthContext);

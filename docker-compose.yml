@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  tramites-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_DEMO_MODE: ${REACT_APP_DEMO_MODE:-false}
+    container_name: tramites-frontend
+    ports:
+      - "8081:80"
+    environment:
+      API_URL: ${API_URL:-http://localhost:8080/api}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+    restart: unless-stopped

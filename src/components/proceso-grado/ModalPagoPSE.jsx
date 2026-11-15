@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { formatCOP } from '../../constants/procesodeGrado';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { getApiBaseUrl } from '../../config/runtimeConfig';
 
-const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+const apiBase = getApiBaseUrl();
 
 /**
  * Modal de pago con Wompi PSE.

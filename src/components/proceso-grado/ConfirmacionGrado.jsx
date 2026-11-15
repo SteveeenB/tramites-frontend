@@ -5,6 +5,7 @@ import { formatFecha, formatearFechaGrado } from '../../constants/procesodeGrado
 import { solicitudesApi } from '../../api/solicitudesApi';
 import { fechasGradoApi } from '../../api/fechasGradoApi';
 import { getEstadoPazYSalvos } from '../../api/pazYSalvoApi';
+import { getApiBaseUrl } from '../../config/runtimeConfig';
 import ModalPagoPSE from './ModalPagoPSE';
 
 /* ─── Constantes ─────────────────────────────────────────────────────── */
@@ -160,7 +161,7 @@ const ModalPagoCeremonia = ({ fecha, solicitudId, cedula, onClose, onExito }) =>
     setProcesando(true);
     try {
       const token = localStorage.getItem('auth_token');
-      const resp = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8080/api'}/pagos/crear`, {
+      const resp = await fetch(`${getApiBaseUrl()}/pagos/crear`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({

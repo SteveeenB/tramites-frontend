@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.27",
+    "eslint-plugin-jest": "^25.7.0",
     "postcss": "^8.5.9",
     "tailwindcss": "^3.4.19"
   },
