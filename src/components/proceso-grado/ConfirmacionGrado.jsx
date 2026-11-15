@@ -6,7 +6,7 @@ import { solicitudesApi } from '../../api/solicitudesApi';
 import { fechasGradoApi } from '../../api/fechasGradoApi';
 import { getEstadoPazYSalvos } from '../../api/pazYSalvoApi';
 import { getApiBaseUrl } from '../../config/runtimeConfig';
-import { getWompiCheckoutUrl } from '../../utils/wompiCheckout';
+import { submitWompiCheckout } from '../../utils/wompiCheckout';
 import ModalPagoPSE from './ModalPagoPSE';
 
 /* ─── Constantes ─────────────────────────────────────────────────────── */
@@ -172,9 +172,7 @@ const ModalPagoCeremonia = ({ fecha, solicitudId, cedula, onClose, onExito }) =>
         }),
       });
       const data = await resp.json();
-      const checkoutUrl = getWompiCheckoutUrl(data?.checkoutUrl);
-      if (!checkoutUrl) throw new Error('El servidor devolvió una URL de pago no válida.');
-      window.location.assign(checkoutUrl);
+      if (!submitWompiCheckout(data?.checkoutUrl)) throw new Error('El servidor devolvió datos de pago no válidos.');
     } catch (e) {
       setProcesando(false);
       alert(e.message || 'Error al conectar con el servicio de pagos');

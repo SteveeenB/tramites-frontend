@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { formatCOP } from '../../constants/procesodeGrado';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { getApiBaseUrl } from '../../config/runtimeConfig';
-import { getWompiCheckoutUrl } from '../../utils/wompiCheckout';
+import { submitWompiCheckout } from '../../utils/wompiCheckout';
 
 const apiBase = getApiBaseUrl();
 
@@ -44,9 +44,7 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
       }
 
       const data = await resp.json();
-      const checkoutUrl = getWompiCheckoutUrl(data?.checkoutUrl);
-      if (!checkoutUrl) throw new Error('El servidor devolvió una URL de pago no válida.');
-      window.location.assign(checkoutUrl);
+      if (!submitWompiCheckout(data?.checkoutUrl)) throw new Error('El servidor devolvió datos de pago no válidos.');
 
     } catch (e) {
       setError(e.message || 'Error al conectar con el servicio de pagos.');
