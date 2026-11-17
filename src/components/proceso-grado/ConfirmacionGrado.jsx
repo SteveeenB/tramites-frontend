@@ -8,6 +8,7 @@ import { getEstadoPazYSalvos } from '../../api/pazYSalvoApi';
 import { getApiBaseUrl } from '../../config/runtimeConfig';
 import { submitWompiCheckout } from '../../utils/wompiCheckout';
 import ModalPagoPSE from './ModalPagoPSE';
+import DescargarActaGrado from './DescargarActaGrado';
 
 /* ─── Constantes ─────────────────────────────────────────────────────── */
 const COSTO_CEREMONIA_EXTRA = 40000;
@@ -482,6 +483,7 @@ const ConfirmacionGrado = ({ solicitudGrado }) => {
                   <p className="text-sm font-bold text-gray-900">{fechaGradoInfo?.label || solicitudGrado?.fechaGrado}</p>
                 </div>
               </div>
+              <DescargarActaGrado solicitudId={solicitudGrado?.id} radicado={solicitudGrado?.radicado} />
             </div>
           </div>
         </div>
