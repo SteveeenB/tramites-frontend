@@ -172,6 +172,35 @@ const ListaSolicitudesPosgrados = () => {
         }
     };
 
+    // TP-156: Posgrados genera el acta de grado cuando la solicitud está
+    // aprobada y el estudiante ya eligió su fecha de grado. El backend
+    // (GET /solicitudes/{id}/acta) la genera la primera vez y después
+    // devuelve la misma, por eso el botón se mantiene para volver a descargarla.
+    const handleActaGrado = async (s) => {
+        setGenerandoId(s.id);
+        setErrorAccion(null);
+        try {
+            const { blob } = await solicitudesApi.descargarActa(s.id);
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `acta-grado-${s.radicado || s.id}.pdf`;
+            a.click();
+            URL.revokeObjectURL(url);
+        } catch (err) {
+            setErrorAccion(
+                err?.message
+                    ? `No se pudo generar el acta de grado: ${err.message}`
+                    : 'No se pudo generar el acta de grado.'
+            );
+        } finally {
+            setGenerandoId(null);
+        }
+    };
+
+    const puedeActaGrado = (s) =>
+        tipo === 'grado' && s.estado === 'APROBADA' && Boolean(s.fechaGrado);
+
     const puedeGenerar = (s) =>
         tipo === 'terminacion' && (
             s.estado === 'APROBADA_DIRECTOR' ||
@@ -230,6 +259,16 @@ const ListaSolicitudesPosgrados = () => {
                     {generandoId === s.id ? 'Generando…' : 'Generar acta'}
                 </button>
             )}
+            {puedeActaGrado(s) && (
+                <button
+                    type="button"
+                    disabled={generandoId === s.id}
+                    onClick={() => handleActaGrado(s)}
+                    className="rounded-lg bg-green-700 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-green-800 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                    {generandoId === s.id ? 'Generando…' : 'Acta de grado'}
+                </button>
+            )}
             {puedeRechazar(s) && (
                 <button
                     type="button"
@@ -266,6 +305,12 @@ const ListaSolicitudesPosgrados = () => {
                     <button type="button" disabled={generandoId === s.id} onClick={() => handleGenerar(s)}
                         className="flex-1 rounded-lg bg-green-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-800 disabled:opacity-50">
                         {generandoId === s.id ? 'Generando…' : 'Generar acta'}
+                    </button>
+                )}
+                {puedeActaGrado(s) && (
+                    <button type="button" disabled={generandoId === s.id} onClick={() => handleActaGrado(s)}
+                        className="flex-1 rounded-lg bg-green-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-800 disabled:opacity-50">
+                        {generandoId === s.id ? 'Generando…' : 'Acta de grado'}
                     </button>
                 )}
                 {puedeRechazar(s) && (
