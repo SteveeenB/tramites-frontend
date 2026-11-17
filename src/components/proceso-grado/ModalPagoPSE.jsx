@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { formatCOP } from '../../constants/procesodeGrado';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { getApiBaseUrl } from '../../config/runtimeConfig';
+import { submitWompiCheckout } from '../../utils/wompiCheckout';
 
-const apiBase = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+const apiBase = getApiBaseUrl();
 
 /**
  * Modal de pago con Wompi PSE.
@@ -42,8 +44,7 @@ const ModalPagoPSE = ({ solicitud, tipoPago = 'TERMINACION', cedula, onClose }) 
       }
 
       const data = await resp.json();
-      // Redirigir a Wompi checkout
-      window.location.href = data.checkoutUrl;
+      if (!submitWompiCheckout(data?.checkoutUrl)) throw new Error('El servidor devolvió datos de pago no válidos.');
 
     } catch (e) {
       setError(e.message || 'Error al conectar con el servicio de pagos.');

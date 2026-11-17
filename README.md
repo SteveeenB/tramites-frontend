@@ -10,7 +10,7 @@
 > **Demo:** [tramites-frontend-r08z.onrender.com](https://tramites-frontend-r08z.onrender.com)
 -->
 
-Documentación técnica del frontend del sistema **GROWEB — TposgradosUFPS**.  
+Documentación técnica del frontend del **Módulo de Trámites de Posgrado (UFPS)**.  
 SPA desarrollada con React.js para la gestión de trámites académicos de posgrado de la Universidad Francisco de Paula Santander (UFPS).
 
 **Equipo:** Raúl David Báez Suárez · Johan Steven Bueno Rojas · Kevin David Arias Villamizar · Santiago Danilo Cepeda Galeano · Diego Alexander Bermúdez Flores · Bryan Alexander Niño López  
@@ -381,6 +381,8 @@ Portal público de verificación. Lee `?codigo=` de la URL y llama a `GET /api/s
 ---
 
 ## 7. Instalación y Ejecución Local
+
+Para construir y probar el contenedor Docker desde cero, sigue [DEPLOY.md](DEPLOY.md).
 
 ### Requisitos
 

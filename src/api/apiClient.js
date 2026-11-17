@@ -1,4 +1,6 @@
-export const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+import { getApiBaseUrl } from '../config/runtimeConfig';
+
+export const BASE_URL = getApiBaseUrl();
 
 export class ApiError extends Error {
   constructor(status, data) {
