@@ -17,7 +17,8 @@ const TarjetaLiquidacion = ({ solicitud, tipoPago = 'TERMINACION' }) => {
       : cfg.label;
 
   const esRechazada = solicitud.estado === 'RECHAZADA';
-  const esPendiente = solicitud.estado === 'PENDIENTE_PAGO' || solicitud.estado === 'EN_REVISION';
+  const esPendientePago = solicitud.estado === 'PENDIENTE_PAGO';
+  const esPendiente = esPendientePago || solicitud.estado === 'EN_REVISION';
   const containerCls = esRechazada
     ? 'border-red-200 bg-red-50'
     : esPendiente
@@ -63,11 +64,15 @@ const TarjetaLiquidacion = ({ solicitud, tipoPago = 'TERMINACION' }) => {
           </div>
         </div>
 
-        <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          {solicitud.liquidacion?.instrucciones}
-        </p>
+        {/* TP-156: las instrucciones ("Realiza el pago…") solo aplican mientras
+            falta pagar; después del pago confundían al estudiante. */}
+        {esPendientePago && solicitud.liquidacion?.instrucciones && (
+          <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {solicitud.liquidacion.instrucciones}
+          </p>
+        )}
 
-        {solicitud.estado === 'PENDIENTE_PAGO' && (
+        {esPendientePago && (
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <button
               type="button"
