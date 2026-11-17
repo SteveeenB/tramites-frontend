@@ -10,7 +10,7 @@
 > **Demo:** [tramites-frontend-r08z.onrender.com](https://tramites-frontend-r08z.onrender.com)
 -->
 
-Documentación técnica del frontend del sistema **GROWEB — TposgradosUFPS**.  
+Documentación técnica del frontend del **Módulo de Trámites de Posgrado (UFPS)**.  
 SPA desarrollada con React.js para la gestión de trámites académicos de posgrado de la Universidad Francisco de Paula Santander (UFPS).
 
 **Equipo:** Raúl David Báez Suárez · Johan Steven Bueno Rojas · Kevin David Arias Villamizar · Santiago Danilo Cepeda Galeano · Diego Alexander Bermúdez Flores · Bryan Alexander Niño López  
