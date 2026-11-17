@@ -35,6 +35,9 @@ export const solicitudesApi = {
 
   descargarActa: (id) => downloadApiClient(`/solicitudes/${id}/acta`),
 
+  // TP-156: el estudiante solo descarga el acta que Posgrados ya generó.
+  descargarActaEstudiante: (id) => downloadApiClient(`/solicitudes/${id}/acta-estudiante`),
+
   subirDocumento: (id, file) => {
     const fd = new FormData();
     fd.append("archivo", file);
